@@ -3,7 +3,11 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    const posyandu = await prisma.posyandu.findMany();
+    const posyandu = await prisma.posyandu.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
     return NextResponse.json(posyandu);
   } catch (error) {
     console.error('[GET Posyandu]', error);
