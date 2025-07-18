@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Posyandu" ALTER COLUMN "longitude" SET DATA TYPE TEXT,
+ALTER COLUMN "lattitude" SET DATA TYPE TEXT;
