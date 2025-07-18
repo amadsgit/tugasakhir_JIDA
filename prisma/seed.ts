@@ -1,4 +1,4 @@
-import { PrismaClient, Akreditasi } from '@prisma/client' // ⬅ enum ikut diimport
+import { PrismaClient, Akreditasi } from '@/generated/prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -12,8 +12,8 @@ async function main() {
       penanggungJawab: 'Ibu Nani',
       noHp: '081234567001',
       akreditasi: Akreditasi.Paripurna,
-      longitude: 107.123001,
-      lattitude: -6.987001,
+      longitude: '107.123001',
+      lattitude: '-6.987001',
     },
   })
 

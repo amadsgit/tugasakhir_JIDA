@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Akreditasi" AS ENUM ('Paripurna', 'Pratama', 'Madya', 'Purnama', 'Mandiri', 'BelumDiakreditasi');
+CREATE TYPE "Akreditasi" AS ENUM ('Paripurna', 'Pratama', 'Madya', 'Purnama', 'Mandiri', 'Belum_akreditasi');
 
 -- CreateTable
 CREATE TABLE "Posyandu" (
@@ -11,8 +11,8 @@ CREATE TABLE "Posyandu" (
     "penanggungJawab" TEXT NOT NULL,
     "noHp" TEXT NOT NULL,
     "akreditasi" "Akreditasi" NOT NULL,
-    "longitude" DOUBLE PRECISION NOT NULL,
-    "lattitude" DOUBLE PRECISION NOT NULL,
+    "longitude" TEXT NOT NULL,
+    "lattitude" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
