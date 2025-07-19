@@ -35,7 +35,7 @@ export default function KontakPage() {
             </li>
             <li className="flex items-start gap-4">
               <EnvelopeIcon className="w-6 h-6 text-emerald-600 mt-1" />
-              <span>eposyandu@care.id</span>
+              <span>mamadahmadfnc@gmail.com</span>
             </li>
           </ul>
         </div>

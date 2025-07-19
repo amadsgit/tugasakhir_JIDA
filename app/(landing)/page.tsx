@@ -82,7 +82,7 @@ export default function Page() {
             src="/hero-desktop.png"
             alt="Hero Ilustrasi"
             width={800}
-            height={600}
+            height={700}
             className="hidden md:block rounded-xl shadow-lg"
             priority
           />
@@ -94,10 +94,6 @@ export default function Page() {
             className="block md:hidden rounded-lg shadow"
             priority
           />
-          {/* <div className="flex items-center justify-center w-full h-full bg-white rounded-xl shadow-lg p-4">
-            <CakupanImunisasiChart />
-          </div> */}
-
         </div>
       </section>
 

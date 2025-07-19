@@ -24,7 +24,7 @@ export async function GET() {
 
     const result = await response.json();
 
-    console.log('[DEBUG] Contoh data dari API:', result?.data?.[0]);
+    // console.log('[DEBUG] data dari API:', result?.data?.[0]);
 
     return NextResponse.json(result.data);
   } catch (error: any) {
