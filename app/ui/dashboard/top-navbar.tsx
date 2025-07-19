@@ -16,7 +16,6 @@ export default function TopNavbar() {
   const profileRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
 
-  // Handle klik di luar dropdown
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -39,13 +38,13 @@ export default function TopNavbar() {
   }, []);
 
   return (
-    <div className="h-16 bg-white border-b shadow-sm px-4 flex items-center justify-between sticky top-0 z-40">
-      {/* Judul */}
-      <div className="text-xl font-semibold text-emerald-600">e-Posyandu Care</div>
+    <header className="bg-white shadow px-4 py-3 flex justify-between items-center z-50">
+      {/* Judul kiri */}
+      <h1 className="text-lg font-semibold text-gray-700">Dashboard</h1>
 
-      {/* Kanan */}
+      {/* Kanan: Notifikasi & Profil */}
       <div className="flex items-center space-x-4">
-        {/* 🔔 Notifikasi */}
+        {/* Notifikasi */}
         <div className="relative" ref={notifRef}>
           <button
             onClick={() => setIsNotifOpen(!isNotifOpen)}
@@ -67,9 +66,6 @@ export default function TopNavbar() {
                   💉 Jadwal imunisasi besok pukul 08:00
                 </li>
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  📈 Data pertumbuhan balita baru diinput
-                </li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                   🔔 Kegiatan Posyandu minggu depan
                 </li>
               </ul>
@@ -80,11 +76,11 @@ export default function TopNavbar() {
           )}
         </div>
 
-        {/* 👤 Profil */}
+        {/* Profil */}
         <div className="relative" ref={profileRef}>
           <button
             onClick={() => setIsProfileOpen(!isProfileOpen)}
-            className="flex items-center gap-2 rounded-full hover:opacity-80 transition"
+            className="flex items-center gap-2 hover:opacity-80 transition"
           >
             <Image
               src="/favicon.ico"
@@ -94,7 +90,7 @@ export default function TopNavbar() {
               className="rounded-full border"
             />
             <span className="hidden md:block text-sm font-medium text-gray-700">
-              Aduhh..
+              Admin
             </span>
           </button>
 
@@ -107,7 +103,7 @@ export default function TopNavbar() {
                 <UserCircleIcon className="w-5 h-5 text-blue-500" />
                 Profil
               </Link>
-              <form action="/">
+              <form action="/logout" method="POST">
                 <button
                   type="submit"
                   className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -120,6 +116,6 @@ export default function TopNavbar() {
           )}
         </div>
       </div>
-    </div>
+    </header>
   );
 }

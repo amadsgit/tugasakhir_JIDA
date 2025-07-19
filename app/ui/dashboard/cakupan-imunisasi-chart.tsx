@@ -30,14 +30,22 @@ export default function CakupanImunisasiChart({ data }: ImunisasiChartProps) {
 
   const labels = Array.from(new Set(data.map((d) => d.nama_puskesmas)));
 
-  const dataLaki = labels.map((nama) => {
-    const item = data.find((d) => d.nama_puskesmas === nama && d.jenis_kelamin === 'LAKI-LAKI');
-    return item?.jumlah_bayi_diimunisasi || 0;
-  });
+  const dataLaki: number[] = [];
+  const dataPerempuan: number[] = [];
 
-  const dataPerempuan = labels.map((nama) => {
-    const item = data.find((d) => d.nama_puskesmas === nama && d.jenis_kelamin === 'PEREMPUAN');
-    return item?.jumlah_bayi_diimunisasi || 0;
+  labels.forEach((nama) => {
+    let jumlahLaki = 0;
+    let jumlahPerempuan = 0;
+
+    data.forEach((d) => {
+      if (d.nama_puskesmas === nama) {
+        if (d.jenis_kelamin === 'LAKI-LAKI') jumlahLaki += d.jumlah_bayi_diimunisasi;
+        if (d.jenis_kelamin === 'PEREMPUAN') jumlahPerempuan += d.jumlah_bayi_diimunisasi;
+      }
+    });
+
+    dataLaki.push(jumlahLaki);
+    dataPerempuan.push(jumlahPerempuan);
   });
 
   const chartData = {
@@ -46,12 +54,12 @@ export default function CakupanImunisasiChart({ data }: ImunisasiChartProps) {
       {
         label: 'Laki-laki',
         data: dataLaki,
-        backgroundColor: 'rgba(16, 185, 129, 0.7)', // emerald-500
+        backgroundColor: 'rgba(16, 185, 129, 0.7)',
       },
       {
         label: 'Perempuan',
         data: dataPerempuan,
-        backgroundColor: 'rgba(59, 130, 246, 0.7)', // blue-500
+        backgroundColor: 'rgba(59, 130, 246, 0.7)',
       },
     ],
   };
@@ -66,22 +74,46 @@ export default function CakupanImunisasiChart({ data }: ImunisasiChartProps) {
       title: {
         display: true,
         text: 'Cakupan Imunisasi Dasar Lengkap per Puskesmas',
+        font: {
+          size: 16,
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: (ctx: any) => `${ctx.dataset.label}: ${ctx.formattedValue} bayi`,
+        },
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Jumlah Bayi',
+        },
+      },
+      x: {
+        title: {
+          display: true,
+          text: 'Puskesmas',
+        },
       },
     },
   };
 
   return (
-    <div className="w-full h-full space-y-3 mt-10">
+    <div className="w-full h-full space-y-4 mt-10">
       <div className="relative w-full" style={{ height: '400px' }}>
         <Bar data={chartData} options={options} />
       </div>
-      <p className="text-sm text-red-500 text-center">
-        Sumber data API :{' '}
+
+      <p className="text-sm text-center text-gray-500">
+        Sumber data API:{' '}
         <a
           href="https://opendata.cimahikota.go.id/"
           target="_blank"
           rel="noopener noreferrer"
-          className="underline hover:text-emerald-600 text-gray-500"
+          className="underline hover:text-emerald-600"
         >
           Open Data Kota Cimahi
         </a>
