@@ -22,7 +22,8 @@ export const flatMenu: NavLink[] = [
 
   // Admin
   { name: 'Manajemen Posyandu', href: '/dashboard/manajemen-posyandu', icon: UserGroupIcon },
-  { name: 'Statistik Posyandu', href: '/dashboard/statistik', icon: ChartBarIcon },
+  { name: 'Statistik Posyandu', href: '#', icon: ChartBarIcon },
+  // { name: 'Statistik Posyandu', href: '/dashboard/statistik', icon: ChartBarIcon },
   // { name: 'Manajemen Akun', href: '/dashboard/akun', icon: UserIcon },
 
   // Kader / Nakes
