@@ -98,8 +98,8 @@ export default function NavLinks() {
               key={link.name}
               href={link.href}
               className={clsx(
-                'flex items-center gap-2 rounded-md px-3 py-2 font-medium hover:bg-sky-100 hover:text-blue-600 mt-1',
-                { 'bg-sky-100 text-blue-600': isActive }
+                'flex items-center gap-2 rounded-md px-3 py-2 font-medium hover:bg-emerald-100 hover:text-emerald-600 mt-1',
+                { 'bg-emerald-100 text-emerald-600': isActive }
               )}
             >
               <LinkIcon className="w-5" />
@@ -113,7 +113,7 @@ export default function NavLinks() {
           <div key={group.title} className="mt-4 border-t pt-3">
             <button
               onClick={() => toggleGroup(group.title)}
-              className="flex w-full items-center justify-between px-2 py-2 font-semibold text-gray-600 hover:text-blue-600 transition"
+              className="flex w-full items-center justify-between px-2 py-2 font-semibold text-gray-600 hover:text-emerald-600 transition"
             >
               <span className="text-sm">{group.title}</span>
               {openGroups[group.title] ? (
@@ -136,8 +136,8 @@ export default function NavLinks() {
                       className={clsx(
                         'flex items-center gap-3 rounded-lg px-3 py-2 ml-1 mr-1 text-sm transition',
                         {
-                          'bg-sky-100 text-blue-600': isActive,
-                          'text-gray-700 hover:text-blue-600 hover:bg-sky-100': !isActive,
+                          'bg-emerald-100 text-emerald-600': isActive,
+                          'text-gray-700 hover:text-emerald-600 hover:bg-emerald-100': !isActive,
                         }
                       )}
                     >

@@ -1,5 +1,5 @@
-## Next.js App Router Course - Starter
+# e-Posyandu Care
 
-This is the starter template for the Next.js App Router Course. It contains the starting code for the dashboard application.
+Project **e-Posyandu Care** ini dibuat sebagai tugas **Jabar Istimewa Digital Academy**, kelas **Fullstack Web Programming dengan Next.js**.
 
-For more information, see the [course curriculum](https://nextjs.org/learn) on the Next.js Website.
+Dibuat oleh: **Mamad Ahmad**
