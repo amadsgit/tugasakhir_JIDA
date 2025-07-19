@@ -7,11 +7,12 @@ import {
 import CakupanImunisasiChart from '@/app/ui/dashboard/cakupan-imunisasi-chart';
 import SummaryCard from '@/app/ui/dashboard/summary-card';
 import { getDataImunisasi } from '@/lib/data-imunisasi';
-
+import { getTotalPosyandu } from '@/lib/data-posyandu';
 
 
 export default async function Page() {
   const data = await getDataImunisasi();
+  const totalPosyandu = await getTotalPosyandu();
 
   return (
     <div className="p-6 bg-gradient-to-b from-emerald-50 via-white to-white text-gray-800">
@@ -19,14 +20,14 @@ export default async function Page() {
         Dashboard <span className="text-emerald-500">E‑Posyandu Care</span>
       </h1>
       <p className="text-gray-600 mb-8">
-        Selamat datang, berikut ringkasan informasi Posyandu hari ini.
+        Selamat datang, berikut ringkasan informasi Posyandu..
       </p>
 
       {/* Ringkasan Info */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <SummaryCard
-          title="Data Balita"
-          count="null"
+          title="Data Posyandu"
+          count={(totalPosyandu ?? 0).toString()}
           icon={<UsersIcon className="w-7 h-7 text-emerald-600" />}
         />
         <SummaryCard
