@@ -2,11 +2,8 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
-import {
-  PencilSquareIcon,
-  TrashIcon,
-  EyeIcon,
-} from '@heroicons/react/24/outline';
+import { PencilSquareIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline';
+import { PlusCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import ModalKonfirmasi from '@/components/delete-confirmation';
 import Search from '@/app/ui/search';
@@ -78,25 +75,26 @@ export default function Page() {
   }, [posyanduList, searchQuery]);
 
   return (
-    <div className="bg-gradient-to-b from-emerald-50 via-white to-white text-gray-800 p-6">
+    <div className="p-6">
       <div className="max-w-5xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-extrabold text-emerald-700">
-              Manajemen Data <span className="text-emerald-500">Posyandu & Kader</span>
+            <h1 className="text-2xl font-bold">
+              Manajemen Data <span className="">Posyandu & Kader</span>
             </h1>
             <p className="text-gray-500 dark:text-gray-400">
               Informasi tabel data posyandu
             </p>
           </div>
           <Link href="/dashboard/manajemen-posyandu/create">
-            <button className="bg-teal-600 hover:bg-emerald-500 text-white text-sm px-4 py-2 rounded-lg shadow-sm transition">
-              + Posyandu
+            <button className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm px-4 py-2 rounded-md shadow-sm transition">
+              <PlusCircle className="w-4 h-4 text-white text-bold" />
+              Posyandu
             </button>
           </Link>
         </div>
 
-        <div className="bg-white rounded-xl shadow border border-gray-200 overflow-x-auto">
+        <div className="bg-white rounded-xl shadow-md border overflow-x-auto">
           <div className="p-4 border-b border-gray-100">
             <Search
               placeholder="Cari nama posyandu..."

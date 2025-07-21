@@ -1,5 +1,5 @@
-import NavbarLanding from '@/components/navbar-landing';
-import FooterLanding from '@/components/footer-landing';
+import NavbarLanding from '@/app/ui/landing/navbar-landing';
+import FooterLanding from '@/app/ui/landing/footer-landing';
 import { EnvelopeIcon, MapPinIcon, PhoneIcon } from '@heroicons/react/24/outline';
 
 export default function KontakPage() {

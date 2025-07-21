@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { Info, Phone, MapPin, History } from 'lucide-react';
+import ButtonKembali from '@/components/button-kembali';
 
 export default async function PosyanduDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -14,26 +15,22 @@ export default async function PosyanduDetailPage({ params }: { params: Promise<{
   if (!posyandu) return notFound();
 
   return (
-    <div className="p-6 max-w-5xl mx-auto bg-gradient-to-b from-emerald-50 via-white to-white rounded-lg shadow-sm">
-      {/* Header */}
+    <div className="p-6 max-w-5xl mx-auto">
+      
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold text-emerald-700">
-            Detail <span className="text-emerald-500">Posyandu</span>
+          <h1 className="text-2xl font-bold">
+            Detail <span className="">Posyandu</span>
           </h1>
           <p className="text-gray-500 dark:text-gray-400">
             Informasi lengkap posyandu yang terdaftar
           </p>
         </div>
-        <Link
-          href="/dashboard/manajemen-posyandu"
-          className="bg-gray-100 hover:bg-orange-100 text-orange-600 font-semibold text-sm px-5 py-2 rounded-xl border border-orange-300 transition duration-200"
-        >
-          Kembali
+        <Link href="/dashboard/manajemen-posyandu">
+          <ButtonKembali />
         </Link>
       </div>
 
-      {/* Card Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Informasi Umum */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow hover:shadow-md transition p-6">

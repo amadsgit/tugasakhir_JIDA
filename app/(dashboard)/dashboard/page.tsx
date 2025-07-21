@@ -15,12 +15,12 @@ export default async function Page() {
   const totalPosyandu = await getTotalPosyandu();
 
   return (
-    <div className="p-6 bg-gradient-to-b from-emerald-50 via-white to-white text-gray-800">
+    <div className="p-6 text-gray-800">
       <h1 className="text-3xl font-bold text-emerald-700 mb-2">
         Dashboard <span className="text-emerald-500">E‑Posyandu Care</span>
       </h1>
       <p className="text-gray-600 mb-8">
-        Selamat datang, berikut ringkasan informasi Posyandu..
+        Selamat datang, berikut ringkasan informasi data E-Posyandu..
       </p>
 
       {/* Ringkasan Info */}

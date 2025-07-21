@@ -9,7 +9,7 @@ async function main() {
       alamat: 'Jl. Curug lima',
       wilayah: 'RW 01',
       kelurahan: 'Kelurahan Pasirkareumbi',
-      penanggungJawab: 'Ibu Nani',
+      penanggungJawab: 'Nani hayati',
       noHp: '081234567001',
       akreditasi: Akreditasi.Paripurna,
       longitude: '107.123001',

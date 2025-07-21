@@ -16,9 +16,9 @@ export async function GET() {
     });
 
     if (!response.ok) {
-      console.error('[API CIMAHI] Status:', response.status);
+      // console.error('[API CIMAHI] Status:', response.status);
       const text = await response.text(); 
-      console.error('[API CIMAHI] Body:', text);
+      // console.error('[API CIMAHI] Body:', text);
       return NextResponse.json({ error: 'Gagal mengambil data dari API eksternal' }, { status: response.status });
     }
 
@@ -28,7 +28,7 @@ export async function GET() {
 
     return NextResponse.json(result.data);
   } catch (error: any) {
-    console.error('[API CIMAHI] Error:', error.message);
+    // console.error('[API CIMAHI] Error:', error.message);
     return NextResponse.json(
       { error: error.message || 'Terjadi kesalahan server' },
       { status: 500 }

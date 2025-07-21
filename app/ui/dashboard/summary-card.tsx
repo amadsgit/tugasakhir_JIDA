@@ -10,7 +10,7 @@ type SummaryCardProps = {
 
 export default function SummaryCard({ title, count, icon }: SummaryCardProps) {
   return (
-    <div className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md hover:scale-[1.01] transition-all">
+    <div className="flex items-center gap-4 p-4 rounded-xl border bg-white shadow-sm hover:shadow-md hover:scale-[1.01] transition-all">
       <div className="bg-emerald-100 p-3 rounded-full ring-2 ring-emerald-300">
         {icon}
       </div>

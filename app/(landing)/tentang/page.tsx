@@ -1,5 +1,5 @@
-import NavbarLanding from '@/components/navbar-landing';
-import FooterLanding from '@/components/footer-landing';
+import NavbarLanding from '@/app/ui/landing/navbar-landing';
+import FooterLanding from '@/app/ui/landing/footer-landing';
 import Image from 'next/image';
 
 export default function TentangPage() {

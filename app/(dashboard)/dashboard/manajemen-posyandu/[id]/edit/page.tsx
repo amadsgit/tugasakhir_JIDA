@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import Link from 'next/link';
 import toast from 'react-hot-toast';
+import ButtonUpdate from '@/components/button-update';
+import ButtonBatal from '@/components/button-batal';
 
 const enumOptions = [
   'Paripurna',
@@ -17,6 +18,7 @@ const enumOptions = [
 export default function EditPosyanduPage() {
   const router = useRouter();
   const { id } = useParams();
+  const namaRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
     nama: '',
@@ -61,6 +63,12 @@ export default function EditPosyanduPage() {
     if (typeof id === 'string') fetchData();
   }, [id, router]);
 
+  useEffect(() => {
+    if (namaRef.current) {
+      namaRef.current.focus();
+    }
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -95,17 +103,32 @@ export default function EditPosyanduPage() {
   };
 
   return (
-    <div className="px-3 py-6 bg-gradient-to-b from-emerald-50 via-white to-white min-h-screen">
+    <div className="px-3 py-6">
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white shadow-xl rounded-2xl p-8 border border-gray-100">
-          <h1 className="text-3xl font-bold text-emerald-700 mb-8">
-            Edit <span className="text-emerald-500">Data Posyandu</span>
+        <div className="p-4 border bg-white shadow-md rounded-xl border">
+          <h1 className="text-2xl font-bold mb-8">
+            Edit <span className="">Data Posyandu</span>
           </h1>
 
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Input Nama dengan autofocus */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">
+                  Nama Posyandu
+                </label>
+                <input
+                  type="text"
+                  name="nama"
+                  value={formData.nama}
+                  onChange={handleChange}
+                  placeholder="Contoh: Posyandu Melati"
+                  ref={namaRef}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                />
+              </div>
+
               {[
-                { label: 'Nama Posyandu', name: 'nama', placeholder: 'Contoh: Posyandu Melati' },
                 { label: 'Alamat', name: 'alamat', placeholder: 'Contoh: Jl. Mawar No. 10' },
                 { label: 'Wilayah', name: 'wilayah', placeholder: 'Contoh: RW 01' },
                 { label: 'Kelurahan', name: 'kelurahan', placeholder: 'Contoh: Pasirkareumbi' },
@@ -124,7 +147,7 @@ export default function EditPosyanduPage() {
                     value={(formData as any)[field.name]}
                     onChange={handleChange}
                     placeholder={field.placeholder}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 transition"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 transition"
                   />
                 </div>
               ))}
@@ -137,7 +160,7 @@ export default function EditPosyanduPage() {
                   name="akreditasi"
                   value={formData.akreditasi}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400 transition"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-green-400 transition"
                 >
                   <option value="">-- Pilih Akreditasi --</option>
                   {enumOptions.map((value) => (
@@ -150,22 +173,9 @@ export default function EditPosyanduPage() {
             </div>
 
             <div className="flex justify-end gap-3 pt-8">
-              <Link href="/dashboard/manajemen-posyandu">
-                <button
-                  type="button"
-                  className="bg-gray-100 hover:bg-orange-100 text-orange-600 font-medium text-sm px-5 py-2 rounded-xl border border-orange-300 transition"
-                >
-                  Batal
-                </button>
-              </Link>
+              <ButtonBatal onClick={() => router.back()} />
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="bg-emerald-600 hover:bg-emerald-500 disabled:bg-emerald-300 text-white font-semibold text-sm px-6 py-2 rounded-xl shadow-md transition"
-              >
-                {loading ? 'Menyimpan...' : 'Simpan Perubahan'}
-              </button>
+              <ButtonUpdate loading={loading} />
             </div>
           </form>
         </div>

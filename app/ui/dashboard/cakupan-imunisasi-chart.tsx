@@ -102,7 +102,7 @@ export default function CakupanImunisasiChart({ data }: ImunisasiChartProps) {
   };
 
   return (
-    <div className="w-full h-full space-y-4 mt-10">
+    <div className="w-full h-full bg-white rounded-md shadow-md space-y-4 mt-10">
       <div className="relative w-full" style={{ height: '400px' }}>
         <Bar data={chartData} options={options} />
       </div>
@@ -113,7 +113,7 @@ export default function CakupanImunisasiChart({ data }: ImunisasiChartProps) {
           href="https://opendata.cimahikota.go.id/"
           target="_blank"
           rel="noopener noreferrer"
-          className="underline hover:text-emerald-600"
+          className="underline hover:text-blue-500"
         >
           Open Data Kota Cimahi
         </a>

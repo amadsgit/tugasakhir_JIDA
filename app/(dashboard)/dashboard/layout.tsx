@@ -2,6 +2,7 @@ import SideNavbar from '@/app/ui/dashboard/side-navbar';
 import TopNavbar from '@/app/ui/dashboard/top-navbar';
 import Footer from '@/app/ui/dashboard/footer';
 import { Toaster } from 'react-hot-toast';
+import ReduxProvider from '@/store/ReduxProvider';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -16,7 +17,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <TopNavbar />
         </header>
         <main className="flex-1 p-6 md:p-8 overflow-y-auto bg-gray-50">
-          {children}
+          <ReduxProvider>{children}</ReduxProvider>
         </main>
         <footer>
           <Footer />
