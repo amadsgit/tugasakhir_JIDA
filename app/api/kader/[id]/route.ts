@@ -1,31 +1,66 @@
 // app/api/kader/[id]/route.ts
-import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(_: Request, { params }: { params: { id: string } }) {
-  const kader = await prisma.kader.findUnique({ where: { id: Number(params.id) } });
-  if (!kader) return NextResponse.json({ error: 'Data tidak ditemukan' }, { status: 404 });
-  return NextResponse.json(kader);
-}
-
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+// GET: Ambil detail kader berdasarkan ID
+export async function GET(
+  _req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const data = await req.json();
-    const kader = await prisma.kader.update({
-      where: { id: Number(params.id) },
-      data,
+    const { id } = await context.params;
+
+    const kader = await prisma.kader.findUnique({
+      where: { id: parseInt(id) },
     });
+
+    if (!kader) {
+      return NextResponse.json({ error: 'Data tidak ditemukan' }, { status: 404 });
+    }
+
     return NextResponse.json(kader);
   } catch (error) {
+    console.error('[GET Kader]', error);
+    return NextResponse.json({ error: 'Gagal mengambil data kader' }, { status: 500 });
+  }
+}
+
+// PUT: Update data kader
+export async function PUT(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await context.params;
+    const data = await req.json();
+
+    const kader = await prisma.kader.update({
+      where: { id: parseInt(id) },
+      data,
+    });
+
+    return NextResponse.json(kader);
+  } catch (error) {
+    console.error('[PUT Kader]', error);
     return NextResponse.json({ error: 'Gagal update kader' }, { status: 400 });
   }
 }
 
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+// DELETE: Hapus data kader berdasarkan ID
+export async function DELETE(
+  _req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    await prisma.kader.delete({ where: { id: Number(params.id) } });
+    const { id } = await context.params;
+
+    await prisma.kader.delete({
+      where: { id: parseInt(id) },
+    });
+
     return NextResponse.json({ message: 'Berhasil dihapus' });
   } catch (error) {
+    console.error('[DELETE Kader]', error);
     return NextResponse.json({ error: 'Gagal menghapus kader' }, { status: 400 });
   }
 }

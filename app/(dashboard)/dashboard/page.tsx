@@ -8,11 +8,13 @@ import CakupanImunisasiChart from '@/app/ui/dashboard/cakupan-imunisasi-chart';
 import SummaryCard from '@/app/ui/dashboard/summary-card';
 import { getDataImunisasi } from '@/lib/data-imunisasi';
 import { getTotalPosyandu } from '@/lib/data-posyandu';
+import { getTotalKader } from '@/lib/data-kader';
 
 
 export default async function Page() {
   const data = await getDataImunisasi();
   const totalPosyandu = await getTotalPosyandu();
+  const totalKader = await getTotalKader();
 
   return (
     <div className="p-6 text-gray-800">
@@ -26,13 +28,13 @@ export default async function Page() {
       {/* Ringkasan Info */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <SummaryCard
-          title="Data Posyandu"
+          title="Total Data Posyandu"
           count={(totalPosyandu ?? 0).toString()}
           icon={<UsersIcon className="w-7 h-7 text-emerald-600" />}
         />
         <SummaryCard
-          title="Ibu Hamil Terdata"
-          count="null"
+          title="Total Data Kader"
+          count={(totalKader ?? 0).toString()}
           icon={<ClipboardDocumentListIcon className="w-7 h-7 text-emerald-600" />}
         />
         <SummaryCard
