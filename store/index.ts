@@ -2,7 +2,7 @@
 'use client';
 
 import { configureStore } from '@reduxjs/toolkit';
-import kaderReducer from './kaderSlice.ts';
+import kaderReducer from './kaderSlice';
 import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
 
 export const store = configureStore({
