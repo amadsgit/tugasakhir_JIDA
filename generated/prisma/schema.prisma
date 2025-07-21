@@ -32,8 +32,8 @@ model Posyandu {
   penanggungJawab String
   noHp            String
   akreditasi      Akreditasi
-  longitude       String
-  lattitude       String
+  longitude       Float
+  lattitude       Float
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
   kader           Kader[]

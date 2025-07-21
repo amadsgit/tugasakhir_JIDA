@@ -43,8 +43,8 @@ export async function POST(request: Request) {
       !penanggungJawab ||
       !noHp ||
       !akreditasi ||
-      !longitude ||
-      !lattitude
+      longitude === undefined ||
+      lattitude === undefined
     ) {
       return NextResponse.json(
         { error: 'Semua field wajib diisi.' },
@@ -69,6 +69,17 @@ export async function POST(request: Request) {
       );
     }
 
+    // Convert longitude & lattitude ke float
+    const lon = parseFloat(longitude);
+    const lat = parseFloat(lattitude);
+
+    if (isNaN(lon) || isNaN(lat)) {
+      return NextResponse.json(
+        { error: 'Longitude dan Lattitude harus berupa angka.' },
+        { status: 400 }
+      );
+    }
+
     // Simpan ke database
     const newPosyandu = await prisma.posyandu.create({
       data: {
@@ -79,8 +90,8 @@ export async function POST(request: Request) {
         penanggungJawab,
         noHp,
         akreditasi: akreditasi as any, // enum string
-        longitude,
-        lattitude,
+        longitude: lon,
+        lattitude: lat,
       },
     });
 

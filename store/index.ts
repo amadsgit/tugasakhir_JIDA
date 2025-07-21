@@ -1,4 +1,3 @@
-// store/index.ts
 'use client';
 
 import { configureStore } from '@reduxjs/toolkit';

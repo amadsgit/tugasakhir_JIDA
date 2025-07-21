@@ -7,6 +7,7 @@ import { PlusCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import ModalKonfirmasi from '@/components/delete-confirmation';
 import Search from '@/app/ui/search';
+import TabsPosyandu from '@/components/tabs-dataPosyandu';
 
 type Posyandu = {
   id: number;
@@ -77,13 +78,13 @@ export default function Page() {
   return (
     <div className="p-6">
       <div className="max-w-5xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-3">
           <div>
             <h1 className="text-2xl font-bold">
               Manajemen Data <span className="">Posyandu & Kader</span>
             </h1>
             <p className="text-gray-500 dark:text-gray-400">
-              Informasi tabel data posyandu
+              Informasi & manajemen data posyandu
             </p>
           </div>
           <Link href="/dashboard/manajemen-posyandu/create">
@@ -93,7 +94,9 @@ export default function Page() {
             </button>
           </Link>
         </div>
-
+        <div className="flex justify-between items-center">
+          <TabsPosyandu />
+        </div>
         <div className="bg-white rounded-xl shadow-md border overflow-x-auto">
           <div className="p-4 border-b border-gray-100">
             <Search

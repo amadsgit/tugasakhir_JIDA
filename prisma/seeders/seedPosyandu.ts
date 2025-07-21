@@ -12,8 +12,8 @@ async function main() {
       penanggungJawab: 'Nani hayati',
       noHp: '081234567001',
       akreditasi: Akreditasi.Paripurna,
-      longitude: '107.123001',
-      lattitude: '-6.987001',
+      longitude: 107.123001,
+      lattitude: -6.987001,
     },
   })
 

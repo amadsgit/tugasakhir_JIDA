@@ -34,7 +34,6 @@ export default function EditPosyanduPage() {
 
   const [loading, setLoading] = useState(false);
 
-  // Fetch data saat halaman dibuka
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -50,8 +49,8 @@ export default function EditPosyanduPage() {
           penanggungJawab: data.penanggungJawab || '',
           noHp: data.noHp || '',
           akreditasi: data.akreditasi || '',
-          longitude: data.longitude || '',
-          lattitude: data.lattitude || '',
+          longitude: data.longitude?.toString() || '',
+          lattitude: data.lattitude?.toString() || '',
         });
       } catch (err) {
         console.error(err);
@@ -82,12 +81,24 @@ export default function EditPosyanduPage() {
       return;
     }
 
+    const parsedLongitude = parseFloat(formData.longitude);
+    const parsedLattitude = parseFloat(formData.lattitude);
+
+    if (isNaN(parsedLongitude) || isNaN(parsedLattitude)) {
+      toast.error('Longitude dan Lattitude harus berupa angka desimal.');
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await fetch(`/api/posyandu/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          longitude: parsedLongitude,
+          lattitude: parsedLattitude,
+        }),
       });
 
       if (!res.ok) throw new Error('Gagal mengupdate data');
@@ -112,7 +123,6 @@ export default function EditPosyanduPage() {
 
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Input Nama dengan autofocus */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">
                   Nama Posyandu
@@ -174,7 +184,6 @@ export default function EditPosyanduPage() {
 
             <div className="flex justify-end gap-3 pt-8">
               <ButtonBatal onClick={() => router.back()} />
-
               <ButtonUpdate loading={loading} />
             </div>
           </form>

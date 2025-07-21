@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import toast from 'react-hot-toast';
 import ButtonSimpan from '@/components/button-simpan';
 import ButtonBatal from '@/components/button-batal';
@@ -34,7 +33,7 @@ export default function Page() {
     penanggungJawab: '',
     noHp: '',
     akreditasi: '',
-    longitude: '',
+    longitude: '', 
     lattitude: '',
   });
 
@@ -47,9 +46,17 @@ export default function Page() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const isEmpty = Object.values(formData).some((value) => !value);
+    const isEmpty = Object.values(formData).some((value) => value === '');
     if (isEmpty) {
       toast.error('Semua field wajib diisi!');
+      return;
+    }
+
+    const longitude = parseFloat(formData.longitude);
+    const lattitude = parseFloat(formData.lattitude);
+
+    if (isNaN(longitude) || isNaN(lattitude)) {
+      toast.error('Longitude dan Lattitude harus berupa angka.');
       return;
     }
 
@@ -60,7 +67,8 @@ export default function Page() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          lattitude: formData.lattitude,
+          longitude,
+          lattitude,
         }),
       });
 
@@ -77,7 +85,7 @@ export default function Page() {
   };
 
   return (
-    <div className="px-3 py-6 ">
+    <div className="px-3 py-6">
       <div className="max-w-4xl mx-auto">
         <div className="p-4 border bg-white shadow-md rounded-xl border">
           <h1 className="text-2xl font-bold mb-8">
@@ -86,7 +94,6 @@ export default function Page() {
 
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Input Nama dengan autofocus */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">
                   Nama Posyandu
@@ -103,7 +110,6 @@ export default function Page() {
               </div>
 
               {[
-                // { label: 'Nama Posyandu', name: 'nama', placeholder: 'Contoh: Posyandu Melati' },
                 { label: 'Alamat', name: 'alamat', placeholder: 'Contoh: Jl. Mawar No. 10' },
                 { label: 'Wilayah', name: 'wilayah', placeholder: 'Contoh: RW 01' },
                 { label: 'Kelurahan', name: 'kelurahan', placeholder: 'Contoh: Pasirkareumbi' },
@@ -149,7 +155,6 @@ export default function Page() {
 
             <div className="flex justify-end gap-3 pt-8">
               <ButtonBatal onClick={() => router.back()} />
-
               <ButtonSimpan loading={loading} />
             </div>
           </form>

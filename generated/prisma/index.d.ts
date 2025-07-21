@@ -1025,10 +1025,14 @@ export namespace Prisma {
 
   export type PosyanduAvgAggregateOutputType = {
     id: number | null
+    longitude: number | null
+    lattitude: number | null
   }
 
   export type PosyanduSumAggregateOutputType = {
     id: number | null
+    longitude: number | null
+    lattitude: number | null
   }
 
   export type PosyanduMinAggregateOutputType = {
@@ -1040,8 +1044,8 @@ export namespace Prisma {
     penanggungJawab: string | null
     noHp: string | null
     akreditasi: $Enums.Akreditasi | null
-    longitude: string | null
-    lattitude: string | null
+    longitude: number | null
+    lattitude: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1055,8 +1059,8 @@ export namespace Prisma {
     penanggungJawab: string | null
     noHp: string | null
     akreditasi: $Enums.Akreditasi | null
-    longitude: string | null
-    lattitude: string | null
+    longitude: number | null
+    lattitude: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1080,10 +1084,14 @@ export namespace Prisma {
 
   export type PosyanduAvgAggregateInputType = {
     id?: true
+    longitude?: true
+    lattitude?: true
   }
 
   export type PosyanduSumAggregateInputType = {
     id?: true
+    longitude?: true
+    lattitude?: true
   }
 
   export type PosyanduMinAggregateInputType = {
@@ -1227,8 +1235,8 @@ export namespace Prisma {
     penanggungJawab: string
     noHp: string
     akreditasi: $Enums.Akreditasi
-    longitude: string
-    lattitude: string
+    longitude: number
+    lattitude: number
     createdAt: Date
     updatedAt: Date
     _count: PosyanduCountAggregateOutputType | null
@@ -1336,8 +1344,8 @@ export namespace Prisma {
       penanggungJawab: string
       noHp: string
       akreditasi: $Enums.Akreditasi
-      longitude: string
-      lattitude: string
+      longitude: number
+      lattitude: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["posyandu"]>
@@ -1772,8 +1780,8 @@ export namespace Prisma {
     readonly penanggungJawab: FieldRef<"Posyandu", 'String'>
     readonly noHp: FieldRef<"Posyandu", 'String'>
     readonly akreditasi: FieldRef<"Posyandu", 'Akreditasi'>
-    readonly longitude: FieldRef<"Posyandu", 'String'>
-    readonly lattitude: FieldRef<"Posyandu", 'String'>
+    readonly longitude: FieldRef<"Posyandu", 'Float'>
+    readonly lattitude: FieldRef<"Posyandu", 'Float'>
     readonly createdAt: FieldRef<"Posyandu", 'DateTime'>
     readonly updatedAt: FieldRef<"Posyandu", 'DateTime'>
   }
@@ -3451,20 +3459,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'DateTime'
-   */
-  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-    
-
-
-  /**
-   * Reference to a field of type 'DateTime[]'
-   */
-  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -3475,6 +3469,20 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DateTime'
+   */
+  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+  /**
+   * Reference to a field of type 'DateTime[]'
+   */
+  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
   /**
    * Deep Input Types
@@ -3493,8 +3501,8 @@ export namespace Prisma {
     penanggungJawab?: StringFilter<"Posyandu"> | string
     noHp?: StringFilter<"Posyandu"> | string
     akreditasi?: EnumAkreditasiFilter<"Posyandu"> | $Enums.Akreditasi
-    longitude?: StringFilter<"Posyandu"> | string
-    lattitude?: StringFilter<"Posyandu"> | string
+    longitude?: FloatFilter<"Posyandu"> | number
+    lattitude?: FloatFilter<"Posyandu"> | number
     createdAt?: DateTimeFilter<"Posyandu"> | Date | string
     updatedAt?: DateTimeFilter<"Posyandu"> | Date | string
     kader?: KaderListRelationFilter
@@ -3528,8 +3536,8 @@ export namespace Prisma {
     penanggungJawab?: StringFilter<"Posyandu"> | string
     noHp?: StringFilter<"Posyandu"> | string
     akreditasi?: EnumAkreditasiFilter<"Posyandu"> | $Enums.Akreditasi
-    longitude?: StringFilter<"Posyandu"> | string
-    lattitude?: StringFilter<"Posyandu"> | string
+    longitude?: FloatFilter<"Posyandu"> | number
+    lattitude?: FloatFilter<"Posyandu"> | number
     createdAt?: DateTimeFilter<"Posyandu"> | Date | string
     updatedAt?: DateTimeFilter<"Posyandu"> | Date | string
     kader?: KaderListRelationFilter
@@ -3567,8 +3575,8 @@ export namespace Prisma {
     penanggungJawab?: StringWithAggregatesFilter<"Posyandu"> | string
     noHp?: StringWithAggregatesFilter<"Posyandu"> | string
     akreditasi?: EnumAkreditasiWithAggregatesFilter<"Posyandu"> | $Enums.Akreditasi
-    longitude?: StringWithAggregatesFilter<"Posyandu"> | string
-    lattitude?: StringWithAggregatesFilter<"Posyandu"> | string
+    longitude?: FloatWithAggregatesFilter<"Posyandu"> | number
+    lattitude?: FloatWithAggregatesFilter<"Posyandu"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Posyandu"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Posyandu"> | Date | string
   }
@@ -3653,8 +3661,8 @@ export namespace Prisma {
     penanggungJawab: string
     noHp: string
     akreditasi: $Enums.Akreditasi
-    longitude: string
-    lattitude: string
+    longitude: number
+    lattitude: number
     createdAt?: Date | string
     updatedAt?: Date | string
     kader?: KaderCreateNestedManyWithoutPosyanduInput
@@ -3669,8 +3677,8 @@ export namespace Prisma {
     penanggungJawab: string
     noHp: string
     akreditasi: $Enums.Akreditasi
-    longitude: string
-    lattitude: string
+    longitude: number
+    lattitude: number
     createdAt?: Date | string
     updatedAt?: Date | string
     kader?: KaderUncheckedCreateNestedManyWithoutPosyanduInput
@@ -3684,8 +3692,8 @@ export namespace Prisma {
     penanggungJawab?: StringFieldUpdateOperationsInput | string
     noHp?: StringFieldUpdateOperationsInput | string
     akreditasi?: EnumAkreditasiFieldUpdateOperationsInput | $Enums.Akreditasi
-    longitude?: StringFieldUpdateOperationsInput | string
-    lattitude?: StringFieldUpdateOperationsInput | string
+    longitude?: FloatFieldUpdateOperationsInput | number
+    lattitude?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     kader?: KaderUpdateManyWithoutPosyanduNestedInput
@@ -3700,8 +3708,8 @@ export namespace Prisma {
     penanggungJawab?: StringFieldUpdateOperationsInput | string
     noHp?: StringFieldUpdateOperationsInput | string
     akreditasi?: EnumAkreditasiFieldUpdateOperationsInput | $Enums.Akreditasi
-    longitude?: StringFieldUpdateOperationsInput | string
-    lattitude?: StringFieldUpdateOperationsInput | string
+    longitude?: FloatFieldUpdateOperationsInput | number
+    lattitude?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     kader?: KaderUncheckedUpdateManyWithoutPosyanduNestedInput
@@ -3716,8 +3724,8 @@ export namespace Prisma {
     penanggungJawab: string
     noHp: string
     akreditasi: $Enums.Akreditasi
-    longitude: string
-    lattitude: string
+    longitude: number
+    lattitude: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -3730,8 +3738,8 @@ export namespace Prisma {
     penanggungJawab?: StringFieldUpdateOperationsInput | string
     noHp?: StringFieldUpdateOperationsInput | string
     akreditasi?: EnumAkreditasiFieldUpdateOperationsInput | $Enums.Akreditasi
-    longitude?: StringFieldUpdateOperationsInput | string
-    lattitude?: StringFieldUpdateOperationsInput | string
+    longitude?: FloatFieldUpdateOperationsInput | number
+    lattitude?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -3745,8 +3753,8 @@ export namespace Prisma {
     penanggungJawab?: StringFieldUpdateOperationsInput | string
     noHp?: StringFieldUpdateOperationsInput | string
     akreditasi?: EnumAkreditasiFieldUpdateOperationsInput | $Enums.Akreditasi
-    longitude?: StringFieldUpdateOperationsInput | string
-    lattitude?: StringFieldUpdateOperationsInput | string
+    longitude?: FloatFieldUpdateOperationsInput | number
+    lattitude?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -3857,6 +3865,17 @@ export namespace Prisma {
     not?: NestedEnumAkreditasiFilter<$PrismaModel> | $Enums.Akreditasi
   }
 
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -3895,6 +3914,8 @@ export namespace Prisma {
 
   export type PosyanduAvgOrderByAggregateInput = {
     id?: SortOrder
+    longitude?: SortOrder
+    lattitude?: SortOrder
   }
 
   export type PosyanduMaxOrderByAggregateInput = {
@@ -3929,6 +3950,8 @@ export namespace Prisma {
 
   export type PosyanduSumOrderByAggregateInput = {
     id?: SortOrder
+    longitude?: SortOrder
+    lattitude?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -3973,6 +3996,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAkreditasiFilter<$PrismaModel>
     _max?: NestedEnumAkreditasiFilter<$PrismaModel>
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -4057,6 +4096,14 @@ export namespace Prisma {
 
   export type EnumAkreditasiFieldUpdateOperationsInput = {
     set?: $Enums.Akreditasi
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -4145,6 +4192,17 @@ export namespace Prisma {
     not?: NestedEnumAkreditasiFilter<$PrismaModel> | $Enums.Akreditasi
   }
 
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -4172,17 +4230,6 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -4208,6 +4255,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAkreditasiFilter<$PrismaModel>
     _max?: NestedEnumAkreditasiFilter<$PrismaModel>
+  }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -4291,8 +4354,8 @@ export namespace Prisma {
     penanggungJawab: string
     noHp: string
     akreditasi: $Enums.Akreditasi
-    longitude: string
-    lattitude: string
+    longitude: number
+    lattitude: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -4306,8 +4369,8 @@ export namespace Prisma {
     penanggungJawab: string
     noHp: string
     akreditasi: $Enums.Akreditasi
-    longitude: string
-    lattitude: string
+    longitude: number
+    lattitude: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -4336,8 +4399,8 @@ export namespace Prisma {
     penanggungJawab?: StringFieldUpdateOperationsInput | string
     noHp?: StringFieldUpdateOperationsInput | string
     akreditasi?: EnumAkreditasiFieldUpdateOperationsInput | $Enums.Akreditasi
-    longitude?: StringFieldUpdateOperationsInput | string
-    lattitude?: StringFieldUpdateOperationsInput | string
+    longitude?: FloatFieldUpdateOperationsInput | number
+    lattitude?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4351,8 +4414,8 @@ export namespace Prisma {
     penanggungJawab?: StringFieldUpdateOperationsInput | string
     noHp?: StringFieldUpdateOperationsInput | string
     akreditasi?: EnumAkreditasiFieldUpdateOperationsInput | $Enums.Akreditasi
-    longitude?: StringFieldUpdateOperationsInput | string
-    lattitude?: StringFieldUpdateOperationsInput | string
+    longitude?: FloatFieldUpdateOperationsInput | number
+    lattitude?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
