@@ -56,7 +56,7 @@ export default function Page() {
           </ul>
           <div className="flex gap-3 mt-4">
             <Link
-              href="/login"
+              href="/auth/login"
               className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 text-white px-5 py-2.5 text-sm md:text-base font-medium shadow hover:bg-emerald-500 transition"
             >
               <span>Login</span> <ArrowRightIcon className="w-5 md:w-6" />

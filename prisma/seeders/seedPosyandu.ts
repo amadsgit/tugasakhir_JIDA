@@ -8,7 +8,7 @@ async function main() {
       nama: 'Posyandu Melati',
       alamat: 'Jl. Curug lima',
       wilayah: 'RW 01',
-      kelurahan: 'Kelurahan Pasirkareumbi',
+      kelurahan: 'Pasirkareumbi',
       penanggungJawab: 'Nani hayati',
       noHp: '081234567001',
       akreditasi: Akreditasi.Paripurna,

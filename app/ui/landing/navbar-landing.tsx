@@ -9,6 +9,7 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import { LogInIcon } from 'lucide-react';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 
@@ -42,6 +43,7 @@ export default function NavbarLanding() {
           <NavItem href="/tentang" icon={<InformationCircleIcon className="w-5 h-5" />} pathname={pathname}>Tentang</NavItem>
           <NavItem href="/kontak" icon={<PhoneIcon className="w-5 h-5" />} pathname={pathname}>Kontak</NavItem>
           <NavItem href="/dashboard" icon={<ChartBarIcon className="w-5 h-5" />} pathname={pathname}>Dashboard</NavItem>
+          <NavItem href="/auth/login" icon={<LogInIcon className="w-5 h-5" />} pathname={pathname}>Login</NavItem>
         </div>
       </div>
 
@@ -52,6 +54,7 @@ export default function NavbarLanding() {
           <NavItem href="/tentang" icon={<InformationCircleIcon className="w-5 h-5" />} pathname={pathname}>Tentang</NavItem>
           <NavItem href="/kontak" icon={<PhoneIcon className="w-5 h-5" />} pathname={pathname}>Kontak</NavItem>
           <NavItem href="/dashboard" icon={<ChartBarIcon className="w-5 h-5" />} pathname={pathname}>Dashboard</NavItem>
+          <NavItem href="/auth/login" icon={<LogInIcon className="w-5 h-5" />} pathname={pathname}>Login</NavItem>
         </div>
       )}
     </nav>
