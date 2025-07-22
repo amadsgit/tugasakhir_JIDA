@@ -11,6 +11,7 @@ export default function TabsPosyandu() {
   const tabs = [
     { name: 'Data Posyandu', href: '/dashboard/manajemen-posyandu' },
     { name: 'GIS Sebaran Posyandu', href: '/dashboard/manajemen-posyandu/gis' },
+    { name: 'Grafik Statistik Posyandu', href: '/dashboard/manajemen-posyandu/statistik-posyandu' },
   ];
 
   return (
