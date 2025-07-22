@@ -12,7 +12,7 @@ export default function TentangPage() {
       <section className="bg-gradient-to-r from-emerald-400 via-emerald-500 to-emerald-600 rounded-xl shadow-xl mx-4 md:mx-6 mt-6 px-6 md:px-12 py-8 md:py-12 flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="flex items-center gap-4">
           <Image
-            src="/logo.png"
+            src="/logo3.png"
             alt="Logo E-Posyandu"
             width={80}
             height={80}

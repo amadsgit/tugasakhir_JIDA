@@ -28,12 +28,12 @@ export default async function Page() {
       {/* Ringkasan Info */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <SummaryCard
-          title="Total Data Posyandu"
+          title="Jumlah Data Posyandu"
           count={(totalPosyandu ?? 0).toString()}
           icon={<UsersIcon className="w-7 h-7 text-emerald-600" />}
         />
         <SummaryCard
-          title="Total Data Kader"
+          title="Jumlah Data Kader"
           count={(totalKader ?? 0).toString()}
           icon={<ClipboardDocumentListIcon className="w-7 h-7 text-emerald-600" />}
         />

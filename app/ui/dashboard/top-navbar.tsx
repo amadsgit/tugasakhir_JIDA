@@ -103,7 +103,8 @@ export default function TopNavbar() {
                 <UserCircleIcon className="w-5 h-5 text-blue-500" />
                 Profil
               </Link>
-              <form action="/" method="POST">
+              <Link href="/">
+              {/* <form action="/" method="POST"> */}
                 <button
                   type="submit"
                   className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -111,7 +112,8 @@ export default function TopNavbar() {
                   <PowerIcon className="w-5 h-5 text-red-500" />
                   Sign Out
                 </button>
-              </form>
+              {/* </form> */}
+              </Link>
             </div>
           )}
         </div>
