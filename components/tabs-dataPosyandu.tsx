@@ -9,10 +9,10 @@ export default function TabsPosyandu() {
   const pathname = usePathname();
 
   const tabs = [
+    { name: 'Wilayah Kerja Puskesmas', href: '/dashboard/manajemen-posyandu/wilayah-kerja' },
     { name: 'Data Posyandu', href: '/dashboard/manajemen-posyandu' },
     { name: 'GIS Sebaran Posyandu', href: '/dashboard/manajemen-posyandu/gis' },
     { name: 'Grafik Statistik Posyandu', href: '/dashboard/manajemen-posyandu/statistik-posyandu' },
-    { name: 'Wilayah Kerja Puskesmas', href: '/dashboard/manajemen-posyandu/wilayah-kerja' },
   ];
 
   return (
