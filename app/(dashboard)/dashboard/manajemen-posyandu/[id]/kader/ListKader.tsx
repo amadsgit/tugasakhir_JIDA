@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@/store/kader';
-import { fetchKader, deleteKaderAsync } from '@/store/kader/kaderSlice';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { fetchKader, deleteKaderAsync } from '@/store/kaderSlice';
 import { selectKaderByPosyandu } from '@/selectors/kaderSelectors';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import ModalKonfirmasi from '@/components/delete-confirmation';

@@ -1,12 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAppDispatch } from '@/store/kader';
+import { useAppDispatch } from '@/store';
 import {
   createKaderAsync,
   fetchKader,
   updateKaderAsync,
-} from '@/store/kader/kaderSlice';
+} from '@/store/kaderSlice';
 import { Save } from 'lucide-react';
 import toast from 'react-hot-toast';
 
