@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
-import { Info, Phone, MapPin, History } from 'lucide-react';
+import { Info, Phone, History } from 'lucide-react';
 import ButtonKembali from '@/components/button-kembali';
 
 export default async function PosyanduDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -10,6 +10,9 @@ export default async function PosyanduDetailPage({ params }: { params: Promise<{
 
   const posyandu = await prisma.posyandu.findUnique({
     where: { id: numericId },
+    include: {
+      kelurahan: true, // include relasi kelurahan
+    },
   });
 
   if (!posyandu) return notFound();
@@ -41,7 +44,7 @@ export default async function PosyanduDetailPage({ params }: { params: Promise<{
             <p><strong>Nama:</strong> {posyandu.nama}</p>
             <p><strong>Alamat:</strong> {posyandu.alamat}</p>
             <p><strong>Wilayah:</strong> {posyandu.wilayah}</p>
-            <p><strong>Kelurahan:</strong> {posyandu.kelurahan}</p>
+            <p><strong>Kelurahan:</strong> {posyandu.kelurahan?.nama || 'Tidak ditemukan'}</p>
             <p><strong>Akreditasi:</strong> {posyandu.akreditasi}</p>
           </div>
         </div>
@@ -54,7 +57,7 @@ export default async function PosyanduDetailPage({ params }: { params: Promise<{
           <div className="divide-y divide-gray-200 dark:divide-gray-700 space-y-2 text-gray-600 dark:text-gray-300">
             <p><strong>Penanggung Jawab:</strong> {posyandu.penanggungJawab}</p>
             <p><strong>No HP:</strong> {posyandu.noHp}</p>
-            <p><strong>Latitude:</strong> {posyandu.lattitude}</p>
+            <p><strong>Latitude:</strong> {posyandu.latitude}</p>
             <p><strong>Longitude:</strong> {posyandu.longitude}</p>
           </div>
         </div>

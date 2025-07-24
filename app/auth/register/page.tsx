@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { UserIcon, MailIcon, PhoneIcon, CalendarIcon, HomeIcon, FingerprintIcon, LockIcon } from 'lucide-react';
+import { UserIcon, MailIcon, PhoneIcon, CalendarIcon, HomeIcon, FingerprintIcon, CardSimIcon, LockIcon } from 'lucide-react';
 import Link from 'next/link';
 
 export default function RegisterPage() {
@@ -9,6 +9,7 @@ export default function RegisterPage() {
     nama: '',
     email: '',
     noHp: '',
+    noKK: '',
     nik: '',
     alamat: '',
     tanggalLahir: '',
@@ -19,12 +20,25 @@ export default function RegisterPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-  };
+    };
 
-  const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', form);
-    // rencana selanjutnya: Kirim ke API backend (dengan validasi + OTP email)
+
+    if (form.password !== form.confirmPassword) {
+      alert('Password dan konfirmasi tidak cocok');
+      return;
+    }
+
+    const cleanedForm = {
+      ...form,
+      noHp: form.noHp.replace(/\D/g, ''),
+      nik: form.nik.replace(/\D/g, ''),
+      noKK: form.noKK?.replace(/\D/g, ''),
+    };
+
+    console.log('Form submitted:', cleanedForm);
+    // Rencana kirim ke /api/auth/register
   };
 
   return (
@@ -45,6 +59,10 @@ export default function RegisterPage() {
 
           {/* No HP */}
           <InputField icon={<PhoneIcon className="w-5 h-5 text-gray-400" />} name="noHp" placeholder="Nomor HP" value={form.noHp} onChange={handleChange} />
+
+          {/* Nomor KK */}
+          <InputField icon={<CardSimIcon className="w-5 h-5 text-gray-400" />} name="noKK" placeholder="Nomor Kartu Keluarga" value={form.noKK} onChange={handleChange}
+          />
 
           {/* NIK */}
           <InputField icon={<FingerprintIcon className="w-5 h-5 text-gray-400" />} name="nik" placeholder="NIK" value={form.nik} onChange={handleChange} />

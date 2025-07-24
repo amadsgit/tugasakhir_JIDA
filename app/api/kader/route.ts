@@ -12,7 +12,12 @@ export async function POST(req: Request) {
     const data = await req.json();
     const kader = await prisma.kader.create({ data });
     return NextResponse.json(kader, { status: 201 });
-  } catch (error) {
-    return NextResponse.json({ error: 'Gagal menambahkan kader' }, { status: 400 });
+  } catch (error: any) {
+    console.error('POST /api/kader error:', error);
+    return NextResponse.json(
+      { error: 'Gagal menambahkan kader', detail: error?.message },
+      { status: 400 }
+    );
   }
 }
+

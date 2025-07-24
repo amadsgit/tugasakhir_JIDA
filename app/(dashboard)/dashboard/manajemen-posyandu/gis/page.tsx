@@ -2,7 +2,7 @@
 
 import TabsPosyandu from '@/components/tabs-dataPosyandu';
 import Link from 'next/link';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, MapPinIcon } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
 export default function Page() {
@@ -29,7 +29,7 @@ export default function Page() {
         <TabsPosyandu />
 
         <div className="bg-white rounded-xl shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">Peta Sebaran Posyandu</h2>
+            <h2 className="text-xl font-semibold mb-4"><MapPinIcon /> Peta Sebaran Posyandu</h2>
             <MapView />
         </div>
     </div>

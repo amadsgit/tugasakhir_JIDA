@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
-// GET: Ambil detail Posyandu berdasarkan ID
+// GET: Ambil detail Posyandu berdasarkan ID, termasuk relasi kelurahan
 export async function GET(
   _req: NextRequest,
   context: { params: Promise<{ id: string }> }
@@ -10,6 +10,9 @@ export async function GET(
     const { id } = await context.params;
     const posyandu = await prisma.posyandu.findUnique({
       where: { id: parseInt(id) },
+      include: {
+        kelurahan: true, // ⬅️ tampilkan data kelurahan relasi
+      },
     });
 
     if (!posyandu) {
@@ -22,6 +25,7 @@ export async function GET(
     return NextResponse.json({ error: 'Gagal mengambil data posyandu.' }, { status: 500 });
   }
 }
+
 
 // PUT: Update data posyandu
 export async function PUT(
@@ -36,12 +40,12 @@ export async function PUT(
       nama,
       alamat,
       wilayah,
-      kelurahan,
+      kelurahanId,
       penanggungJawab,
       noHp,
       akreditasi,
       longitude,
-      lattitude,
+      latitude,
     } = body;
 
     // Validasi kosong
@@ -49,12 +53,12 @@ export async function PUT(
       !nama ||
       !alamat ||
       !wilayah ||
-      !kelurahan ||
+      !kelurahanId ||
       !penanggungJawab ||
       !noHp ||
       !akreditasi ||
       longitude === undefined ||
-      lattitude === undefined
+      latitude === undefined
     ) {
       return NextResponse.json(
         { error: 'Semua field wajib diisi.' },
@@ -64,12 +68,12 @@ export async function PUT(
 
     // Validasi enum akreditasi
     const validAkreditasi = [
-      'Paripurna',
-      'Pratama',
-      'Madya',
-      'Purnama',
-      'Mandiri',
-      'Belum_akreditasi',
+      'PARIPURNA',
+      'PRATAMA',
+      'MADYA',
+      'PURNAMA',
+      'MANDIRI',
+      'BELUM_AKREDITASI',
     ];
 
     if (!validAkreditasi.includes(akreditasi)) {
@@ -79,29 +83,30 @@ export async function PUT(
       );
     }
 
-    // Convert longitude dan lattitude ke float
+    // Convert longitude dan latitude ke float
     const lon = parseFloat(longitude);
-    const lat = parseFloat(lattitude);
+    const lat = parseFloat(latitude);
 
     if (isNaN(lon) || isNaN(lat)) {
       return NextResponse.json(
-        { error: 'Longitude dan Lattitude harus berupa angka.' },
+        { error: 'Longitude dan Latitude harus berupa angka.' },
         { status: 400 }
       );
     }
 
+    // Proses update
     const updated = await prisma.posyandu.update({
       where: { id: parseInt(id) },
       data: {
         nama,
         alamat,
         wilayah,
-        kelurahan,
+        kelurahanId: parseInt(kelurahanId),
         penanggungJawab,
         noHp,
         akreditasi: akreditasi as any,
         longitude: lon,
-        lattitude: lat,
+        latitude: lat,
       },
     });
 
@@ -115,6 +120,7 @@ export async function PUT(
   }
 }
 
+
 // DELETE: Hapus posyandu berdasarkan ID
 export async function DELETE(
   _request: NextRequest,
@@ -122,9 +128,25 @@ export async function DELETE(
 ) {
   try {
     const { id } = await context.params;
+    const posyanduId = parseInt(id);
 
+    // Cek apakah ada kader yang terhubung
+    const jumlahKader = await prisma.kader.count({
+      where: { posyanduId },
+    });
+
+    if (jumlahKader > 0) {
+      return NextResponse.json(
+        {
+          error: 'Posyandu ini masih memiliki kader aktif. Silakan hapus kader terlebih dahulu sebelum menghapus posyandu ini.',
+        },
+        { status: 409 } // HTTP 409 Conflict
+      );
+    }
+
+    // Hapus jika tidak ada kader
     await prisma.posyandu.delete({
-      where: { id: parseInt(id) },
+      where: { id: posyanduId },
     });
 
     return NextResponse.json({ message: 'Data berhasil dihapus.' });

@@ -1,13 +1,55 @@
 'use client';
 
-import { useAppSelector } from '@/store';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/store/kader';
+import { fetchKader, deleteKaderAsync } from '@/store/kader/kaderSlice';
 import { selectKaderByPosyandu } from '@/selectors/kaderSelectors';
-import Link from 'next/link';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import ModalKonfirmasi from '@/components/delete-confirmation';
+import toast from 'react-hot-toast';
 
+interface Kader {
+  id: number;
+  nama: string;
+  nik: string;
+  noHp: string;
+  alamat: string;
+}
 
-export default function ListKader({ posyanduId }: { posyanduId: number }) {
-  const kaderList = useAppSelector(selectKaderByPosyandu(posyanduId));
+interface ListKaderProps {
+  posyanduId: number;
+  onEdit: (kader: Kader) => void;
+}
+
+export default function ListKader({ posyanduId, onEdit }: ListKaderProps) {
+  const dispatch = useAppDispatch();
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [openModal, setOpenModal] = useState(false);
+
+  const kaderList = useAppSelector(selectKaderByPosyandu(posyanduId)) as Kader[];
+  // const kaderList = useAppSelector(selectKaderByPosyandu(posyanduId));
+
+  useEffect(() => {
+    if (posyanduId) {
+      dispatch(fetchKader());
+    }
+  }, [dispatch, posyanduId]);
+
+  const handleDelete = async () => {
+    if (!selectedId) return;
+
+    try {
+      await dispatch(deleteKaderAsync(selectedId)).unwrap();
+      toast.success('Kader berhasil dihapus');
+      dispatch(fetchKader()); // Refresh data
+    } catch (err) {
+      toast.error('Gagal menghapus kader');
+      console.error(err);
+    } finally {
+      setSelectedId(null);
+      setOpenModal(false);
+    }
+  };
 
   return (
     <div className="mt-6">
@@ -33,23 +75,26 @@ export default function ListKader({ posyanduId }: { posyanduId: number }) {
               </tr>
             ) : (
               kaderList.map((kader, index) => (
-                <tr key={kader.id ?? `${kader.nik}-${kader.nama}`} className="hover:bg-gray-50">
+                <tr key={kader.id} className="hover:bg-gray-50">
                   <td className="px-4 py-2 text-sm text-gray-700">{index + 1}</td>
-                  <td className="px-4 py-2 text-sm text-gray-800 font-medium">{kader.nama}</td>
+                  <td className="px-4 py-2 text-sm font-medium text-gray-800">{kader.nama}</td>
                   <td className="px-4 py-2 text-sm text-gray-700">{kader.nik}</td>
                   <td className="px-4 py-2 text-sm text-gray-700">{kader.noHp}</td>
                   <td className="px-4 py-2 text-sm text-gray-700">{kader.alamat}</td>
-                  <td className="flex gap-2 py-2">
-                    <Link
-                      href="#"
+                  <td className="flex items-center gap-2 py-2 px-4">
+                    <button
+                      onClick={() => onEdit(kader)}
                       className="p-2 rounded-md bg-white border border-gray-300 hover:border-teal-500 hover:text-teal-600 transition"
                       title="Edit"
                     >
                       <PencilSquareIcon className="h-4 w-4" />
-                    </Link>
+                    </button>
 
                     <button
-                      // onClick={() => openDeleteModal(item.id)}
+                      onClick={() => {
+                        setSelectedId(kader.id);
+                        setOpenModal(true);
+                      }}
                       className="p-2 rounded-md bg-white border border-gray-300 hover:border-rose-500 hover:text-rose-600 transition"
                       title="Hapus"
                     >
@@ -61,6 +106,13 @@ export default function ListKader({ posyanduId }: { posyanduId: number }) {
             )}
           </tbody>
         </table>
+
+        <ModalKonfirmasi
+          key={selectedId ?? 'modal'} // untuk pastikan render ulang
+          isOpen={openModal}
+          onClose={() => setOpenModal(false)}
+          onConfirm={handleDelete}
+        />
       </div>
     </div>
   );

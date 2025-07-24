@@ -9,12 +9,17 @@ import ModalKonfirmasi from '@/components/delete-confirmation';
 import Search from '@/app/ui/search';
 import TabsPosyandu from '@/components/tabs-dataPosyandu';
 
+type Kelurahan = {
+  id: number;
+  nama: string;
+};
+
 type Posyandu = {
   id: number;
   nama: string;
   alamat: string;
   wilayah: string;
-  kelurahan: string;
+  kelurahan: Kelurahan | null;
 };
 
 export default function Page() {
@@ -55,7 +60,17 @@ export default function Page() {
         method: 'DELETE',
       });
 
-      if (!res.ok) throw new Error('Gagal menghapus data');
+      if (!res.ok) {
+        const errorData = await res.json();
+
+        if (res.status === 409 && errorData?.error) {
+          toast.error(errorData.error);
+        } else {
+          toast.error('Gagal menghapus data posyandu!');
+        }
+
+        return;
+      }
 
       setPosyanduList((prev) => prev.filter((item) => item.id !== selectedId));
       toast.success('Data Posyandu berhasil dihapus!');
@@ -67,12 +82,9 @@ export default function Page() {
     }
   };
 
-  // Filter posyandu berdasarkan searchQuery
   const filteredList = useMemo(() => {
     const q = searchQuery.toLowerCase();
-    return posyanduList.filter((item) =>
-      item.nama.toLowerCase().includes(q)
-    );
+    return posyanduList.filter((item) => item.nama.toLowerCase().includes(q));
   }, [posyanduList, searchQuery]);
 
   return (
@@ -94,9 +106,11 @@ export default function Page() {
             </button>
           </Link>
         </div>
+
         <div className="flex justify-between items-center">
           <TabsPosyandu />
         </div>
+
         <div className="bg-white rounded-xl shadow-md border overflow-x-auto">
           <div className="p-4 border-b border-gray-100">
             <Search
@@ -137,7 +151,7 @@ export default function Page() {
                         <td className="px-6 py-4">{item.nama}</td>
                         <td className="px-6 py-4">{item.alamat}</td>
                         <td className="px-6 py-4">{item.wilayah}</td>
-                        <td className="px-6 py-4">{item.kelurahan}</td>
+                        <td className="px-6 py-4">{item.kelurahan?.nama ?? '-'}</td>
                         <td className="px-6 py-4 text-center">
                           <div className="flex justify-center items-center gap-2">
                             <Link

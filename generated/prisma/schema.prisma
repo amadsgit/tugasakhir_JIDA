@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -14,13 +8,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Kelurahan {
+  id        Int        @id @default(autoincrement())
+  nama      String     @unique
+  posyandu  Posyandu[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
 enum Akreditasi {
-  Paripurna
-  Pratama
-  Madya
-  Purnama
-  Mandiri
-  Belum_akreditasi
+  PARIPURNA
+  PRATAMA
+  MADYA
+  PURNAMA
+  MANDIRI
+  BELUM_AKREDITASI
 }
 
 model Posyandu {
@@ -28,12 +30,13 @@ model Posyandu {
   nama            String
   alamat          String
   wilayah         String
-  kelurahan       String
+  kelurahanId     Int?
+  kelurahan       Kelurahan? @relation(fields: [kelurahanId], references: [id])
   penanggungJawab String
   noHp            String
   akreditasi      Akreditasi
   longitude       Float
-  lattitude       Float
+  latitude        Float
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
   kader           Kader[]
@@ -49,4 +52,40 @@ model Kader {
   posyandu   Posyandu @relation(fields: [posyanduId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model Role {
+  id        Int      @id @default(autoincrement())
+  nama      String   @unique // admin, kader, orang_tua_balita, ibu_hamil
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  nama         String
+  email        String   @unique
+  noHp         String
+  noKK         String? // Nomor Kartu Keluarga (hanya ibu_balita/ibu_hamil)
+  nik          String   @unique
+  tanggalLahir DateTime
+  alamat       String
+  password     String
+  roleId       Int
+  role         Role     @relation(fields: [roleId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Otp {
+  id        Int      @id @default(autoincrement())
+  email     String
+  kode      String
+  expiredAt DateTime
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email]) // Mempercepat pencarian berdasarkan email
 }

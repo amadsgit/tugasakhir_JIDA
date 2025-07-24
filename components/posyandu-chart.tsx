@@ -14,10 +14,18 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend);
 
-function countByField(data: any[], field: string) {
+// menghitung jumlah berdasarkan nama properti nested (misalnya kelurahan.nama)
+function countByField(data: any[], field: string, isRelation: boolean = false) {
   const result: { [key: string]: number } = {};
   data.forEach((item) => {
-    const key = item[field] || 'Tidak diketahui';
+    let key;
+
+    if (isRelation) {
+      key = item[field]?.nama || 'Tidak diketahui';
+    } else {
+      key = item[field] || 'Tidak diketahui';
+    }
+
     result[key] = (result[key] || 0) + 1;
   });
   return result;
@@ -32,7 +40,8 @@ export default function PosyanduChart() {
       .then((data) => setPosyandu(data));
   }, []);
 
-  const kelurahanCount = countByField(posyandu, 'kelurahan');
+  // Kelurahan isRelation = true
+  const kelurahanCount = countByField(posyandu, 'kelurahan', true);
   const akreditasiCount = countByField(posyandu, 'akreditasi');
 
   const barData = {

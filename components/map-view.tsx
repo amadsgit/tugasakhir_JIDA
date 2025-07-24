@@ -12,16 +12,21 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
+type Kelurahan = {
+  id: number;
+  nama: string;
+};
+
 type Posyandu = {
   id: number;
   nama: string;
   alamat: string;
   wilayah: string;
-  kelurahan: string;
+  kelurahan: Kelurahan; // relasi ke tabel kelurahan
   penanggungJawab: string;
   noHp: string;
   akreditasi: string;
-  lattitude: string;
+  latitude: string;
   longitude: string;
 };
 
@@ -48,7 +53,7 @@ export default function MapView() {
   useEffect(() => {
     if (typeof window === 'undefined' || mapRef.current) return;
 
-    const map = L.map('leaflet-map').setView([-6.5749606, 107.7609975], 13);
+    const map = L.map('leaflet-map').setView([-6.5740985, 107.7407857], 13);
     mapRef.current = map;
 
     const key = 'AIasOmN8uDOgOOQXtW0T';
@@ -62,7 +67,7 @@ export default function MapView() {
         maxZoom: 20,
       }
     );
-    
+
     hybrid.addTo(map);
 
     const markerGroup = L.layerGroup().addTo(map);
@@ -76,13 +81,18 @@ export default function MapView() {
     markerGroup?.clearLayers();
 
     posyanduData.forEach((item) => {
-      const lat = parseFloat(item.lattitude);
+      const lat = parseFloat(item.latitude);
       const lng = parseFloat(item.longitude);
 
       if (!isNaN(lat) && !isNaN(lng)) {
         const marker = L.marker([lat, lng])
           .bindPopup(
-            `<strong>${item.nama}</strong><br/>${item.alamat}</br>${item.wilayah} Kelurahan ${item.kelurahan}<br/>Penanggung Jawab: ${item.penanggungJawab}<br/>Contact: ${item.noHp}<br/>Akreditasi: ${item.akreditasi}`
+            `<strong>${item.nama}</strong><br/>
+             ${item.alamat}<br/>
+             ${item.wilayah}, Kelurahan ${item.kelurahan?.nama ?? '-'}<br/>
+             Penanggung Jawab: ${item.penanggungJawab}<br/>
+             Contact: ${item.noHp}<br/>
+             Akreditasi: ${item.akreditasi}`
           )
           .bindTooltip(item.nama, {
             permanent: true,

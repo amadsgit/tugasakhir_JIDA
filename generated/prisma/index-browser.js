@@ -120,17 +120,24 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.KelurahanScalarFieldEnum = {
+  id: 'id',
+  nama: 'nama',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.PosyanduScalarFieldEnum = {
   id: 'id',
   nama: 'nama',
   alamat: 'alamat',
   wilayah: 'wilayah',
-  kelurahan: 'kelurahan',
+  kelurahanId: 'kelurahanId',
   penanggungJawab: 'penanggungJawab',
   noHp: 'noHp',
   akreditasi: 'akreditasi',
   longitude: 'longitude',
-  lattitude: 'lattitude',
+  latitude: 'latitude',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -146,6 +153,38 @@ exports.Prisma.KaderScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.RoleScalarFieldEnum = {
+  id: 'id',
+  nama: 'nama',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  nama: 'nama',
+  email: 'email',
+  noHp: 'noHp',
+  noKK: 'noKK',
+  nik: 'nik',
+  tanggalLahir: 'tanggalLahir',
+  alamat: 'alamat',
+  password: 'password',
+  roleId: 'roleId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OtpScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  kode: 'kode',
+  expiredAt: 'expiredAt',
+  verified: 'verified',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -155,18 +194,27 @@ exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
 };
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
 exports.Akreditasi = exports.$Enums.Akreditasi = {
-  Paripurna: 'Paripurna',
-  Pratama: 'Pratama',
-  Madya: 'Madya',
-  Purnama: 'Purnama',
-  Mandiri: 'Mandiri',
-  Belum_akreditasi: 'Belum_akreditasi'
+  PARIPURNA: 'PARIPURNA',
+  PRATAMA: 'PRATAMA',
+  MADYA: 'MADYA',
+  PURNAMA: 'PURNAMA',
+  MANDIRI: 'MANDIRI',
+  BELUM_AKREDITASI: 'BELUM_AKREDITASI'
 };
 
 exports.Prisma.ModelName = {
+  Kelurahan: 'Kelurahan',
   Posyandu: 'Posyandu',
-  Kader: 'Kader'
+  Kader: 'Kader',
+  Role: 'Role',
+  User: 'User',
+  Otp: 'Otp'
 };
 
 /**

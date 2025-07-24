@@ -7,12 +7,12 @@ import ButtonUpdate from '@/components/button-update';
 import ButtonBatal from '@/components/button-batal';
 
 const enumOptions = [
-  'Paripurna',
-  'Pratama',
-  'Madya',
-  'Purnama',
-  'Mandiri',
-  'Belum_akreditasi',
+  'PARIPURNA',
+  'PRATAMA',
+  'MADYA',
+  'PURNAMA',
+  'MANDIRI',
+  'BELUM_AKREDITASI',
 ];
 
 export default function EditPosyanduPage() {
@@ -20,16 +20,18 @@ export default function EditPosyanduPage() {
   const { id } = useParams();
   const namaRef = useRef<HTMLInputElement>(null);
 
+  const [kelurahanOptions, setKelurahanOptions] = useState<{ id: number; nama: string }[]>([]);
+
   const [formData, setFormData] = useState({
     nama: '',
     alamat: '',
     wilayah: '',
-    kelurahan: '',
+    kelurahanId: '',
     penanggungJawab: '',
     noHp: '',
     akreditasi: '',
     longitude: '',
-    lattitude: '',
+    latitude: '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -37,21 +39,27 @@ export default function EditPosyanduPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch posyandu data
         const res = await fetch(`/api/posyandu/${id}`);
         if (!res.ok) throw new Error('Gagal mengambil data');
-
         const data = await res.json();
+
         setFormData({
           nama: data.nama || '',
           alamat: data.alamat || '',
           wilayah: data.wilayah || '',
-          kelurahan: data.kelurahan || '',
+          kelurahanId: data.kelurahanId?.toString() || '',
           penanggungJawab: data.penanggungJawab || '',
           noHp: data.noHp || '',
           akreditasi: data.akreditasi || '',
           longitude: data.longitude?.toString() || '',
-          lattitude: data.lattitude?.toString() || '',
+          latitude: data.latitude?.toString() || '',
         });
+
+        // Fetch kelurahan options
+        const kelurahanRes = await fetch('/api/wilayah-kerja');
+        const kelurahanData = await kelurahanRes.json();
+        setKelurahanOptions(kelurahanData);
       } catch (err) {
         console.error(err);
         toast.error('Gagal memuat data posyandu');
@@ -82,10 +90,16 @@ export default function EditPosyanduPage() {
     }
 
     const parsedLongitude = parseFloat(formData.longitude);
-    const parsedLattitude = parseFloat(formData.lattitude);
+    const parsedLatitude = parseFloat(formData.latitude);
+    const parsedKelurahanId = parseInt(formData.kelurahanId);
 
-    if (isNaN(parsedLongitude) || isNaN(parsedLattitude)) {
-      toast.error('Longitude dan Lattitude harus berupa angka desimal.');
+    if (isNaN(parsedLongitude) || isNaN(parsedLatitude)) {
+      toast.error('Longitude dan Latitude harus berupa angka desimal.');
+      return;
+    }
+
+    if (isNaN(parsedKelurahanId)) {
+      toast.error('Kelurahan tidak valid.');
       return;
     }
 
@@ -96,8 +110,9 @@ export default function EditPosyanduPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
+          kelurahanId: parsedKelurahanId,
           longitude: parsedLongitude,
-          lattitude: parsedLattitude,
+          latitude: parsedLatitude,
         }),
       });
 
@@ -116,13 +131,14 @@ export default function EditPosyanduPage() {
   return (
     <div className="px-3 py-6">
       <div className="max-w-4xl mx-auto">
-        <div className="p-4 border bg-white shadow-md rounded-xl border">
+        <div className="p-6 border bg-white shadow-md rounded-xl">
           <h1 className="text-2xl font-bold mb-8">
             Edit <span className="">Data Posyandu</span>
           </h1>
 
           <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-8">
+              {/* --- Nama Posyandu --- */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">
                   Nama Posyandu
@@ -138,53 +154,125 @@ export default function EditPosyanduPage() {
                 />
               </div>
 
-              {[
-                { label: 'Alamat', name: 'alamat', placeholder: 'Contoh: Jl. Mawar No. 10' },
-                { label: 'Wilayah', name: 'wilayah', placeholder: 'Contoh: RW 01' },
-                { label: 'Kelurahan', name: 'kelurahan', placeholder: 'Contoh: Pasirkareumbi' },
-                { label: 'Penanggung Jawab', name: 'penanggungJawab', placeholder: 'Contoh: Aisyah' },
-                { label: 'No. HP', name: 'noHp', placeholder: 'Contoh: 081234567890', type: 'tel' },
-                { label: 'Longitude', name: 'longitude', placeholder: 'Contoh: 107.619123', type: 'text' },
-                { label: 'Lattitude', name: 'lattitude', placeholder: 'Contoh: -6.903449', type: 'text' },
-              ].map((field) => (
-                <div key={field.name}>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">
-                    {field.label}
-                  </label>
+              {/* --- Alamat & Wilayah --- */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Alamat</label>
                   <input
-                    type={field.type || 'text'}
-                    name={field.name}
-                    value={(formData as any)[field.name]}
+                    type="text"
+                    name="alamat"
+                    value={formData.alamat}
                     onChange={handleChange}
-                    placeholder={field.placeholder}
+                    placeholder="Contoh: Jl. Mawar No. 10"
                     className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 transition"
                   />
                 </div>
-              ))}
-
-              <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-gray-700 mb-1">
-                  Akreditasi
-                </label>
-                <select
-                  name="akreditasi"
-                  value={formData.akreditasi}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-green-400 transition"
-                >
-                  <option value="">-- Pilih Akreditasi --</option>
-                  {enumOptions.map((value) => (
-                    <option key={value} value={value}>
-                      {value.replace(/([A-Z])/g, ' $1').trim()}
-                    </option>
-                  ))}
-                </select>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Wilayah</label>
+                  <input
+                    type="text"
+                    name="wilayah"
+                    value={formData.wilayah}
+                    onChange={handleChange}
+                    placeholder="Contoh: RW 01"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="flex justify-end gap-3 pt-8">
-              <ButtonBatal onClick={() => router.back()} />
-              <ButtonUpdate loading={loading} />
+              {/* --- Penanggung Jawab & No HP --- */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Penanggung Jawab</label>
+                  <input
+                    type="text"
+                    name="penanggungJawab"
+                    value={formData.penanggungJawab}
+                    onChange={handleChange}
+                    placeholder="Contoh: Aisyah"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">No. HP</label>
+                  <input
+                    type="tel"
+                    name="noHp"
+                    value={formData.noHp}
+                    onChange={handleChange}
+                    placeholder="Contoh: 081234567890"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                  />
+                </div>
+              </div>
+
+              {/* --- Koordinat Lokasi --- */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Longitude</label>
+                  <input
+                    type="text"
+                    name="longitude"
+                    value={formData.longitude}
+                    onChange={handleChange}
+                    placeholder="Contoh: 107.619123"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Latitude</label>
+                  <input
+                    type="text"
+                    name="latitude"
+                    value={formData.latitude}
+                    onChange={handleChange}
+                    placeholder="Contoh: -6.903449"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                  />
+                </div>
+              </div>
+
+              {/* --- Kelurahan & Akreditasi --- */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Kelurahan</label>
+                  <select
+                    name="kelurahanId"
+                    value={formData.kelurahanId}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                  >
+                    <option value="">-- Pilih Kelurahan --</option>
+                    {kelurahanOptions.map((k) => (
+                      <option key={k.id} value={k.id}>
+                        {k.nama}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Akreditasi</label>
+                  <select
+                    name="akreditasi"
+                    value={formData.akreditasi}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                  >
+                    <option value="">-- Pilih Akreditasi --</option>
+                    {enumOptions.map((value) => (
+                      <option key={value} value={value}>
+                        {value.replace(/([A-Z])/g, ' $1').trim()}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* --- Tombol Aksi --- */}
+              <div className="flex justify-end gap-3 pt-8">
+                <ButtonBatal onClick={() => router.back()} />
+                <ButtonUpdate loading={loading} />
+              </div>
             </div>
           </form>
         </div>

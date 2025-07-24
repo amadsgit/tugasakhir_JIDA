@@ -1,13 +1,23 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
+// GET: Ambil semua data posyandu dan relasi kelurahan
 export async function GET() {
   try {
     const posyandu = await prisma.posyandu.findMany({
       orderBy: {
         createdAt: 'desc',
       },
+      include: {
+        kelurahan: {
+          select: {
+            id: true,
+            nama: true,
+          },
+        },
+      },
     });
+
     return NextResponse.json(posyandu);
   } catch (error) {
     console.error('[GET Posyandu]', error);
@@ -18,6 +28,8 @@ export async function GET() {
   }
 }
 
+
+// POST: Tambah data posyandu baru dengan relasi ke kelurahan
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -26,12 +38,12 @@ export async function POST(request: Request) {
       nama,
       alamat,
       wilayah,
-      kelurahan,
+      kelurahanId,
       penanggungJawab,
       noHp,
       akreditasi,
       longitude,
-      lattitude,
+      latitude,
     } = body;
 
     // Validasi kosong
@@ -39,12 +51,12 @@ export async function POST(request: Request) {
       !nama ||
       !alamat ||
       !wilayah ||
-      !kelurahan ||
+      !kelurahanId ||
       !penanggungJawab ||
       !noHp ||
       !akreditasi ||
       longitude === undefined ||
-      lattitude === undefined
+      latitude === undefined
     ) {
       return NextResponse.json(
         { error: 'Semua field wajib diisi.' },
@@ -54,12 +66,12 @@ export async function POST(request: Request) {
 
     // Validasi enum akreditasi
     const validAkreditasi = [
-      'Paripurna',
-      'Pratama',
-      'Madya',
-      'Purnama',
-      'Mandiri',
-      'Belum_akreditasi',
+      'PARIPURNA',
+      'PRATAMA',
+      'MADYA',
+      'PURNAMA',
+      'MANDIRI',
+      'BELUM_AKREDITASI',
     ];
 
     if (!validAkreditasi.includes(akreditasi)) {
@@ -69,13 +81,14 @@ export async function POST(request: Request) {
       );
     }
 
-    // Convert longitude & lattitude ke float
+    // Convert longitude & latitude ke float
     const lon = parseFloat(longitude);
-    const lat = parseFloat(lattitude);
+    const lat = parseFloat(latitude);
+    const kelurahanIdInt = parseInt(kelurahanId);
 
-    if (isNaN(lon) || isNaN(lat)) {
+    if (isNaN(lon) || isNaN(lat) || isNaN(kelurahanIdInt)) {
       return NextResponse.json(
-        { error: 'Longitude dan Lattitude harus berupa angka.' },
+        { error: 'Longitude, Latitude, dan Kelurahan ID harus berupa angka.' },
         { status: 400 }
       );
     }
@@ -86,12 +99,12 @@ export async function POST(request: Request) {
         nama,
         alamat,
         wilayah,
-        kelurahan,
+        kelurahanId: kelurahanIdInt,
         penanggungJawab,
         noHp,
-        akreditasi: akreditasi as any, // enum string
+        akreditasi,
         longitude: lon,
-        lattitude: lat,
+        latitude: lat,
       },
     });
 
