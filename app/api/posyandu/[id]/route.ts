@@ -138,7 +138,7 @@ export async function DELETE(
     if (jumlahKader > 0) {
       return NextResponse.json(
         {
-          error: 'Posyandu ini masih memiliki kader aktif. Silakan hapus kader terlebih dahulu sebelum menghapus posyandu ini.',
+          error: 'Posyandu masih memiliki kader aktif. Silakan hapus kader terlebih dahulu sebelum menghapus data.',
         },
         { status: 409 } // HTTP 409 Conflict
       );

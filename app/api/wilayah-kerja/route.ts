@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// GET: Ambil semua kelurahan/desa
+
 export async function GET() {
   try {
     const kelurahan = await prisma.kelurahan.findMany({
@@ -19,7 +19,7 @@ export async function GET() {
   }
 }
 
-// POST: Tambah kelurahan/desa baru
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();

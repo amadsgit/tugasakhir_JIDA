@@ -1,6 +1,6 @@
 'use client'
 
-import TabsPosyandu from '@/components/tabs-dataPosyandu';
+import TabsPane from '@/components/tab-pane-manajemen-posyandu';
 import Link from 'next/link';
 import { PlusCircle, MapPinIcon } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -26,7 +26,7 @@ export default function Page() {
                 </button>
             </Link>
         </div>
-        <TabsPosyandu />
+        <TabsPane />
 
         <div className="bg-white rounded-xl shadow-md p-6">
             <h2 className="text-xl font-semibold mb-4"><MapPinIcon /> Peta Sebaran Posyandu</h2>

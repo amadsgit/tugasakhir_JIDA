@@ -56,19 +56,27 @@ export default function MapView() {
     const map = L.map('leaflet-map').setView([-6.5740985, 107.7407857], 13);
     mapRef.current = map;
 
-    const key = 'AIasOmN8uDOgOOQXtW0T';
-    const hybrid = L.tileLayer(
-      `https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${key}`,
+    // const key = 'AIasOmN8uDOgOOQXtW0T';
+    const googleStreets = L.tileLayer(
+      'http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', // m = street, s = satellite, y = hybrid, t = terrain
       {
-        attribution:
-          '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
-        tileSize: 512,
-        zoomOffset: -1,
         maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       }
     );
+    googleStreets.addTo(map);
+    // const hybrid = L.tileLayer(
+    //   `https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${key}`,
+    //   {
+    //     attribution:
+    //       '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
+    //     tileSize: 512,
+    //     zoomOffset: -1,
+    //     maxZoom: 20,
+    //   }
+    // );
 
-    hybrid.addTo(map);
+    // hybrid.addTo(map);
 
     const markerGroup = L.layerGroup().addTo(map);
     markerGroupRef.current = markerGroup;

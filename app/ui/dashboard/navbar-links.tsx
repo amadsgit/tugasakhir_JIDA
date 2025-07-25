@@ -21,10 +21,10 @@ export const flatMenu: NavLink[] = [
   { name: 'Home', href: '/dashboard', icon: HomeIcon },
 
   // Admin
-  { name: 'Manajemen Posyandu', href: '/dashboard/manajemen-posyandu', icon: UserGroupIcon },
-  { name: 'Statistik Posyandu', href: '#', icon: ChartBarIcon },
+  { name: 'Manajemen Posyandu', href: '/dashboard/manajemen-posyandu/wilayah-kerja', icon: UserGroupIcon },
+  // { name: 'Statistik Posyandu', href: '#', icon: ChartBarIcon },
   // { name: 'Statistik Posyandu', href: '/dashboard/statistik', icon: ChartBarIcon },
-  // { name: 'Manajemen Akun', href: '/dashboard/akun', icon: UserIcon },
+  { name: 'Manajemen Akun', href: '/dashboard/manajemen-akun/role', icon: UserIcon },
 
   // Kader / Nakes
   // { name: 'Input Data Balita', href: '/dashboard/input/balita', icon: ClipboardDocumentIcon },

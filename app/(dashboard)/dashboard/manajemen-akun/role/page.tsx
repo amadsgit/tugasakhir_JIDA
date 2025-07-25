@@ -1,44 +1,45 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import TabsPane from '@/components/tab-pane-manajemen-posyandu';
-import Link from 'next/link';
-import { PlusCircle, MapIcon, RefreshCcw, Save } from 'lucide-react';
+import TabsPane from '@/components/tab-pane-manajemen-akun';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import ModalKonfirmasi from '@/components/delete-confirmation';
-import { Kelurahan } from '@/generated/prisma';
+import { RefreshCcw, Save } from 'lucide-react';
+import { Role } from '@/generated/prisma';
 
 export default function Page() {
-  const [kelurahanList, setKelurahanList] = useState<Kelurahan[]>([]);
   const [nama, setNama] = useState('');
+  const [roles, setRoles] = useState<Role[]>([]);
   const [loadingFetch, setLoadingFetch] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [selectedDeleteId, setSelectedDeleteId] = useState<number | null>(null);
+
   const isEdit = selectedId !== null;
 
-  const fetchKelurahan = async () => {
+  const fetchRole = async () => {
     setLoadingFetch(true);
     try {
-      const res = await fetch('/api/wilayah-kerja');
+      const res = await fetch('/api/role');
       const data = await res.json();
-      setKelurahanList(data);
-    } catch (err) {
-      console.error('Gagal memuat data kelurahan:', err);
-      toast.error('Gagal memuat data kelurahan');
+      setRoles(data);
+    } catch (error) {
+      console.error(error);
+      toast.error('Gagal memuat data role');
     } finally {
       setLoadingFetch(false);
     }
   };
 
   useEffect(() => {
-    fetchKelurahan();
+    fetchRole();
   }, []);
 
   const resetForm = () => {
-    setSelectedId(null);
     setNama('');
+    setSelectedId(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,51 +47,46 @@ export default function Page() {
     setLoadingSubmit(true);
 
     try {
-      const url = isEdit ? `/api/wilayah-kerja/${selectedId}` : '/api/wilayah-kerja';
-      const method = isEdit ? 'PUT' : 'POST';
-
-      const res = await fetch(url, {
-        method,
+      const res = await fetch(`/api/role${isEdit ? `/${selectedId}` : ''}`, {
+        method: isEdit ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nama }),
       });
 
-      const data = await res.json();
-
       if (res.ok) {
-        toast.success(isEdit ? 'Data berhasil diperbarui!' : 'Data berhasil ditambahkan!');
-        await fetchKelurahan();
+        toast.success(isEdit ? 'Role berhasil diperbarui!' : 'Role berhasil ditambahkan!');
+        await fetchRole();
         resetForm();
-      } else if (res.status === 409) {
-        toast.error(data.message || 'Nama sudah digunakan!');
       } else {
-        toast.error(data.message || 'Gagal menyimpan data!');
+        const { message } = await res.json();
+        toast.error(message || 'Gagal menyimpan data');
       }
-    } catch (err) {
-      console.error('Gagal simpan data:', err);
-      toast.error('Terjadi kesalahan pada server!');
+    } catch (error) {
+      console.error(error);
+      toast.error('Terjadi kesalahan saat menyimpan data');
     } finally {
       setLoadingSubmit(false);
     }
   };
 
-  const handleEdit = (item: Kelurahan) => {
-    setSelectedId(item.id);
-    setNama(item.nama);
+  const handleEdit = (role: Role) => {
+    setSelectedId(role.id);
+    setNama(role.nama);
   };
 
+  
   const openDeleteModal = (id: number) => {
-    setSelectedId(id);
+    setSelectedDeleteId(id);
     setShowModal(true);
   };
 
   const handleDelete = async () => {
-    if (selectedId === null) return;
+    if (selectedDeleteId === null) return;
     try {
-      const res = await fetch(`/api/wilayah-kerja/${selectedId}`, { method: 'DELETE' });
+      const res = await fetch(`/api/role/${selectedDeleteId}`, { method: 'DELETE' });
       if (res.ok) {
         toast.success('Role berhasil dihapus!');
-        await fetchKelurahan();
+        await fetchRole();
         resetForm();
       } else if (!res.ok) {
         const errorData = await res.json();
@@ -106,7 +102,7 @@ export default function Page() {
       toast.error('Terjadi kesalahan saat menghapus data');
     } finally {
       setShowModal(false);
-      setSelectedId(null);
+      setSelectedDeleteId(null);
     }
   };
 
@@ -115,35 +111,25 @@ export default function Page() {
       {/* Header */}
       <div className="flex justify-between items-center mb-3">
         <div>
-          <h1 className="text-2xl font-bold">Manajemen Data <span>Posyandu & Kader</span></h1>
-          <p className="text-gray-500 dark:text-gray-400">Informasi & manajemen data posyandu</p>
+          <h1 className="text-2xl font-bold">Manajemen Data <span>Role & User</span></h1>
+          <p className="text-gray-500 dark:text-gray-400">Informasi & manajemen data role & user</p>
         </div>
-        <Link href="/dashboard/manajemen-posyandu/create">
-          <button className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm px-4 py-2 rounded-md shadow-sm transition">
-            <PlusCircle className="w-4 h-4" />
-            Posyandu
-          </button>
-        </Link>
       </div>
 
       <TabsPane />
 
       {/* Form & List */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mt-6">
-        <h2 className="text-xl font-semibold flex items-center gap-2 mb-4">
-          <MapIcon className="w-5 h-5" /> Wilayah Kerja Puskesmas
-        </h2>
-
-        {/* Form */}
+        {/* Form Tambah/Edit Role */}
         <p className="text-md font-semibold text-gray-600 mb-2">
-          {isEdit ? 'Edit Kelurahan / Desa' : 'Tambah Kelurahan / Desa'}
+          {isEdit ? 'Edit Role' : 'Tambah Role'}
         </p>
         <form onSubmit={handleSubmit} className="mb-6">
           <div className="flex gap-2">
             <input
               type="text"
               className="border border-gray-300 dark:border-gray-700 rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="Contoh : Pasirkareumbi"
+              placeholder="Contoh : Admin"
               value={nama}
               onChange={(e) => setNama(e.target.value)}
               required
@@ -183,7 +169,7 @@ export default function Page() {
           </div>
         </form>
 
-        {/* Table List */}
+        {/* List Role */}
         <div className="overflow-x-auto">
           {loadingFetch ? (
             <div className="flex justify-center items-center py-16 text-emerald-600">
@@ -195,20 +181,20 @@ export default function Page() {
                   d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
                 />
               </svg>
-              <span className="text-sm font-medium">Memuat data kelurahan/desa...</span>
+              <span className="text-sm font-medium">Memuat data role...</span>
             </div>
           ) : (
             <table className="w-full table-auto border border-gray-200 dark:border-gray-700">
               <thead className="bg-gray-100 dark:bg-gray-700 text-left">
                 <tr>
                   <th className="p-3 border-b">#</th>
-                  <th className="p-3 border-b">Nama Kelurahan/Desa</th>
+                  <th className="p-3 border-b">Nama Role</th>
                   <th className="p-3 border-b">Aksi</th>
                 </tr>
               </thead>
               <tbody>
-                {kelurahanList.length > 0 ? (
-                  kelurahanList.map((item, index) => (
+                {roles.length > 0 ? (
+                  roles.map((item, index) => (
                     <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                       <td className="p-3 border-b">{index + 1}</td>
                       <td className="p-3 border-b">{item.nama}</td>
@@ -235,7 +221,7 @@ export default function Page() {
                 ) : (
                   <tr>
                     <td colSpan={3} className="p-3 text-center text-gray-500">
-                      Belum ada data kelurahan.
+                      Belum ada data role.
                     </td>
                   </tr>
                 )}
@@ -245,12 +231,12 @@ export default function Page() {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Modal Konfirmasi */}
       <ModalKonfirmasi
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         onConfirm={handleDelete}
-        title="Hapus Data Kelurahan/Desa"
+        title="Hapus Data Role"
         message="Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak bisa dibatalkan."
       />
     </div>

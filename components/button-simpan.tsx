@@ -15,12 +15,12 @@ export default function ButtonSimpan({
 }: ButtonSimpanProps) {
   return (
     <button
-      type="submit"
       disabled={loading || props.disabled}
+      aria-busy={loading}
       className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 disabled:bg-emerald-300 text-white font-semibold text-sm px-6 py-2 rounded-md shadow-md transition"
       {...props}
     >
-      {!loading && <Save className="w-4 h-4" />}
+      <Save className="w-4 h-4" />
       {loading ? 'Menyimpan...' : children ?? 'Simpan'}
     </button>
   );

@@ -45,7 +45,7 @@ export default function Page() {
   const [kelurahanList, setKelurahanList] = useState<Kelurahan[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Fetch kelurahan
+  // Fetch data kelurahan
   useEffect(() => {
     const fetchKelurahan = async () => {
       try {
@@ -98,7 +98,7 @@ export default function Page() {
       if (!res.ok) throw new Error('Gagal menyimpan data');
 
       toast.success('Berhasil menambahkan data Posyandu!');
-      router.push('/dashboard/manajemen-posyandu');
+      router.push('/dashboard/manajemen-posyandu/data-posyandu');
     } catch (err) {
       console.error(err);
       toast.error('Terjadi kesalahan saat menyimpan data.');

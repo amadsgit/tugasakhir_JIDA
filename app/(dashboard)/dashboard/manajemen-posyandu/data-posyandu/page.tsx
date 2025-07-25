@@ -7,7 +7,7 @@ import { PlusCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import ModalKonfirmasi from '@/components/delete-confirmation';
 import Search from '@/app/ui/search';
-import TabsPosyandu from '@/components/tabs-dataPosyandu';
+import TabsPane from '@/components/tab-pane-manajemen-posyandu';
 
 type Kelurahan = {
   id: number;
@@ -108,7 +108,7 @@ export default function Page() {
         </div>
 
         <div className="flex justify-between items-center">
-          <TabsPosyandu />
+          <TabsPane />
         </div>
 
         <div className="bg-white rounded-xl shadow-md border overflow-x-auto">
@@ -137,6 +137,7 @@ export default function Page() {
               <table className="min-w-full text-sm">
                 <thead className="bg-gray-100 text-gray-600 uppercase text-xs tracking-wider">
                   <tr>
+                    <th className="p-4 border-b">#</th>
                     <th className="px-6 py-4 text-left">Nama Posyandu</th>
                     <th className="px-6 py-4 text-left">Alamat</th>
                     <th className="px-6 py-4 text-left">Wilayah</th>
@@ -146,8 +147,9 @@ export default function Page() {
                 </thead>
                 <tbody>
                   {filteredList.length > 0 ? (
-                    filteredList.map((item) => (
+                    filteredList.map((item, index) => (
                       <tr key={item.id} className="border-t hover:bg-gray-50 transition">
+                        <td className="px-4 py-4">{index + 1}</td>
                         <td className="px-6 py-4">{item.nama}</td>
                         <td className="px-6 py-4">{item.alamat}</td>
                         <td className="px-6 py-4">{item.wilayah}</td>

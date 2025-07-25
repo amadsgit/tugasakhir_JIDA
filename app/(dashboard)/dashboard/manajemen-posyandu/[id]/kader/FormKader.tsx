@@ -7,7 +7,7 @@ import {
   fetchKader,
   updateKaderAsync,
 } from '@/store/kaderSlice';
-import { Save } from 'lucide-react';
+import { RefreshCcw, Save } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 interface Kader {
@@ -22,7 +22,7 @@ interface FormKaderProps {
   posyanduId: number;
   selectedKader?: Kader | null;
   onSuccess?: () => void;
-  onEditDone?: () => void; // optional callback untuk reset selectedKader di parent
+  onEditDone?: () => void;
 }
 
 export default function FormKader({
@@ -145,9 +145,30 @@ export default function FormKader({
             loading ? 'bg-green-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
           } text-white font-semibold text-sm px-5 py-2 rounded-md shadow-sm transition duration-150 ease-in-out`}
         >
-          <Save className="w-4 h-4" />
-          {loading ? (selectedKader ? 'Mengupdate...' : 'Menyimpan...') : selectedKader ? 'Update' : 'Simpan'}
+          {selectedKader ? (
+            <RefreshCcw className={`w-4 h-4 ${loading ? 'animate-spin-slow' : ''}`} />
+          ) : (
+            <Save className="w-4 h-4" />
+          )}
+          {loading
+            ? selectedKader
+              ? 'Mengupdate...'
+              : 'Menyimpan...'
+            : selectedKader
+            ? 'Update'
+            : 'Simpan'}
         </button>
+
+        {/* button Batal jika mode edit */}
+        {selectedKader && (
+          <button
+            type="button"
+            onClick={onEditDone}
+            className="bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm px-5 py-2 rounded-md shadow-sm transition duration-150 ease-in-out"
+          >
+            Batal
+          </button>
+        )}
       </div>
     </div>
   );

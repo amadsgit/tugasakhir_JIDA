@@ -29,7 +29,7 @@ export default async function PosyanduDetailPage({ params }: { params: Promise<{
             Informasi lengkap posyandu yang terdaftar
           </p>
         </div>
-        <Link href="/dashboard/manajemen-posyandu">
+        <Link href="/dashboard/manajemen-posyandu/data-posyandu">
           <ButtonKembali />
         </Link>
       </div>
