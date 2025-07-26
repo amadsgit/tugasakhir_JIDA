@@ -9,8 +9,8 @@ export default function TabsUser() {
   const pathname = usePathname();
 
   const tabs = [
-    { name: 'Data Role', href: '/dashboard/manajemen-akun/role' },
-    { name: 'Data User', href: '/dashboard/manajemen-akun/user' },
+    { name: 'Manajemen Role', href: '/dashboard/manajemen-akun/role' },
+    { name: 'Manajemen User', href: '/dashboard/manajemen-akun/user' },
   ];
 
   return (

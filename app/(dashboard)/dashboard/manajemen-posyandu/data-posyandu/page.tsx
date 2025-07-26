@@ -192,8 +192,8 @@ export default function Page() {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={5} className="text-center py-6 text-gray-500">
-                        Tidak ada data posyandu yang cocok.
+                      <td colSpan={6} className="text-center py-6 text-gray-500">
+                        Tidak ada data posyandu.
                       </td>
                     </tr>
                   )}

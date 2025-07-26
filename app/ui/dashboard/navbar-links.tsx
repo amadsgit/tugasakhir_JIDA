@@ -21,7 +21,7 @@ export const flatMenu: NavLink[] = [
   { name: 'Home', href: '/dashboard', icon: HomeIcon },
 
   // Admin
-  { name: 'Manajemen Posyandu', href: '/dashboard/manajemen-posyandu/wilayah-kerja', icon: UserGroupIcon },
+  { name: 'Manajemen Posyandu & Kader', href: '/dashboard/manajemen-posyandu/wilayah-kerja', icon: UserGroupIcon },
   // { name: 'Statistik Posyandu', href: '#', icon: ChartBarIcon },
   // { name: 'Statistik Posyandu', href: '/dashboard/statistik', icon: ChartBarIcon },
   { name: 'Manajemen Akun', href: '/dashboard/manajemen-akun/role', icon: UserIcon },

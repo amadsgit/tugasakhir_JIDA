@@ -9,21 +9,26 @@ import ModalKonfirmasi from '@/components/delete-confirmation';
 import Search from '@/app/ui/search';
 import TabsPane from '@/components/tab-pane-manajemen-akun';
 
-type Kelurahan = {
+type Role = {
   id: number;
   nama: string;
 };
 
-type Posyandu = {
+type User = {
   id: number;
   nama: string;
+  email: string;
+  noHp: string;
+  noKK: string | null;
+  nik: string;
+  tanggalLahir: string;
   alamat: string;
-  wilayah: string;
-  kelurahan: Kelurahan | null;
+  password: string;
+  role: Role | null;
 };
 
 export default function Page() {
-  const [posyanduList, setPosyanduList] = useState<Posyandu[]>([]);
+  const [userList, setUserList] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -32,13 +37,13 @@ export default function Page() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch('/api/posyandu');
+        const res = await fetch('/api/user');
         if (!res.ok) throw new Error('Fetch gagal');
         const data = await res.json();
-        setPosyanduList(data);
+        setUserList(data);
       } catch (error) {
-        console.error('Gagal memuat data posyandu:', error);
-        toast.error('Gagal memuat data posyandu!');
+        console.error('Gagal memuat data user:', error);
+        toast.error('Gagal memuat data user!');
       } finally {
         setIsLoading(false);
       }
@@ -47,16 +52,17 @@ export default function Page() {
     fetchData();
   }, []);
 
+
+  // delete user
   const openDeleteModal = (id: number) => {
     setSelectedId(id);
     setShowModal(true);
   };
-
   const handleDelete = async () => {
     if (!selectedId) return;
 
     try {
-      const res = await fetch(`/api/posyandu/${selectedId}`, {
+      const res = await fetch(`/api/user/${selectedId}`, {
         method: 'DELETE',
       });
 
@@ -66,14 +72,14 @@ export default function Page() {
         if (res.status === 409 && errorData?.error) {
           toast.error(errorData.error);
         } else {
-          toast.error('Gagal menghapus data posyandu!');
+          toast.error('Gagal menghapus data user!');
         }
 
         return;
       }
 
-      setPosyanduList((prev) => prev.filter((item) => item.id !== selectedId));
-      toast.success('Data Posyandu berhasil dihapus!');
+      setUserList((prev) => prev.filter((item) => item.id !== selectedId));
+      toast.success('Data User berhasil dihapus!');
     } catch (err) {
       console.error(err);
       toast.error('Terjadi kesalahan saat menghapus data!');
@@ -84,8 +90,8 @@ export default function Page() {
 
   const filteredList = useMemo(() => {
     const q = searchQuery.toLowerCase();
-    return posyanduList.filter((item) => item.nama.toLowerCase().includes(q));
-  }, [posyanduList, searchQuery]);
+    return userList.filter((item) => item.nama.toLowerCase().includes(q));
+  }, [userList, searchQuery]);
 
   return (
     <div className="p-6">
@@ -147,9 +153,9 @@ export default function Page() {
                       <tr key={item.id} className="border-t hover:bg-gray-50 transition">
                         <td className="px-4 py-4">{index + 1}</td>
                         <td className="px-6 py-4">{item.nama}</td>
-                        <td className="px-6 py-4">{item.alamat}</td>
-                        <td className="px-6 py-4">{item.wilayah}</td>
-                        <td className="px-6 py-4">{item.kelurahan?.nama ?? '-'}</td>
+                        <td className="px-6 py-4">{item.email}</td>
+                        <td className="px-6 py-4">{item.noHp}</td>
+                        <td className="px-6 py-4">{item.role?.nama ?? '-'}</td>
                         <td className="px-6 py-4 text-center">
                           <div className="flex justify-center items-center gap-2">
                             <Link
@@ -182,7 +188,7 @@ export default function Page() {
                   ) : (
                     <tr>
                       <td colSpan={6} className="text-center py-6 text-gray-500">
-                        Tidak ada data user yang cocok.
+                        Tidak ada data user.
                       </td>
                     </tr>
                   )}

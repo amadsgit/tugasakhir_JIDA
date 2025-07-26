@@ -10,7 +10,7 @@ export default function TabsPosyandu() {
 
   const tabs = [
     { name: 'Wilayah Kerja Puskesmas', href: '/dashboard/manajemen-posyandu/wilayah-kerja' },
-    { name: 'Data Posyandu', href: '/dashboard/manajemen-posyandu/data-posyandu' },
+    { name: 'Manajemen Posyandu', href: '/dashboard/manajemen-posyandu/data-posyandu' },
     { name: 'GIS Sebaran Posyandu', href: '/dashboard/manajemen-posyandu/gis' },
     { name: 'Grafik Statistik Posyandu', href: '/dashboard/manajemen-posyandu/statistik-posyandu' },
   ];
