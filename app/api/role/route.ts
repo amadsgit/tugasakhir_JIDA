@@ -13,17 +13,7 @@ function generateSlug(text: string): string {
 
 export async function GET() {
   try {
-    const role = await prisma.role.findMany({
-      select: {
-        id: true,
-        nama: true,
-        slug: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-      orderBy: { createdAt: 'desc' },
-    });
-
+    const role = await prisma.role.findMany({ include: { users: true } });
     return NextResponse.json(role);
   } catch (error) {
     console.error('Error fetching role:', error);

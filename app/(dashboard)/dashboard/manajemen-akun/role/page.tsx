@@ -236,7 +236,7 @@ export default function Page() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={3} className="p-3 text-center text-gray-500">
+                    <td colSpan={5} className="p-3 text-center text-gray-500">
                       Belum ada data role.
                     </td>
                   </tr>

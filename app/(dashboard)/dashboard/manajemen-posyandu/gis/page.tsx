@@ -1,8 +1,7 @@
 'use client'
 
 import TabsPane from '@/components/tab-pane-manajemen-posyandu';
-import Link from 'next/link';
-import { PlusCircle, MapPinIcon } from 'lucide-react';
+import { MapPinIcon } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
 export default function Page() {
@@ -19,12 +18,6 @@ export default function Page() {
                 Informasi & manajemen data posyandu
                 </p>
             </div>
-            <Link href="/dashboard/manajemen-posyandu/create">
-                <button className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm px-4 py-2 rounded-md shadow-sm transition">
-                <PlusCircle className="w-4 h-4 text-white text-bold" />
-                Posyandu
-                </button>
-            </Link>
         </div>
         <TabsPane />
 
