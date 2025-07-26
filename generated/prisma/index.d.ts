@@ -4930,6 +4930,7 @@ export namespace Prisma {
   export type RoleMinAggregateOutputType = {
     id: number | null
     nama: string | null
+    slug: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4937,6 +4938,7 @@ export namespace Prisma {
   export type RoleMaxAggregateOutputType = {
     id: number | null
     nama: string | null
+    slug: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4944,6 +4946,7 @@ export namespace Prisma {
   export type RoleCountAggregateOutputType = {
     id: number
     nama: number
+    slug: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -4961,6 +4964,7 @@ export namespace Prisma {
   export type RoleMinAggregateInputType = {
     id?: true
     nama?: true
+    slug?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4968,6 +4972,7 @@ export namespace Prisma {
   export type RoleMaxAggregateInputType = {
     id?: true
     nama?: true
+    slug?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4975,6 +4980,7 @@ export namespace Prisma {
   export type RoleCountAggregateInputType = {
     id?: true
     nama?: true
+    slug?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -5069,6 +5075,7 @@ export namespace Prisma {
   export type RoleGroupByOutputType = {
     id: number
     nama: string
+    slug: string
     createdAt: Date
     updatedAt: Date
     _count: RoleCountAggregateOutputType | null
@@ -5095,6 +5102,7 @@ export namespace Prisma {
   export type RoleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     nama?: boolean
+    slug?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     users?: boolean | Role$usersArgs<ExtArgs>
@@ -5104,6 +5112,7 @@ export namespace Prisma {
   export type RoleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     nama?: boolean
+    slug?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["role"]>
@@ -5111,6 +5120,7 @@ export namespace Prisma {
   export type RoleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     nama?: boolean
+    slug?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["role"]>
@@ -5118,11 +5128,12 @@ export namespace Prisma {
   export type RoleSelectScalar = {
     id?: boolean
     nama?: boolean
+    slug?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RoleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nama" | "createdAt" | "updatedAt", ExtArgs["result"]["role"]>
+  export type RoleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nama" | "slug" | "createdAt" | "updatedAt", ExtArgs["result"]["role"]>
   export type RoleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | Role$usersArgs<ExtArgs>
     _count?: boolean | RoleCountOutputTypeDefaultArgs<ExtArgs>
@@ -5138,6 +5149,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       nama: string
+      slug: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["role"]>
@@ -5566,6 +5578,7 @@ export namespace Prisma {
   interface RoleFieldRefs {
     readonly id: FieldRef<"Role", 'Int'>
     readonly nama: FieldRef<"Role", 'String'>
+    readonly slug: FieldRef<"Role", 'String'>
     readonly createdAt: FieldRef<"Role", 'DateTime'>
     readonly updatedAt: FieldRef<"Role", 'DateTime'>
   }
@@ -6030,6 +6043,8 @@ export namespace Prisma {
     tanggalLahir: Date | null
     alamat: string | null
     password: string | null
+    isVerified: boolean | null
+    resetToken: string | null
     roleId: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6045,6 +6060,8 @@ export namespace Prisma {
     tanggalLahir: Date | null
     alamat: string | null
     password: string | null
+    isVerified: boolean | null
+    resetToken: string | null
     roleId: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6060,6 +6077,8 @@ export namespace Prisma {
     tanggalLahir: number
     alamat: number
     password: number
+    isVerified: number
+    resetToken: number
     roleId: number
     createdAt: number
     updatedAt: number
@@ -6087,6 +6106,8 @@ export namespace Prisma {
     tanggalLahir?: true
     alamat?: true
     password?: true
+    isVerified?: true
+    resetToken?: true
     roleId?: true
     createdAt?: true
     updatedAt?: true
@@ -6102,6 +6123,8 @@ export namespace Prisma {
     tanggalLahir?: true
     alamat?: true
     password?: true
+    isVerified?: true
+    resetToken?: true
     roleId?: true
     createdAt?: true
     updatedAt?: true
@@ -6117,6 +6140,8 @@ export namespace Prisma {
     tanggalLahir?: true
     alamat?: true
     password?: true
+    isVerified?: true
+    resetToken?: true
     roleId?: true
     createdAt?: true
     updatedAt?: true
@@ -6219,6 +6244,8 @@ export namespace Prisma {
     tanggalLahir: Date
     alamat: string
     password: string
+    isVerified: boolean
+    resetToken: string | null
     roleId: number
     createdAt: Date
     updatedAt: Date
@@ -6253,6 +6280,8 @@ export namespace Prisma {
     tanggalLahir?: boolean
     alamat?: boolean
     password?: boolean
+    isVerified?: boolean
+    resetToken?: boolean
     roleId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6269,6 +6298,8 @@ export namespace Prisma {
     tanggalLahir?: boolean
     alamat?: boolean
     password?: boolean
+    isVerified?: boolean
+    resetToken?: boolean
     roleId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6285,6 +6316,8 @@ export namespace Prisma {
     tanggalLahir?: boolean
     alamat?: boolean
     password?: boolean
+    isVerified?: boolean
+    resetToken?: boolean
     roleId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6301,12 +6334,14 @@ export namespace Prisma {
     tanggalLahir?: boolean
     alamat?: boolean
     password?: boolean
+    isVerified?: boolean
+    resetToken?: boolean
     roleId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nama" | "email" | "noHp" | "noKK" | "nik" | "tanggalLahir" | "alamat" | "password" | "roleId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nama" | "email" | "noHp" | "noKK" | "nik" | "tanggalLahir" | "alamat" | "password" | "isVerified" | "resetToken" | "roleId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     role?: boolean | RoleDefaultArgs<ExtArgs>
   }
@@ -6332,6 +6367,8 @@ export namespace Prisma {
       tanggalLahir: Date
       alamat: string
       password: string
+      isVerified: boolean
+      resetToken: string | null
       roleId: number
       createdAt: Date
       updatedAt: Date
@@ -6768,6 +6805,8 @@ export namespace Prisma {
     readonly tanggalLahir: FieldRef<"User", 'DateTime'>
     readonly alamat: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
+    readonly isVerified: FieldRef<"User", 'Boolean'>
+    readonly resetToken: FieldRef<"User", 'String'>
     readonly roleId: FieldRef<"User", 'Int'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
@@ -8299,6 +8338,7 @@ export namespace Prisma {
   export const RoleScalarFieldEnum: {
     id: 'id',
     nama: 'nama',
+    slug: 'slug',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -8316,6 +8356,8 @@ export namespace Prisma {
     tanggalLahir: 'tanggalLahir',
     alamat: 'alamat',
     password: 'password',
+    isVerified: 'isVerified',
+    resetToken: 'resetToken',
     roleId: 'roleId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -8671,6 +8713,7 @@ export namespace Prisma {
     NOT?: RoleWhereInput | RoleWhereInput[]
     id?: IntFilter<"Role"> | number
     nama?: StringFilter<"Role"> | string
+    slug?: StringFilter<"Role"> | string
     createdAt?: DateTimeFilter<"Role"> | Date | string
     updatedAt?: DateTimeFilter<"Role"> | Date | string
     users?: UserListRelationFilter
@@ -8679,6 +8722,7 @@ export namespace Prisma {
   export type RoleOrderByWithRelationInput = {
     id?: SortOrder
     nama?: SortOrder
+    slug?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     users?: UserOrderByRelationAggregateInput
@@ -8687,17 +8731,19 @@ export namespace Prisma {
   export type RoleWhereUniqueInput = Prisma.AtLeast<{
     id?: number
     nama?: string
+    slug?: string
     AND?: RoleWhereInput | RoleWhereInput[]
     OR?: RoleWhereInput[]
     NOT?: RoleWhereInput | RoleWhereInput[]
     createdAt?: DateTimeFilter<"Role"> | Date | string
     updatedAt?: DateTimeFilter<"Role"> | Date | string
     users?: UserListRelationFilter
-  }, "id" | "nama">
+  }, "id" | "nama" | "slug">
 
   export type RoleOrderByWithAggregationInput = {
     id?: SortOrder
     nama?: SortOrder
+    slug?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: RoleCountOrderByAggregateInput
@@ -8713,6 +8759,7 @@ export namespace Prisma {
     NOT?: RoleScalarWhereWithAggregatesInput | RoleScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Role"> | number
     nama?: StringWithAggregatesFilter<"Role"> | string
+    slug?: StringWithAggregatesFilter<"Role"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Role"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Role"> | Date | string
   }
@@ -8730,6 +8777,8 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFilter<"User"> | Date | string
     alamat?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
+    isVerified?: BoolFilter<"User"> | boolean
+    resetToken?: StringNullableFilter<"User"> | string | null
     roleId?: IntFilter<"User"> | number
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -8746,6 +8795,8 @@ export namespace Prisma {
     tanggalLahir?: SortOrder
     alamat?: SortOrder
     password?: SortOrder
+    isVerified?: SortOrder
+    resetToken?: SortOrderInput | SortOrder
     roleId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -8765,6 +8816,8 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFilter<"User"> | Date | string
     alamat?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
+    isVerified?: BoolFilter<"User"> | boolean
+    resetToken?: StringNullableFilter<"User"> | string | null
     roleId?: IntFilter<"User"> | number
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -8781,6 +8834,8 @@ export namespace Prisma {
     tanggalLahir?: SortOrder
     alamat?: SortOrder
     password?: SortOrder
+    isVerified?: SortOrder
+    resetToken?: SortOrderInput | SortOrder
     roleId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -8804,6 +8859,8 @@ export namespace Prisma {
     tanggalLahir?: DateTimeWithAggregatesFilter<"User"> | Date | string
     alamat?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
+    isVerified?: BoolWithAggregatesFilter<"User"> | boolean
+    resetToken?: StringNullableWithAggregatesFilter<"User"> | string | null
     roleId?: IntWithAggregatesFilter<"User"> | number
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -9103,6 +9160,7 @@ export namespace Prisma {
 
   export type RoleCreateInput = {
     nama: string
+    slug: string
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutRoleInput
@@ -9111,6 +9169,7 @@ export namespace Prisma {
   export type RoleUncheckedCreateInput = {
     id?: number
     nama: string
+    slug: string
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutRoleInput
@@ -9118,6 +9177,7 @@ export namespace Prisma {
 
   export type RoleUpdateInput = {
     nama?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutRoleNestedInput
@@ -9126,6 +9186,7 @@ export namespace Prisma {
   export type RoleUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     nama?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutRoleNestedInput
@@ -9134,12 +9195,14 @@ export namespace Prisma {
   export type RoleCreateManyInput = {
     id?: number
     nama: string
+    slug: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type RoleUpdateManyMutationInput = {
     nama?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9147,6 +9210,7 @@ export namespace Prisma {
   export type RoleUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     nama?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9160,6 +9224,8 @@ export namespace Prisma {
     tanggalLahir: Date | string
     alamat: string
     password: string
+    isVerified?: boolean
+    resetToken?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     role: RoleCreateNestedOneWithoutUsersInput
@@ -9175,6 +9241,8 @@ export namespace Prisma {
     tanggalLahir: Date | string
     alamat: string
     password: string
+    isVerified?: boolean
+    resetToken?: string | null
     roleId: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9189,6 +9257,8 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFieldUpdateOperationsInput | Date | string
     alamat?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
@@ -9204,6 +9274,8 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFieldUpdateOperationsInput | Date | string
     alamat?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
     roleId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9219,6 +9291,8 @@ export namespace Prisma {
     tanggalLahir: Date | string
     alamat: string
     password: string
+    isVerified?: boolean
+    resetToken?: string | null
     roleId: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9233,6 +9307,8 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFieldUpdateOperationsInput | Date | string
     alamat?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9247,6 +9323,8 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFieldUpdateOperationsInput | Date | string
     alamat?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
     roleId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9654,6 +9732,7 @@ export namespace Prisma {
   export type RoleCountOrderByAggregateInput = {
     id?: SortOrder
     nama?: SortOrder
+    slug?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -9665,6 +9744,7 @@ export namespace Prisma {
   export type RoleMaxOrderByAggregateInput = {
     id?: SortOrder
     nama?: SortOrder
+    slug?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -9672,6 +9752,7 @@ export namespace Prisma {
   export type RoleMinOrderByAggregateInput = {
     id?: SortOrder
     nama?: SortOrder
+    slug?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -9695,6 +9776,11 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type RoleScalarRelationFilter = {
     is?: RoleWhereInput
     isNot?: RoleWhereInput
@@ -9710,6 +9796,8 @@ export namespace Prisma {
     tanggalLahir?: SortOrder
     alamat?: SortOrder
     password?: SortOrder
+    isVerified?: SortOrder
+    resetToken?: SortOrder
     roleId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9730,6 +9818,8 @@ export namespace Prisma {
     tanggalLahir?: SortOrder
     alamat?: SortOrder
     password?: SortOrder
+    isVerified?: SortOrder
+    resetToken?: SortOrder
     roleId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9745,6 +9835,8 @@ export namespace Prisma {
     tanggalLahir?: SortOrder
     alamat?: SortOrder
     password?: SortOrder
+    isVerified?: SortOrder
+    resetToken?: SortOrder
     roleId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9773,9 +9865,12 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type OtpCountOrderByAggregateInput = {
@@ -9814,14 +9909,6 @@ export namespace Prisma {
 
   export type OtpSumOrderByAggregateInput = {
     id?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type PosyanduCreateNestedManyWithoutKelurahanInput = {
@@ -10026,16 +10113,16 @@ export namespace Prisma {
     set?: string | null
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type RoleUpdateOneRequiredWithoutUsersNestedInput = {
     create?: XOR<RoleCreateWithoutUsersInput, RoleUncheckedCreateWithoutUsersInput>
     connectOrCreate?: RoleCreateOrConnectWithoutUsersInput
     upsert?: RoleUpsertWithoutUsersInput
     connect?: RoleWhereUniqueInput
     update?: XOR<XOR<RoleUpdateToOneWithWhereWithoutUsersInput, RoleUpdateWithoutUsersInput>, RoleUncheckedUpdateWithoutUsersInput>
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -10217,6 +10304,11 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -10232,11 +10324,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -10504,6 +10591,8 @@ export namespace Prisma {
     tanggalLahir: Date | string
     alamat: string
     password: string
+    isVerified?: boolean
+    resetToken?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -10518,6 +10607,8 @@ export namespace Prisma {
     tanggalLahir: Date | string
     alamat: string
     password: string
+    isVerified?: boolean
+    resetToken?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -10561,6 +10652,8 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFilter<"User"> | Date | string
     alamat?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
+    isVerified?: BoolFilter<"User"> | boolean
+    resetToken?: StringNullableFilter<"User"> | string | null
     roleId?: IntFilter<"User"> | number
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -10568,6 +10661,7 @@ export namespace Prisma {
 
   export type RoleCreateWithoutUsersInput = {
     nama: string
+    slug: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -10575,6 +10669,7 @@ export namespace Prisma {
   export type RoleUncheckedCreateWithoutUsersInput = {
     id?: number
     nama: string
+    slug: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -10597,6 +10692,7 @@ export namespace Prisma {
 
   export type RoleUpdateWithoutUsersInput = {
     nama?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10604,6 +10700,7 @@ export namespace Prisma {
   export type RoleUncheckedUpdateWithoutUsersInput = {
     id?: IntFieldUpdateOperationsInput | number
     nama?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10714,6 +10811,8 @@ export namespace Prisma {
     tanggalLahir: Date | string
     alamat: string
     password: string
+    isVerified?: boolean
+    resetToken?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -10727,6 +10826,8 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFieldUpdateOperationsInput | Date | string
     alamat?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10741,6 +10842,8 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFieldUpdateOperationsInput | Date | string
     alamat?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10755,6 +10858,8 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFieldUpdateOperationsInput | Date | string
     alamat?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

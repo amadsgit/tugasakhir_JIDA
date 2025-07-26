@@ -2,6 +2,15 @@
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
+// Fungsi bantu untuk membuat slug dari nama
+function generateSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '') // hapus karakter spesial
+    .replace(/\s+/g, '_')         // ganti spasi dengan _
+    .replace(/_+/g, '_');         // hapus tanda _ ganda
+}
 
 export async function PUT(
   req: NextRequest,
@@ -9,20 +18,26 @@ export async function PUT(
 ) {
   try {
     const { id } = await context.params;
-    const data = await req.json(); 
+    const data = await req.json();
 
-    const role = await prisma.role.update({
+    if (!data.nama || typeof data.nama !== 'string') {
+      return NextResponse.json({ error: 'Nama tidak valid' }, { status: 400 });
+    }
+
+    const updatedRole = await prisma.role.update({
       where: { id: parseInt(id) },
-      data,
+      data: {
+        nama: data.nama,
+        slug: generateSlug(data.nama),
+      },
     });
 
-    return NextResponse.json(role);
+    return NextResponse.json(updatedRole);
   } catch (error) {
     console.error('[PUT role]', error);
     return NextResponse.json({ error: 'Gagal update role' }, { status: 400 });
   }
 }
-
 
 
 export async function DELETE(

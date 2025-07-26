@@ -156,6 +156,7 @@ exports.Prisma.KaderScalarFieldEnum = {
 exports.Prisma.RoleScalarFieldEnum = {
   id: 'id',
   nama: 'nama',
+  slug: 'slug',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -170,6 +171,8 @@ exports.Prisma.UserScalarFieldEnum = {
   tanggalLahir: 'tanggalLahir',
   alamat: 'alamat',
   password: 'password',
+  isVerified: 'isVerified',
+  resetToken: 'resetToken',
   roleId: 'roleId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

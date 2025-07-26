@@ -56,7 +56,8 @@ model Kader {
 
 model Role {
   id        Int      @id @default(autoincrement())
-  nama      String   @unique // admin, kader, orang_tua_balita, ibu_hamil
+  nama      String   @unique
+  slug      String   @unique
   users     User[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -67,11 +68,13 @@ model User {
   nama         String
   email        String   @unique
   noHp         String
-  noKK         String? // Nomor Kartu Keluarga (hanya ibu_balita/ibu_hamil)
+  noKK         String? // Nomor Kartu Keluarga
   nik          String   @unique
   tanggalLahir DateTime
   alamat       String
   password     String
+  isVerified   Boolean  @default(false) // Status verifikasi OTP/email
+  resetToken   String? // Token untuk reset password
   roleId       Int
   role         Role     @relation(fields: [roleId], references: [id])
   createdAt    DateTime @default(now())
@@ -87,5 +90,5 @@ model Otp {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([email]) // Mempercepat pencarian berdasarkan email
+  @@index([email])
 }

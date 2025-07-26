@@ -54,7 +54,7 @@ export default function Page() {
       });
 
       if (res.ok) {
-        toast.success(isEdit ? 'Role berhasil diperbarui!' : 'Role berhasil ditambahkan!');
+        toast.success(isEdit ? 'Role berhasil diupdate!' : 'Role berhasil disimpan!');
         await fetchRole();
         resetForm();
       } else {
@@ -75,11 +75,11 @@ export default function Page() {
   };
 
   
+  // delete data
   const openDeleteModal = (id: number) => {
     setSelectedDeleteId(id);
     setShowModal(true);
   };
-
   const handleDelete = async () => {
     if (selectedDeleteId === null) return;
     try {
@@ -111,8 +111,8 @@ export default function Page() {
       {/* Header */}
       <div className="flex justify-between items-center mb-3">
         <div>
-          <h1 className="text-2xl font-bold">Manajemen Data <span>Role & User</span></h1>
-          <p className="text-gray-500 dark:text-gray-400">Informasi & manajemen data role & user</p>
+          <h1 className="text-2xl font-bold">Manajemen Data <span>Role & Akun User</span></h1>
+          <p className="text-gray-500 dark:text-gray-400">Informasi data role & akun user</p>
         </div>
       </div>
 
@@ -189,6 +189,8 @@ export default function Page() {
                 <tr>
                   <th className="p-3 border-b">#</th>
                   <th className="p-3 border-b">Nama Role</th>
+                  <th className="p-3 border-b">Dibuat</th>
+                  <th className="p-3 border-b">Diupdate</th>
                   <th className="p-3 border-b">Aksi</th>
                 </tr>
               </thead>
@@ -198,6 +200,20 @@ export default function Page() {
                     <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                       <td className="p-3 border-b">{index + 1}</td>
                       <td className="p-3 border-b">{item.nama}</td>
+                      <td className="p-3 border-b">
+                        {new Date(item.createdAt).toLocaleDateString('id-ID', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric',
+                        })}
+                      </td>
+                      <td className="p-3 border-b">
+                        {new Date(item.updatedAt).toLocaleDateString('id-ID', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric',
+                        })}
+                      </td>
                       <td className="p-3 border-b">
                         <div className="flex gap-2">
                           <button
