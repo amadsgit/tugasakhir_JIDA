@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
-import { Info, Phone, History } from 'lucide-react';
+import { Info, Phone, History, MapPin } from 'lucide-react';
 import ButtonKembali from '@/components/button-kembali';
 
 export default async function PosyanduDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -10,23 +10,19 @@ export default async function PosyanduDetailPage({ params }: { params: Promise<{
 
   const posyandu = await prisma.posyandu.findUnique({
     where: { id: numericId },
-    include: {
-      kelurahan: true, // include relasi kelurahan
-    },
+    include: { kelurahan: true },
   });
 
   if (!posyandu) return notFound();
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      
-      <div className="mb-8 flex items-center justify-between">
+    <div className="p-6 max-w-6xl mx-auto">
+      {/* Header */}
+      <div className="mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">
-            Detail <span className="">Posyandu</span>
-          </h1>
+          <h2 className="text-2xl font-bold mb-1">Detail Posyandu</h2>
           <p className="text-gray-500 dark:text-gray-400">
-            Informasi lengkap posyandu yang terdaftar
+            Informasi lengkap tentang posyandu yang terdaftar
           </p>
         </div>
         <Link href="/dashboard/manajemen-posyandu/data-posyandu">
@@ -34,43 +30,58 @@ export default async function PosyanduDetailPage({ params }: { params: Promise<{
         </Link>
       </div>
 
+      {/* Konten */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Informasi Umum */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow hover:shadow-md transition p-6">
-          <h2 className="text-lg font-semibold flex items-center gap-2 text-gray-700 dark:text-white mb-4">
-            <Info className="w-5 h-5 text-emerald-500" /> Informasi Umum
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 hover:shadow-lg transition-all duration-200">
+          <h2 className="text-lg font-semibold text-emerald-600 flex items-center gap-2 mb-4">
+            <Info className="w-5 h-5" /> Informasi Umum
           </h2>
-          <div className="divide-y divide-gray-200 dark:divide-gray-700 space-y-2 text-gray-600 dark:text-gray-300">
-            <p><strong>Nama:</strong> {posyandu.nama}</p>
-            <p><strong>Alamat:</strong> {posyandu.alamat}</p>
-            <p><strong>Wilayah:</strong> {posyandu.wilayah}</p>
-            <p><strong>Kelurahan:</strong> {posyandu.kelurahan?.nama || 'Tidak ditemukan'}</p>
-            <p><strong>Akreditasi:</strong> {posyandu.akreditasi}</p>
-          </div>
+          <ul className="space-y-3 text-gray-700 dark:text-gray-200">
+            <li><strong>Nama:</strong> {posyandu.nama}</li>
+            <li><strong>Alamat:</strong> {posyandu.alamat}</li>
+            <li><strong>Wilayah:</strong> {posyandu.wilayah}</li>
+            <li><strong>Kelurahan:</strong> {posyandu.kelurahan?.nama || '-'}</li>
+            <li><strong>Akreditasi:</strong> {posyandu.akreditasi}</li>
+          </ul>
         </div>
 
         {/* Kontak & Koordinat */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow hover:shadow-md transition p-6">
-          <h2 className="text-lg font-semibold flex items-center gap-2 text-gray-700 dark:text-white mb-4">
-            <Phone className="w-5 h-5 text-emerald-500" /> Kontak & Koordinat
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 hover:shadow-lg transition-all duration-200">
+          <h2 className="text-lg font-semibold text-emerald-600 flex items-center gap-2 mb-4">
+            <Phone className="w-5 h-5" /> Kontak & Koordinat
           </h2>
-          <div className="divide-y divide-gray-200 dark:divide-gray-700 space-y-2 text-gray-600 dark:text-gray-300">
-            <p><strong>Penanggung Jawab:</strong> {posyandu.penanggungJawab}</p>
-            <p><strong>No HP:</strong> {posyandu.noHp}</p>
-            <p><strong>Latitude:</strong> {posyandu.latitude}</p>
-            <p><strong>Longitude:</strong> {posyandu.longitude}</p>
-          </div>
+          <ul className="space-y-3 text-gray-700 dark:text-gray-200">
+            <li><strong>Penanggung Jawab:</strong> {posyandu.penanggungJawab}</li>
+            <li><strong>No HP:</strong> {posyandu.noHp}</li>
+            <li><strong>Latitude:</strong> {posyandu.latitude}</li>
+            <li><strong>Longitude:</strong> {posyandu.longitude}</li>
+          </ul>
         </div>
 
         {/* Riwayat */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow hover:shadow-md transition p-6 col-span-1 md:col-span-2">
-          <h2 className="text-lg font-semibold flex items-center gap-2 text-gray-700 dark:text-white mb-4">
-            <History className="w-5 h-5 text-emerald-500" /> Riwayat
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 col-span-1 md:col-span-2 hover:shadow-lg transition-all duration-200">
+          <h2 className="text-lg font-semibold text-emerald-600 flex items-center gap-2 mb-4">
+            <History className="w-5 h-5" /> Riwayat Pencatatan
           </h2>
-          <div className="divide-y divide-gray-200 dark:divide-gray-700 space-y-2 text-gray-600 dark:text-gray-300">
-            <p><strong>Dibuat:</strong> {new Date(posyandu.createdAt).toLocaleDateString()}</p>
-            <p><strong>Diupdate:</strong> {new Date(posyandu.updatedAt).toLocaleDateString()}</p>
-          </div>
+          <ul className="space-y-3 text-gray-700 dark:text-gray-200">
+            <li>
+              <strong>Dibuat:</strong>{' '}
+              {new Date(posyandu.createdAt).toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              })}
+            </li>
+            <li>
+              <strong>Diupdate:</strong>{' '}
+              {new Date(posyandu.updatedAt).toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              })}
+            </li>
+          </ul>
         </div>
       </div>
     </div>

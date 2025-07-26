@@ -38,9 +38,9 @@ export default function TopNavbar() {
   }, []);
 
   return (
-    <header className="bg-white shadow px-4 py-3 flex justify-between items-center z-50">
+    <header className="bg-gradient-to-br from-emerald-400 to-emerald-500 shadow px-4 py-3 flex justify-between items-center z-50">
       {/* Judul kiri */}
-      <h1 className="text-lg font-semibold text-gray-700">Dashboard</h1>
+      <h1 className="text-lg font-semibold text-white">Dashboard</h1>
 
       {/* Kanan: Notifikasi & Profil */}
       <div className="flex items-center space-x-4">
@@ -89,8 +89,8 @@ export default function TopNavbar() {
               height={32}
               className="rounded-full border"
             />
-            <span className="hidden md:block text-sm font-medium text-gray-700">
-              Admin
+            <span className="hidden md:block text-sm font-medium text-white font-bold">
+              Administrator
             </span>
           </button>
 

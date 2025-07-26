@@ -23,8 +23,8 @@ export default function Sidebar() {
   return (
     <>
       {/* Mobile Topbar */}
-      <div className="md:hidden bg-gray-100 text-emerald-700 p-4 flex justify-between items-center">
-        <span className="font-bold text-lg">E‑Posyandu Care</span>
+      <div className="md:hidden bg-gray-100 text-emerald-800 p-4 flex justify-between items-center">
+        <span className="font-bold text-emerald-800 text-lg">E‑Posyandu Care</span>
         <button onClick={() => setOpen(!open)}>
           {open ? <XIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
         </button>
