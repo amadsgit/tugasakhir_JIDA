@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { UserIcon, MailIcon, PhoneIcon, CalendarIcon, HomeIcon, FingerprintIcon, CardSimIcon, LockIcon } from 'lucide-react';
 import Link from 'next/link';
 
@@ -13,10 +13,33 @@ export default function RegisterPage() {
     nik: '',
     alamat: '',
     tanggalLahir: '',
-    jenis: 'ibu_balita',
+    role: '',
     password: '',
     confirmPassword: '',
   });
+
+  // get data role
+  const [roleOptions, setRoleOptions] = useState<{ id: number; nama: string; slug:string }[]>([]);
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const res = await fetch('/api/role');
+        const data = await res.json();
+        // Filter hanya role yang diizinkan
+        const filtered = data.filter(
+          (role: { slug: string }) =>
+            role.slug === 'ibu_hamil' || role.slug === 'orang_tua_balita'
+        );
+        setRoleOptions(filtered);
+      } catch (error) {
+        console.error('Gagal memuat role:', error);
+      }
+    };
+
+    fetchRoles();
+  }, []);
+
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -51,26 +74,12 @@ export default function RegisterPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Nama */}
           <InputField icon={<UserIcon className="w-5 h-5 text-gray-400" />} name="nama" placeholder="Nama Lengkap" value={form.nama} onChange={handleChange} />
-
-          {/* Email */}
           <InputField icon={<MailIcon className="w-5 h-5 text-gray-400" />} name="email" type="email" placeholder="Email aktif" value={form.email} onChange={handleChange} />
-
-          {/* No HP */}
           <InputField icon={<PhoneIcon className="w-5 h-5 text-gray-400" />} name="noHp" placeholder="Nomor HP" value={form.noHp} onChange={handleChange} />
-
-          {/* Nomor KK */}
-          <InputField icon={<CardSimIcon className="w-5 h-5 text-gray-400" />} name="noKK" placeholder="Nomor Kartu Keluarga" value={form.noKK} onChange={handleChange}
-          />
-
-          {/* NIK */}
+          <InputField icon={<CardSimIcon className="w-5 h-5 text-gray-400" />} name="noKK" placeholder="Nomor Kartu Keluarga" value={form.noKK} onChange={handleChange} />
           <InputField icon={<FingerprintIcon className="w-5 h-5 text-gray-400" />} name="nik" placeholder="NIK" value={form.nik} onChange={handleChange} />
-
-          {/* Alamat */}
           <InputField icon={<HomeIcon className="w-5 h-5 text-gray-400" />} name="alamat" placeholder="Alamat Lengkap" value={form.alamat} onChange={handleChange} />
-
-          {/* Tanggal Lahir */}
           <div>
             <label htmlFor="tanggalLahir" className="block text-sm font-medium text-gray-700 mb-1">
                 Tanggal Lahir
@@ -88,26 +97,18 @@ export default function RegisterPage() {
                 <CalendarIcon className="w-5 h-5 absolute top-2.5 left-3 text-gray-400" />
             </div>
           </div>
-
-
-          {/* Jenis Pendaftaran */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Jenis Pendaftaran</label>
-            <select
-              name="jenis"
-              value={form.jenis}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-teal-500"
-            >
-              <option value="ibu_balita">Ibu Balita</option>
-              <option value="ibu_hamil">Ibu Hamil</option>
+            <select name="role" value={form.role} onChange={handleChange} className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-teal-500" >
+              <option value="">Pilih jenis pendaftaran</option>
+              {roleOptions.map((role) => (
+                <option key={role.id} value={role.id}>
+                  {role.nama}
+                </option>
+              ))}
             </select>
           </div>
-
-          {/* Password */}
           <InputField icon={<LockIcon className="w-5 h-5 text-gray-400" />} name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} />
-
-          {/* Confirm Password */}
           <InputField icon={<LockIcon className="w-5 h-5 text-gray-400" />} name="confirmPassword" type="password" placeholder="Ulangi Password" value={form.confirmPassword} onChange={handleChange} />
 
           <button
