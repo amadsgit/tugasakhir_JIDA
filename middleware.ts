@@ -33,7 +33,8 @@ export async function middleware(req: NextRequest) {
       orang_tua_balita: '/dashboard/orang-tua-balita',
     };
 
-    return NextResponse.redirect(new URL(roleRoutes[user.role] || '/dashboard', req.url));
+    return NextResponse.redirect(new URL(roleRoutes[user.role], req.url));
+    // return NextResponse.redirect(new URL(roleRoutes[user.role] || '/dashboard', req.url));
   }
 
   // Tambahkan header no-cache untuk semua halaman dashboard yang dilindungi

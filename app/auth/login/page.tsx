@@ -48,7 +48,7 @@ export default function LoginPage() {
 
       toast.success('Selamat datang kembali!');
       const roleRoutes: Record<string, string> = {
-        admin: '/dashboard/admin',
+        administrator: '/dashboard/admin',
         kader: '/dashboard/kader',
         ibu_hamil: '/dashboard/ibu-hamil',
         orang_tua_balita: '/dashboard/orang-tua-balita',

@@ -11,12 +11,26 @@ import { useState, useRef, useEffect } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
 
 
+
 export default function TopNavbar() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
-
+  const [userData, setUserData] = useState<any>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    async function fetchUser() {
+      const res = await fetch('/api/me');
+      if (res.ok) {
+        const data = await res.json();
+        setUserData(data.user); // <- simpan ke state
+      }
+    }
+
+    fetchUser();
+  }, []);
+
 
   const showLogoutConfirm = () => {
     confirmAlert({
@@ -151,7 +165,7 @@ export default function TopNavbar() {
               className="rounded-full border"
             />
             <span className="hidden md:block text-sm font-medium text-white font-bold">
-              Administrator
+              {userData?.nama || 'Loading...'}
             </span>
           </button>
 
