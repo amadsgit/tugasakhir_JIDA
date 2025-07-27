@@ -14,9 +14,30 @@ export async function middleware(req: NextRequest) {
   }
   
   const token = req.cookies.get('token')?.value;
-  const user = token ? await verifyJwtToken<{ role: string; id: string }>(token) : null;
+  let user = null;
+  
+  if (token) {
+    try {
+      user = await verifyJwtToken<{ role: string; id: string; email?: string }>(token);
+      if (process.env.NODE_ENV === 'production') {
+        console.log('Middleware: Token verified for user ID:', user?.id || 'unknown');
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV === 'production') {
+        console.log('Middleware: Token verification failed:', error);
+      }
+      user = null;
+    }
+  } else {
+    if (process.env.NODE_ENV === 'production' && path.startsWith('/dashboard')) {
+      console.log('Middleware: No token found for dashboard access');
+    }
+  }
 
   if (!user && path.startsWith('/dashboard')) {
+    if (process.env.NODE_ENV === 'production') {
+      console.log('Middleware: Redirecting to login from:', path);
+    }
     const response = NextResponse.redirect(new URL('/auth/login', req.url));
     // Tambahkan header untuk mencegah caching halaman dashboard
     response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate, private');

@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
 
-const verifyAuthAndRedirect = async (userRole: string) => {
+const redirectToDashboard = (userRole: string) => {
   const roleRoutes: Record<string, string> = {
     administrator: '/dashboard/admin',
     kader: '/dashboard/kader',
@@ -15,44 +15,11 @@ const verifyAuthAndRedirect = async (userRole: string) => {
     orang_tua_balita: '/dashboard/orang-tua-balita',
   };
 
-  try {
-    await new Promise(resolve => setTimeout(resolve, 100));
-    
-    const response = await fetch('/api/me', {
-      method: 'GET',
-      credentials: 'include', // Include cookies
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      if (data.user) {
-
-        const targetRoute = roleRoutes[userRole] || '/dashboard';
-        window.location.href = targetRoute;
-        return;
-      }
-    }
-
-    await new Promise(resolve => setTimeout(resolve, 500));
-    const retryResponse = await fetch('/api/me', {
-      method: 'GET',
-      credentials: 'include',
-    });
-
-    if (retryResponse.ok) {
-      const retryData = await retryResponse.json();
-      if (retryData.user) {
-        const targetRoute = roleRoutes[userRole] || '/dashboard';
-        window.location.href = targetRoute;
-        return;
-      }
-    }
-
-    toast.error('Terjadi masalah saat redirect. Silakan refresh halaman.');
-  } catch (error) {
-    console.error('Error verifying authentication:', error);
-    toast.error('Terjadi masalah saat redirect. Silakan refresh halaman.');
-  }
+  const targetRoute = roleRoutes[userRole] || '/dashboard';
+  
+  setTimeout(() => {
+    window.location.replace(targetRoute);
+  }, 100);
 };
 
 export default function LoginPage() {
@@ -95,9 +62,9 @@ export default function LoginPage() {
         return toast.error(result.message || 'Login gagal!');
       }
 
-      toast.success('login berhasil, selamat datang kembali!');
+      toast.success('Login berhasil, Selamat datang kembali!');
       
-      await verifyAuthAndRedirect(result.user.role);
+      redirectToDashboard(result.user.role);
     } catch (error) {
       console.error(error);
       toast.error('Terjadi kesalahan saat login.');

@@ -57,9 +57,6 @@ export async function POST(req: Request) {
       secure: process.env.NODE_ENV === 'production',
       maxAge: 3600, // 1 jam
       path: '/',
-      ...(process.env.NODE_ENV === 'production' && process.env.VERCEL_URL && {
-        domain: `.${process.env.VERCEL_URL.replace('https://', '')}`
-      })
     });
 
     console.log('Login successful for user:', payload.email, 'Role:', payload.role);
