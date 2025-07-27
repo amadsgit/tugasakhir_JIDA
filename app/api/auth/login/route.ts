@@ -51,7 +51,8 @@ export async function POST(req: Request) {
 
     const response = NextResponse.json({ message: 'Login berhasil', user: payload });
     response.cookies.set('token', token, {
-      httpOnly: true,
+      httpOnly: false, // untuk sementara
+      // httpOnly: true,
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
       maxAge: 3600, // 1 jam
