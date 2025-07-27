@@ -1,13 +1,11 @@
 import SideNavbar from '@/app/ui/dashboard/side-navbar';
 import TopNavbar from '@/app/ui/dashboard/top-navbar';
 import Footer from '@/app/ui/dashboard/footer';
-import { Toaster } from 'react-hot-toast';
 import ReduxProvider from '@/store/ReduxProvider';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="h-screen md:flex">
-      <Toaster position="top-center" reverseOrder={false} />
       <aside className="w-full md:w-64 flex-none z-50 bg-white border-r shadow-md">
         <SideNavbar />
       </aside>

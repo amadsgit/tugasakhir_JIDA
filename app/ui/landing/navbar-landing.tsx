@@ -42,7 +42,6 @@ export default function NavbarLanding() {
           <NavItem href="/" icon={<HomeIcon className="w-5 h-5" />} pathname={pathname}>Beranda</NavItem>
           <NavItem href="/tentang" icon={<InformationCircleIcon className="w-5 h-5" />} pathname={pathname}>Tentang</NavItem>
           <NavItem href="/kontak" icon={<PhoneIcon className="w-5 h-5" />} pathname={pathname}>Kontak</NavItem>
-          <NavItem href="/dashboard" icon={<ChartBarIcon className="w-5 h-5" />} pathname={pathname}>Dashboard</NavItem>
           <NavItem href="/auth/login" icon={<LogInIcon className="w-5 h-5" />} pathname={pathname}>Login</NavItem>
         </div>
       </div>
@@ -53,7 +52,6 @@ export default function NavbarLanding() {
           <NavItem href="/" icon={<HomeIcon className="w-5 h-5" />} pathname={pathname}>Beranda</NavItem>
           <NavItem href="/tentang" icon={<InformationCircleIcon className="w-5 h-5" />} pathname={pathname}>Tentang</NavItem>
           <NavItem href="/kontak" icon={<PhoneIcon className="w-5 h-5" />} pathname={pathname}>Kontak</NavItem>
-          <NavItem href="/dashboard" icon={<ChartBarIcon className="w-5 h-5" />} pathname={pathname}>Dashboard</NavItem>
           <NavItem href="/auth/login" icon={<LogInIcon className="w-5 h-5" />} pathname={pathname}>Login</NavItem>
         </div>
       )}

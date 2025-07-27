@@ -3,8 +3,14 @@ import FooterLanding from '@/app/ui/landing/footer-landing';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import Image from 'next/image';
+import { redirect } from 'next/navigation';
+
 
 export default function Page() {
+
+  // route sementara ke halaman login 
+  redirect('/auth/login');
+
   return (
     <main className="flex min-h-screen flex-col bg-gradient-to-b from-white via-emerald-50 to-white text-gray-800">
       {/* Navbar */}

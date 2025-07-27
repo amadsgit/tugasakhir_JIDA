@@ -1,17 +1,108 @@
 'use client';
 
-import { MailIcon, LockIcon } from 'lucide-react';
+import { MailIcon, LockIcon, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [errors, setErrors] = useState<{ email?: string[]; password?: string[] }>({});
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log({ email, password });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrors({});
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+
+      const result = await res.json();
+
+      if (res.status === 400 && result.errors) {
+        setLoading(false);
+        return setErrors(result.errors);
+      }
+
+      if (res.status === 403 && result.unverified) {
+        setLoading(false);
+        toast.error('Akun belum diverifikasi, silakan masukkan OTP.');
+        return router.push(`/auth/verify-otp?email=${encodeURIComponent(form.email)}`);
+      }
+
+      if (!res.ok) {
+        setLoading(false);
+        return toast.error(result.message || 'Login gagal!');
+      }
+
+      toast.success('Selamat datang kembali!');
+      const roleRoutes: Record<string, string> = {
+        admin: '/dashboard/admin',
+        kader: '/dashboard/kader',
+        ibu_hamil: '/dashboard/ibu-hamil',
+        orang_tua_balita: '/dashboard/orang-tua-balita',
+      };
+
+      window.location.href = roleRoutes[result.user.role] || '/dashboard';
+      console.log('Redirecting to:', roleRoutes[result.user.role]);
+    } catch (error) {
+      console.error(error);
+      toast.error('Terjadi kesalahan saat login.');
+      setLoading(false);
+    }
+  };
+
+
+  // catatan 
+  useEffect(() => {
+    toast.custom((t) => (
+      <div className="fixed top-4 left-2 z-20">
+        <div
+          className={`${
+            t.visible ? 'animate-enter' : 'animate-leave'
+          } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+        >
+          <div className="flex-1 w-500 p-4">
+            <div className="flex items-start">
+              <div className="flex-shrink-0 pt-0.5">
+              </div>
+              <div className="ml-3 flex-1">
+                <p className="text-sm font-medium text-gray-900">
+                  akun admin & kader
+                </p>
+                <p className="mt-1 text-sm text-gray-500">
+                registrasi hanya untuk <span className="font-bold">akun ibu hamil dan orang tua balita.</span> <br />
+                akun dgn <span className="font-bold">role administrator & kader</span> hanya dibuatkan oleh admin. akun sementara yang telah didaftarkan: <br /><br />
+                 <span className="font-bold">administrator : email: mdahmadline@gmail.com<br /> pass: password1234 <br/>
+                  kader: email: ahmadpramesta@gmail.com<br /> pass: password1234</span> 
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="flex border-l border-gray-200">
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-teal-600 hover:text-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            >
+              Tutup
+            </button>
+          </div>
+        </div>
+      </div>
+    ));
+  }, []);
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-400 to-green-600 flex items-center justify-center px-4">
@@ -19,39 +110,48 @@ export default function LoginPage() {
         <div className="text-center">
           <img src="/logo3.png" alt="Logo Posyandu" className="h-16 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800">Login e-Posyandu</h2>
-          <p className="text-sm text-gray-500">Silahkan masuk menggunakan email dan password</p>
+          <p className="text-sm text-gray-500">Silakan masuk menggunakan email dan password</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
-          <div className="relative">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-              required
-              className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none"
-            />
-            <MailIcon className="w-5 h-5 absolute top-3 left-3 text-gray-400" />
-          </div>
-
-          <div className="relative">
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              required
-              className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none"
-            />
-            <LockIcon className="w-5 h-5 absolute top-3 left-3 text-gray-400" />
-          </div>
+          {[
+            { name: 'email', type: 'email', icon: MailIcon, placeholder: 'Email' },
+            { name: 'password', type: 'password', icon: LockIcon, placeholder: 'Password' },
+          ].map(({ name, type, icon: Icon, placeholder }) => (
+            <div key={name} className="relative">
+              <input
+                name={name}
+                type={type}
+                value={form[name as 'email' | 'password']}
+                onChange={handleChange}
+                placeholder={placeholder}
+                required
+                className={`w-full px-4 py-2 pl-10 border rounded-md focus:ring-2 focus:outline-none ${
+                  errors[name as 'email' | 'password']
+                    ? 'border-red-500 focus:ring-red-500'
+                    : 'border-gray-300 focus:ring-teal-500'
+                }`}
+              />
+              <Icon className="w-5 h-5 absolute top-3 left-3 text-gray-400" />
+              {errors[name as 'email' | 'password'] && (
+                <p className="text-sm text-red-600 mt-1">{errors[name as 'email' | 'password']![0]}</p>
+              )}
+            </div>
+          ))}
 
           <button
             type="submit"
-            className="w-full bg-teal-600 text-white py-1 rounded-md hover:bg-teal-700 transition shadow-md font-semibold"
+            className="w-full bg-teal-600 text-white py-1 rounded-md hover:bg-teal-700 transition shadow-md font-semibold flex justify-center items-center gap-2"
+            disabled={loading}
           >
-            Login
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>Loading ... </span>
+              </>
+            ) : (
+              'Login'
+            )}
           </button>
 
           <div className="text-center text-sm text-gray-600">
@@ -64,10 +164,11 @@ export default function LoginPage() {
         <div className="text-center text-sm text-gray-500">
           Belum punya akun?{' '}
           <Link href="/auth/register" className="text-teal-600 hover:underline">
-            Daftar sekarang
-          </Link><br />
+            Registrasi sekarang
+          </Link>
+          <br />
           <Link href="/" className="text-teal-600 hover:underline">
-            Kembali
+            kembali ke beranda
           </Link>
         </div>
       </div>

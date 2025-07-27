@@ -8,6 +8,8 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
+import { confirmAlert } from 'react-confirm-alert';
+
 
 export default function TopNavbar() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -15,6 +17,66 @@ export default function TopNavbar() {
 
   const profileRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
+
+  const showLogoutConfirm = () => {
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <div className="bg-white p-6 rounded-md shadow-md border w-[350px] text-center">
+            <h2 className="text-xl font-semibold mb-2">Konfirmasi Logout</h2>
+            <p className="text-gray-600 mb-4">Apakah Anda yakin ingin keluar?</p>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={onClose}
+                className="px-4 py-2 bg-white border rounded hover:bg-gray-200 transition"
+              >
+                Batal
+              </button>
+              <button
+                onClick={() => {
+                  handleLogout();
+                  onClose();
+                }}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+              >
+                Ya
+              </button>
+            </div>
+          </div>
+        );
+      },
+    });
+  };
+
+  const handleLogout = async () => {
+    // Mencegah banyak klik
+    const button = document.activeElement as HTMLButtonElement;
+    if (button) {
+      button.disabled = true;
+    }
+
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.clear();
+        sessionStorage.clear();
+      }
+
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // memastikan permintaan selesai bahkan jika halaman di unload
+        keepalive: true,
+      });
+      
+      window.location.replace('/auth/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      
+      window.location.replace('/auth/login');
+    }
+  };
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -32,7 +94,6 @@ export default function TopNavbar() {
         setIsNotifOpen(false);
       }
     }
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
@@ -103,17 +164,13 @@ export default function TopNavbar() {
                 <UserCircleIcon className="w-5 h-5 text-blue-500" />
                 Profil
               </Link>
-              <Link href="/">
-              {/* <form action="/" method="POST"> */}
-                <button
-                  type="submit"
-                  className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  <PowerIcon className="w-5 h-5 text-red-500" />
-                  Sign Out
-                </button>
-              {/* </form> */}
-              </Link>
+              <button
+                onClick={showLogoutConfirm}
+                className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                <PowerIcon className="w-5 h-5 text-red-500" />
+                Log Out
+              </button>
             </div>
           )}
         </div>

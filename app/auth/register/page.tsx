@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { UserIcon, MailIcon, PhoneIcon, CalendarIcon, HomeIcon, FingerprintIcon, CardSimIcon, LockIcon } from 'lucide-react';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -18,14 +20,18 @@ export default function RegisterPage() {
     confirmPassword: '',
   });
 
+  const [isPasswordMatch, setIsPasswordMatch] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+  const [errors, setErrors] = useState({ password: '' });
+
   // get data role
-  const [roleOptions, setRoleOptions] = useState<{ id: number; nama: string; slug:string }[]>([]);
+  const [roleOptions, setRoleOptions] = useState<{ id: number; nama: string; slug: string }[]>([]);
   useEffect(() => {
     const fetchRoles = async () => {
       try {
         const res = await fetch('/api/role');
         const data = await res.json();
-        // Filter hanya role yang diizinkan
         const filtered = data.filter(
           (role: { slug: string }) =>
             role.slug === 'ibu_hamil' || role.slug === 'orang_tua_balita'
@@ -40,28 +46,76 @@ export default function RegisterPage() {
   }, []);
 
 
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    };
+    const { name, value } = e.target;
+    const updatedForm = { ...form, [name]: value };
+    setForm(updatedForm);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    // Validasi langsung password
+      if (name === 'password') {
+        if (value.length < 6) {
+          setErrors(prev => ({ ...prev, password: 'Minimal 6 karakter' }));
+        } else {
+          setErrors(prev => ({ ...prev, password: '' }));
+        }
+      }
+    // validasi langsung saat input
+    if (name === 'password' || name === 'confirmPassword') {
+      setIsPasswordMatch(updatedForm.password === updatedForm.confirmPassword);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (form.password !== form.confirmPassword) {
-      alert('Password dan konfirmasi tidak cocok');
+      toast.error('Password dan konfirmasi tidak cocok!');
       return;
     }
 
+    setIsSubmitting(true);
+
     const cleanedForm = {
-      ...form,
+      nama: form.nama,
+      email: form.email,
       noHp: form.noHp.replace(/\D/g, ''),
-      nik: form.nik.replace(/\D/g, ''),
       noKK: form.noKK?.replace(/\D/g, ''),
+      nik: form.nik.replace(/\D/g, ''),
+      alamat: form.alamat,
+      tanggalLahir: form.tanggalLahir,
+      password: form.password,
+      roleId: Number(form.role),
     };
 
-    console.log('Form submitted:', cleanedForm);
-    // Rencana kirim ke /api/auth/register
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cleanedForm),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        // Tangani status error apa pun, termasuk 409
+        toast.error(result.message || 'Gagal mendaftar, silahkan coba lagi!');
+        return;
+      }
+
+      // Jika berhasil (res.ok === true, status 201)
+      toast.success('Pendaftaran berhasil! Kode OTP dikirim ke email.');
+      localStorage.setItem('registerEmail', form.email);
+
+      setTimeout(() => {
+        router.push(`/auth/verify-otp?email=${encodeURIComponent(cleanedForm.email)}`);
+      }, 1500);
+
+    } catch (error) {
+      console.error('Error saat submit:', error);
+      toast.error('Terjadi kesalahan saat pendaftaran!');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -74,18 +128,102 @@ export default function RegisterPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <InputField icon={<UserIcon className="w-5 h-5 text-gray-400" />} name="nama" placeholder="Nama Lengkap" value={form.nama} onChange={handleChange} />
-          <InputField icon={<MailIcon className="w-5 h-5 text-gray-400" />} name="email" type="email" placeholder="Email aktif" value={form.email} onChange={handleChange} />
-          <InputField icon={<PhoneIcon className="w-5 h-5 text-gray-400" />} name="noHp" placeholder="Nomor HP" value={form.noHp} onChange={handleChange} />
-          <InputField icon={<CardSimIcon className="w-5 h-5 text-gray-400" />} name="noKK" placeholder="Nomor Kartu Keluarga" value={form.noKK} onChange={handleChange} />
-          <InputField icon={<FingerprintIcon className="w-5 h-5 text-gray-400" />} name="nik" placeholder="NIK" value={form.nik} onChange={handleChange} />
-          <InputField icon={<HomeIcon className="w-5 h-5 text-gray-400" />} name="alamat" placeholder="Alamat Lengkap" value={form.alamat} onChange={handleChange} />
+          <div className="relative">
+            <input
+              name="nama"
+              type="text"
+              value={form.nama}
+              onChange={handleChange}
+              placeholder="Nama Lengkap"
+              required
+              className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            />
+            <UserIcon className="w-5 h-5 absolute top-2.5 left-3 text-gray-400" />
+          </div>
+
+          <div className="relative">
+            <input
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="Email aktif"
+              required
+              className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            />
+            <MailIcon className="w-5 h-5 absolute top-2.5 left-3 text-gray-400" />
+          </div>
+
+          <div className="relative">
+            <input
+              name="noHp"
+              type="tel"
+              value={form.noHp}
+              onChange={handleChange}
+              placeholder="Nomor HP"
+              maxLength={13}
+              onInput={(e) => {
+                e.currentTarget.value = e.currentTarget.value.replace(/\D/g, '').slice(0, 16);
+              }}
+              required
+              className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            />
+            <PhoneIcon className="w-5 h-5 absolute top-2.5 left-3 text-gray-400" />
+          </div>
+
+          <div className="relative">
+            <input
+              name="noKK"
+              type="text"
+              value={form.noKK}
+              onChange={handleChange}
+              maxLength={16}
+              onInput={(e) => {
+                e.currentTarget.value = e.currentTarget.value.replace(/\D/g, '').slice(0, 16);
+              }}
+              placeholder="Nomor Kartu Keluarga"
+              required
+              className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            />
+            <CardSimIcon className="w-5 h-5 absolute top-2.5 left-3 text-gray-400" />
+          </div>
+
+          <div className="relative">
+            <input
+              name="nik"
+              type="text"
+              value={form.nik}
+              onChange={handleChange}
+              maxLength={16}
+              onInput={(e) => {
+                e.currentTarget.value = e.currentTarget.value.replace(/\D/g, '').slice(0, 16);
+              }}
+              placeholder="NIK"
+              required
+              className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            />
+            <FingerprintIcon className="w-5 h-5 absolute top-2.5 left-3 text-gray-400" />
+          </div>
+
+          <div className="relative">
+            <input
+              name="alamat"
+              type="text"
+              value={form.alamat}
+              onChange={handleChange}
+              placeholder="Alamat Lengkap"
+              required
+              className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            />
+            <HomeIcon className="w-5 h-5 absolute top-2.5 left-3 text-gray-400" />
+          </div>
+
           <div>
             <label htmlFor="tanggalLahir" className="block text-sm font-medium text-gray-700 mb-1">
-                Tanggal Lahir
+              Tanggal Lahir
             </label>
             <div className="relative">
-                <input
+              <input
                 name="tanggalLahir"
                 id="tanggalLahir"
                 type="date"
@@ -93,13 +231,20 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                />
-                <CalendarIcon className="w-5 h-5 absolute top-2.5 left-3 text-gray-400" />
+              />
+              <CalendarIcon className="w-5 h-5 absolute top-2.5 left-3 text-gray-400" />
             </div>
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Jenis Pendaftaran</label>
-            <select name="role" value={form.role} onChange={handleChange} className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-teal-500" >
+            <select
+              name="role"
+              value={form.role}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-teal-500"
+              required
+            >
               <option value="">Pilih jenis pendaftaran</option>
               {roleOptions.map((role) => (
                 <option key={role.id} value={role.id}>
@@ -108,14 +253,51 @@ export default function RegisterPage() {
               ))}
             </select>
           </div>
-          <InputField icon={<LockIcon className="w-5 h-5 text-gray-400" />} name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} />
-          <InputField icon={<LockIcon className="w-5 h-5 text-gray-400" />} name="confirmPassword" type="password" placeholder="Ulangi Password" value={form.confirmPassword} onChange={handleChange} />
+
+          <div className="relative">
+            <input
+              name="password"
+              type="password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder="Password"
+              required
+              className={`w-full px-4 py-2 pl-10 border rounded-md focus:ring-2 focus:outline-none ${
+                errors.password ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-teal-500'
+              }`}
+            />
+            <LockIcon className="w-5 h-5 absolute top-2.5 left-3 text-gray-400" />
+          </div>
+          {errors.password && (
+            <p className="text-sm text-red-600 mt-1">{errors.password}</p>
+          )}
+
+          <div className="relative">
+            <input
+              name="confirmPassword"
+              type="password"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              placeholder="Konfirmasi Password"
+              required
+              className={`w-full px-4 py-2 pl-10 border rounded-md focus:ring-2 focus:outline-none ${
+                isPasswordMatch
+                  ? 'border-gray-300 focus:ring-teal-500'
+                  : 'border-red-500 focus:ring-red-500'
+              }`}
+            />
+            <LockIcon className="w-5 h-5 absolute top-2.5 left-3 text-gray-400" />
+          </div>
+          {!isPasswordMatch && (
+            <p className="text-sm text-red-500 -mt-2">Konfirmasi password tidak sama</p>
+          )}
 
           <button
             type="submit"
-            className="w-full bg-teal-600 text-white py-2 rounded-md hover:bg-teal-700 transition font-semibold shadow"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded disabled:opacity-50"
+            disabled={isSubmitting}
           >
-            Daftar
+            {isSubmitting ? 'Mendaftar...' : 'Daftar'}
           </button>
 
           <div className="text-center text-sm text-gray-500">
@@ -126,38 +308,6 @@ export default function RegisterPage() {
           </div>
         </form>
       </div>
-    </div>
-  );
-}
-
-// Komponen InputField
-function InputField({
-  icon,
-  name,
-  placeholder,
-  value,
-  onChange,
-  type = 'text',
-}: {
-  icon: React.ReactNode;
-  name: string;
-  placeholder: string;
-  value: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
-  type?: string;
-}) {
-  return (
-    <div className="relative">
-      <input
-        name={name}
-        type={type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        required
-        className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none"
-      />
-      <div className="absolute left-3 top-2.5">{icon}</div>
     </div>
   );
 }
