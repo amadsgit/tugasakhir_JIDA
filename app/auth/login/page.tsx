@@ -84,8 +84,8 @@ export default function LoginPage() {
                 <p className="mt-1 text-sm text-gray-500">
                 registrasi hanya untuk <span className="font-bold">akun ibu hamil dan orang tua balita.</span> <br />
                 akun dgn <span className="font-bold">role administrator & kader</span> hanya dibuatkan oleh admin. akun sementara yang telah didaftarkan: <br /><br />
-                 <span className="font-bold">administrator : email: mdahmadline@gmail.com<br /> pass: password1234 <br/>
-                  kader: email: ahmadpramesta@gmail.com<br /> pass: password1234</span> 
+                 <span className="font-bold">administrator : email: mdahmadline@gmail.com<br /> pass: password123 <br/>
+                  kader: email: ahmadpramesta@gmail.com<br /> pass: password123</span> 
                 </p>
               </div>
             </div>
