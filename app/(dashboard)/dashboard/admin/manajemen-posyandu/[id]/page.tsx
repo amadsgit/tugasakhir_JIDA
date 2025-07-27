@@ -25,7 +25,7 @@ export default async function PosyanduDetailPage({ params }: { params: Promise<{
             Informasi lengkap tentang posyandu yang terdaftar
           </p>
         </div>
-        <Link href="/dashboard/manajemen-posyandu/data-posyandu">
+        <Link href="/dashboard/admin/manajemen-posyandu/data-posyandu">
           <ButtonKembali />
         </Link>
       </div>

@@ -6,6 +6,55 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
+
+const verifyAuthAndRedirect = async (userRole: string) => {
+  const roleRoutes: Record<string, string> = {
+    administrator: '/dashboard/admin',
+    kader: '/dashboard/kader',
+    ibu_hamil: '/dashboard/ibu-hamil',
+    orang_tua_balita: '/dashboard/orang-tua-balita',
+  };
+
+  try {
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    const response = await fetch('/api/me', {
+      method: 'GET',
+      credentials: 'include', // Include cookies
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data.user) {
+
+        const targetRoute = roleRoutes[userRole] || '/dashboard';
+        window.location.href = targetRoute;
+        return;
+      }
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 500));
+    const retryResponse = await fetch('/api/me', {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (retryResponse.ok) {
+      const retryData = await retryResponse.json();
+      if (retryData.user) {
+        const targetRoute = roleRoutes[userRole] || '/dashboard';
+        window.location.href = targetRoute;
+        return;
+      }
+    }
+
+    toast.error('Terjadi masalah saat redirect. Silakan refresh halaman.');
+  } catch (error) {
+    console.error('Error verifying authentication:', error);
+    toast.error('Terjadi masalah saat redirect. Silakan refresh halaman.');
+  }
+};
+
 export default function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState<{ email?: string[]; password?: string[] }>({});
@@ -46,16 +95,9 @@ export default function LoginPage() {
         return toast.error(result.message || 'Login gagal!');
       }
 
-      toast.success('Selamat datang kembali!');
-      const roleRoutes: Record<string, string> = {
-        administrator: '/dashboard/admin',
-        kader: '/dashboard/kader',
-        ibu_hamil: '/dashboard/ibu-hamil',
-        orang_tua_balita: '/dashboard/orang-tua-balita',
-      };
-
-      window.location.href = roleRoutes[result.user.role] || '/dashboard';
-      console.log('Redirecting to:', roleRoutes[result.user.role]);
+      toast.success('login berhasil, selamat datang kembali!');
+      
+      await verifyAuthAndRedirect(result.user.role);
     } catch (error) {
       console.error(error);
       toast.error('Terjadi kesalahan saat login.');
@@ -147,7 +189,7 @@ export default function LoginPage() {
             {loading ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                <span>Loading ... </span>
+                <span>Login ... </span>
               </>
             ) : (
               'Login'

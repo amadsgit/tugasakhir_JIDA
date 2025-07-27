@@ -99,7 +99,7 @@ export default function Page() {
               Informasi & manajemen data posyandu
             </p>
           </div>
-          <Link href="/dashboard/manajemen-posyandu/create">
+          <Link href="/dashboard/admin/manajemen-posyandu/create">
             <button className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm px-4 py-2 rounded-md shadow-sm transition">
               <PlusCircle className="w-4 h-4 text-white text-bold" />
               Posyandu
@@ -157,7 +157,7 @@ export default function Page() {
                         <td className="px-6 py-4 text-center">
                           <div className="flex justify-center items-center gap-2">
                             <Link
-                              href={`/dashboard/manajemen-posyandu/${item.id}/edit`}
+                              href={`/dashboard/admin/manajemen-posyandu/${item.id}/edit`}
                               className="p-2 rounded-md bg-white border border-gray-300 hover:border-teal-500 hover:text-teal-600 transition"
                               title="Edit"
                             >
@@ -173,7 +173,7 @@ export default function Page() {
                             </button>
 
                             <Link
-                              href={`/dashboard/manajemen-posyandu/${item.id}`}
+                              href={`/dashboard/admin/manajemen-posyandu/${item.id}`}
                               className="p-2 rounded-md bg-white border border-gray-300 hover:border-blue-500 hover:text-blue-600 transition"
                               title="Detail Posyandu"
                             >
@@ -181,7 +181,7 @@ export default function Page() {
                             </Link>
 
                             <Link
-                              href={`/dashboard/manajemen-posyandu/${item.id}/kader`}
+                              href={`/dashboard/admin/manajemen-posyandu/${item.id}/kader`}
                               className="px-3 py-1.5 text-xs rounded-md bg-sky-600 hover:bg-sky-500 text-white transition"
                             >
                               Kelola Kader

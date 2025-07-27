@@ -50,15 +50,19 @@ export async function POST(req: Request) {
     const token = await signJwtAccessToken(payload);
 
     const response = NextResponse.json({ message: 'Login berhasil', user: payload });
+    
     response.cookies.set('token', token, {
-      httpOnly: false, // untuk sementara
-      // httpOnly: true,
+      httpOnly: true,
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
       maxAge: 3600, // 1 jam
       path: '/',
+      ...(process.env.NODE_ENV === 'production' && process.env.VERCEL_URL && {
+        domain: `.${process.env.VERCEL_URL.replace('https://', '')}`
+      })
     });
 
+    console.log('Login successful for user:', payload.email, 'Role:', payload.role);
     return response;
   } catch (err) {
     console.error(err);

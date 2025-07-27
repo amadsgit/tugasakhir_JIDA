@@ -63,7 +63,7 @@ export default function EditPosyanduPage() {
       } catch (err) {
         console.error(err);
         toast.error('Gagal memuat data posyandu');
-        router.push('/dashboard/manajemen-posyandu/data-posyandu');
+        router.push('/dashboard/admin/manajemen-posyandu/data-posyandu');
       }
     };
 
@@ -119,7 +119,7 @@ export default function EditPosyanduPage() {
       if (!res.ok) throw new Error('Gagal mengupdate data');
 
       toast.success('Data berhasil diupdate!');
-      router.push('/dashboard/manajemen-posyandu/data-posyandu');
+      router.push('/dashboard/admin/manajemen-posyandu/data-posyandu');
     } catch (err) {
       console.error(err);
       toast.error('Terjadi kesalahan saat mengupdate data.');
