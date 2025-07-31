@@ -10,12 +10,12 @@ import Search from '@/app/ui/search';
 import TabsPane from '@/components/tab-pane-manajemen-akun';
 
 type Role = {
-  id: number;
+  id: string;
   nama: string;
 };
 
 type User = {
-  id: number;
+  id: string;
   nama: string;
   email: string;
   noHp: string;
@@ -31,7 +31,7 @@ export default function Page() {
   const [userList, setUserList] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export default function Page() {
 
 
   // delete user
-  const openDeleteModal = (id: number) => {
+  const openDeleteModal = (id: string) => {
     setSelectedId(id);
     setShowModal(true);
   };
@@ -101,7 +101,7 @@ export default function Page() {
             <h1 className="text-2xl font-bold">Manajemen Data <span>Role & Akun User</span></h1>
             <p className="text-gray-500 dark:text-gray-400">Informasi data role & akun user</p>
           </div>
-          <Link href="/dashboard/manajemen-posyandu/create">
+          <Link href="#">
             <button className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm px-4 py-2 rounded-md shadow-sm transition">
               <PlusCircle className="w-4 h-4 text-white text-bold" />
               User
@@ -159,7 +159,7 @@ export default function Page() {
                         <td className="px-6 py-4 text-center">
                           <div className="flex justify-center items-center gap-2">
                             <Link
-                              href={`/dashboard/manajemen-posyandu/${item.id}/edit`}
+                              href={`#`}
                               className="p-2 rounded-md bg-white border border-gray-300 hover:border-teal-500 hover:text-teal-600 transition"
                               title="Edit"
                             >
@@ -175,7 +175,7 @@ export default function Page() {
                             </button>
 
                             <Link
-                              href={`/dashboard/manajemen-posyandu/${item.id}`}
+                              href={`#`}
                               className="p-2 rounded-md bg-white border border-gray-300 hover:border-blue-500 hover:text-blue-600 transition"
                               title="Detail Posyandu"
                             >

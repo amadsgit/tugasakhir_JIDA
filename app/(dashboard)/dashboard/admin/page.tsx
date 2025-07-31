@@ -7,6 +7,7 @@ import {
 import SummaryCard from '@/app/ui/dashboard/summary-card';
 import { getTotalPosyandu } from '@/lib/data-posyandu';
 import { getTotalKader } from '@/lib/data-kader';
+import { getTotalUser } from '@/lib/data-user';
 import { getTotalKelurahan } from '@/lib/data-wilayah-kerja';
 import PosyanduChart from '@/components/posyandu-chart';
 import { MapIcon } from 'lucide-react';
@@ -16,6 +17,7 @@ export default async function Page() {
   const totalPosyandu = await getTotalPosyandu();
   const totalKader = await getTotalKader();
   const TotalKelurahan = await getTotalKelurahan();
+  const TotalUser = await getTotalUser();
 
   return (
     <div className="p-6 text-gray-800">
@@ -44,8 +46,8 @@ export default async function Page() {
           icon={<MapIcon className="w-7 h-7 text-emerald-600" />}
         />
         <SummaryCard
-          title="Laporan Pemeriksaan"
-          count="null"
+          title="Jumlah Data User"
+          count={(TotalUser ?? 0).toString()}
           icon={<DocumentTextIcon className="w-7 h-7 text-emerald-600" />}
         />
       </div>
