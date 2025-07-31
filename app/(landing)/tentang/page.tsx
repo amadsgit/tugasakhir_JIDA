@@ -55,7 +55,7 @@ export default function TentangPage() {
         {/* Ilustrasi */}
         <div className="md:w-1/2 flex justify-center">
           <Image
-            src="/hero-desktop.png"
+            src="/desktop.png"
             alt="Ilustrasi Posyandu"
             width={600}
             height={400}
