@@ -9,27 +9,24 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
+import { useSession, signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
-
+type CustomSession = {
+  user: {
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+  };
+};
 
 export default function TopNavbar() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
-  const [userData, setUserData] = useState<any>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    async function fetchUser() {
-      const res = await fetch('/api/me');
-      if (res.ok) {
-        const data = await res.json();
-        setUserData(data.user); // <- simpan ke state
-      }
-    }
-
-    fetchUser();
-  }, []);
+  const { data: session } = useSession() as { data: CustomSession | null };
 
 
   const showLogoutConfirm = () => {
@@ -63,32 +60,12 @@ export default function TopNavbar() {
   };
 
   const handleLogout = async () => {
-    // Mencegah banyak klik
-    const button = document.activeElement as HTMLButtonElement;
-    if (button) {
-      button.disabled = true;
-    }
-
     try {
-      if (typeof window !== 'undefined') {
-        localStorage.clear();
-        sessionStorage.clear();
-      }
-
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // memastikan permintaan selesai bahkan jika halaman di unload
-        keepalive: true,
+      await signOut({
+        callbackUrl: '/auth/login',
       });
-      
-      window.location.replace('/auth/login');
     } catch (error) {
       console.error('Logout error:', error);
-      
-      window.location.replace('/auth/login');
     }
   };
 
@@ -112,6 +89,7 @@ export default function TopNavbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+
   return (
     <header className="bg-gradient-to-br from-emerald-400 to-emerald-500 shadow px-4 py-3 flex justify-between items-center z-50">
       {/* Judul kiri */}
@@ -127,7 +105,7 @@ export default function TopNavbar() {
           >
             <BellIcon className="w-6 h-6" />
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-              3
+              0
             </span>
           </button>
 
@@ -138,10 +116,7 @@ export default function TopNavbar() {
               </div>
               <ul className="text-sm text-gray-700 max-h-60 overflow-y-auto">
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  💉 Jadwal imunisasi besok pukul 08:00
-                </li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  🔔 Kegiatan Posyandu minggu depan
+                  🔔 fitur notifikasi masih belum dibuat
                 </li>
               </ul>
               <div className="text-right px-4 py-2 text-xs text-blue-500 hover:underline cursor-pointer">
@@ -165,14 +140,14 @@ export default function TopNavbar() {
               className="rounded-full border"
             />
             <span className="hidden md:block text-sm font-medium text-white font-bold">
-              {userData?.nama || 'Loading...'}
+              {session?.user?.name || 'Loading...'}
             </span>
           </button>
 
           {isProfileOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-50 overflow-hidden">
               <Link
-                href="/dashboard/profile"
+                href="#"
                 className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >
                 <UserCircleIcon className="w-5 h-5 text-blue-500" />

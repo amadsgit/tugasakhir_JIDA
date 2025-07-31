@@ -25,7 +25,7 @@ export async function PUT(
     }
 
     const updatedRole = await prisma.role.update({
-      where: { id: parseInt(id) },
+      where: { id },
       data: {
         nama: data.nama,
         slug: generateSlug(data.nama),
@@ -46,7 +46,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await context.params;
-    const roleId = parseInt(id);
+    const roleId = id;
 
     // Cek apakah ada user yang terhubung
     const jumlahUser = await prisma.user.count({
@@ -63,7 +63,7 @@ export async function DELETE(
     }
 
     await prisma.role.delete({
-      where: { id: parseInt(id) },
+      where: { id: id},
     });
 
     return NextResponse.json({ message: 'Role Berhasil dihapus' });

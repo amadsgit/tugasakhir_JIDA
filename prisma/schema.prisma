@@ -55,7 +55,7 @@ model Kader {
 }
 
 model Role {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   nama      String   @unique                      
   slug      String   @unique                      
   users     User[]
@@ -64,7 +64,7 @@ model Role {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
+  id           String       @id @default(cuid())
   nama         String
   email        String   @unique
   noHp         String
@@ -73,22 +73,21 @@ model User {
   tanggalLahir DateTime
   alamat       String
   password     String
-  isVerified   Boolean  @default(false)            // Status verifikasi OTP/email
+  verifiedAt   DateTime?           
   resetToken   String?                             // Token untuk reset password
-  roleId       Int
+  roleId       String
   role         Role     @relation(fields: [roleId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  otp          Otp[]
 }
-
+ 
 model Otp {
-  id        Int      @id @default(autoincrement())
-  email     String
+  id        String    @id @default(cuid())
   kode      String
-  expiredAt DateTime
-  verified  Boolean  @default(false)
+  expiry    DateTime
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@index([email])
 }

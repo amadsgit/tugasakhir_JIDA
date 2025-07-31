@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import TabsPane from '@/components/tab-pane-manajemen-posyandu';
 
-// Dynamic import to prevent SSR issues with Chart.js
+// Dynamic import
 const PosyanduChart = dynamic(() => import('@/components/posyandu-chart'), {
   ssr: false,
 });
@@ -20,7 +20,7 @@ export default function StatistikPage() {
                 Informasi & manajemen data posyandu
                 </p>
             </div>
-        </div>
+        </div> 
         <TabsPane />
 
       <div className="bg-white rounded-xl shadow-md p-6">

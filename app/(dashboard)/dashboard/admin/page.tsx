@@ -4,17 +4,18 @@ import {
   CalendarDaysIcon,
   DocumentTextIcon,
 } from '@heroicons/react/24/outline';
-import CakupanImunisasiChart from '@/app/ui/dashboard/cakupan-imunisasi-chart';
 import SummaryCard from '@/app/ui/dashboard/summary-card';
-import { getDataImunisasi } from '@/lib/data-imunisasi';
 import { getTotalPosyandu } from '@/lib/data-posyandu';
 import { getTotalKader } from '@/lib/data-kader';
+import { getTotalKelurahan } from '@/lib/data-wilayah-kerja';
+import PosyanduChart from '@/components/posyandu-chart';
+import { MapIcon } from 'lucide-react';
 
 
 export default async function Page() {
-  const data = await getDataImunisasi();
   const totalPosyandu = await getTotalPosyandu();
   const totalKader = await getTotalKader();
+  const TotalKelurahan = await getTotalKelurahan();
 
   return (
     <div className="p-6 text-gray-800">
@@ -38,9 +39,9 @@ export default async function Page() {
           icon={<ClipboardDocumentListIcon className="w-7 h-7 text-emerald-600" />}
         />
         <SummaryCard
-          title="Jadwal Posyandu"
-          count="null"
-          icon={<CalendarDaysIcon className="w-7 h-7 text-emerald-600" />}
+          title="Jumlah Kelurahan/Desa"
+          count={(TotalKelurahan ?? 0).toString()}
+          icon={<MapIcon className="w-7 h-7 text-emerald-600" />}
         />
         <SummaryCard
           title="Laporan Pemeriksaan"
@@ -49,8 +50,10 @@ export default async function Page() {
         />
       </div>
 
-      {/* Grafik Imunisasi */}
-      <CakupanImunisasiChart data={data} />
+      <div className="bg-white rounded-xl mt-5 shadow-md p-6">
+        <h2 className="text-xl font-semibold mb-4">Grafik Statistik Posyandu</h2>
+        <PosyanduChart />
+      </div>
     </div>
   );
 }

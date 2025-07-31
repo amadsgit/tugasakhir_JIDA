@@ -81,7 +81,7 @@ export const Akreditasi: typeof $Enums.Akreditasi
  */
 export class PrismaClient<
   ClientOptions extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
-  U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
+  const U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
   ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs
 > {
   [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['other'] }
@@ -307,8 +307,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.12.0
-   * Query Engine version: 8047c96bbd92db98a2abc7c9323ce77c02c89dbc
+   * Prisma Client JS version: 6.13.0
+   * Query Engine version: 361e86d0ea4987e9f53a565309b3eed797a6bcbd
    */
   export type PrismaVersion = {
     client: string
@@ -1204,16 +1204,24 @@ export namespace Prisma {
     /**
      * @example
      * ```
-     * // Defaults to stdout
+     * // Shorthand for `emit: 'stdout'`
      * log: ['query', 'info', 'warn', 'error']
      * 
-     * // Emit as events
+     * // Emit as events only
      * log: [
-     *   { emit: 'stdout', level: 'query' },
-     *   { emit: 'stdout', level: 'info' },
-     *   { emit: 'stdout', level: 'warn' }
-     *   { emit: 'stdout', level: 'error' }
+     *   { emit: 'event', level: 'query' },
+     *   { emit: 'event', level: 'info' },
+     *   { emit: 'event', level: 'warn' }
+     *   { emit: 'event', level: 'error' }
      * ]
+     * 
+     * / Emit as events and log to stdout
+     * og: [
+     *  { emit: 'stdout', level: 'query' },
+     *  { emit: 'stdout', level: 'info' },
+     *  { emit: 'stdout', level: 'warn' }
+     *  { emit: 'stdout', level: 'error' }
+     * 
      * ```
      * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
      */
@@ -1260,10 +1268,15 @@ export namespace Prisma {
     emit: 'stdout' | 'event'
   }
 
-  export type GetLogType<T extends LogLevel | LogDefinition> = T extends LogDefinition ? T['emit'] extends 'event' ? T['level'] : never : never
-  export type GetEvents<T extends any> = T extends Array<LogLevel | LogDefinition> ?
-    GetLogType<T[0]> | GetLogType<T[1]> | GetLogType<T[2]> | GetLogType<T[3]>
-    : never
+  export type CheckIsLogLevel<T> = T extends LogLevel ? T : never;
+
+  export type GetLogType<T> = CheckIsLogLevel<
+    T extends LogDefinition ? T['level'] : T
+  >;
+
+  export type GetEvents<T extends any[]> = T extends Array<LogLevel | LogDefinition>
+    ? GetLogType<T[number]>
+    : never;
 
   export type QueryEvent = {
     timestamp: Date
@@ -1430,6 +1443,37 @@ export namespace Prisma {
    */
   export type RoleCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserWhereInput
+  }
+
+
+  /**
+   * Count Type UserCountOutputType
+   */
+
+  export type UserCountOutputType = {
+    otp: number
+  }
+
+  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    otp?: boolean | UserCountOutputTypeCountOtpArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     */
+    select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountOtpArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OtpWhereInput
   }
 
 
@@ -4913,22 +4957,12 @@ export namespace Prisma {
 
   export type AggregateRole = {
     _count: RoleCountAggregateOutputType | null
-    _avg: RoleAvgAggregateOutputType | null
-    _sum: RoleSumAggregateOutputType | null
     _min: RoleMinAggregateOutputType | null
     _max: RoleMaxAggregateOutputType | null
   }
 
-  export type RoleAvgAggregateOutputType = {
-    id: number | null
-  }
-
-  export type RoleSumAggregateOutputType = {
-    id: number | null
-  }
-
   export type RoleMinAggregateOutputType = {
-    id: number | null
+    id: string | null
     nama: string | null
     slug: string | null
     createdAt: Date | null
@@ -4936,7 +4970,7 @@ export namespace Prisma {
   }
 
   export type RoleMaxAggregateOutputType = {
-    id: number | null
+    id: string | null
     nama: string | null
     slug: string | null
     createdAt: Date | null
@@ -4952,14 +4986,6 @@ export namespace Prisma {
     _all: number
   }
 
-
-  export type RoleAvgAggregateInputType = {
-    id?: true
-  }
-
-  export type RoleSumAggregateInputType = {
-    id?: true
-  }
 
   export type RoleMinAggregateInputType = {
     id?: true
@@ -5024,18 +5050,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: RoleAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: RoleSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: RoleMinAggregateInputType
@@ -5066,21 +5080,17 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: RoleCountAggregateInputType | true
-    _avg?: RoleAvgAggregateInputType
-    _sum?: RoleSumAggregateInputType
     _min?: RoleMinAggregateInputType
     _max?: RoleMaxAggregateInputType
   }
 
   export type RoleGroupByOutputType = {
-    id: number
+    id: string
     nama: string
     slug: string
     createdAt: Date
     updatedAt: Date
     _count: RoleCountAggregateOutputType | null
-    _avg: RoleAvgAggregateOutputType | null
-    _sum: RoleSumAggregateOutputType | null
     _min: RoleMinAggregateOutputType | null
     _max: RoleMaxAggregateOutputType | null
   }
@@ -5147,7 +5157,7 @@ export namespace Prisma {
       users: Prisma.$UserPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: number
+      id: string
       nama: string
       slug: string
       createdAt: Date
@@ -5576,7 +5586,7 @@ export namespace Prisma {
    * Fields of the Role model
    */
   interface RoleFieldRefs {
-    readonly id: FieldRef<"Role", 'Int'>
+    readonly id: FieldRef<"Role", 'String'>
     readonly nama: FieldRef<"Role", 'String'>
     readonly slug: FieldRef<"Role", 'String'>
     readonly createdAt: FieldRef<"Role", 'DateTime'>
@@ -6017,24 +6027,12 @@ export namespace Prisma {
 
   export type AggregateUser = {
     _count: UserCountAggregateOutputType | null
-    _avg: UserAvgAggregateOutputType | null
-    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
   }
 
-  export type UserAvgAggregateOutputType = {
-    id: number | null
-    roleId: number | null
-  }
-
-  export type UserSumAggregateOutputType = {
-    id: number | null
-    roleId: number | null
-  }
-
   export type UserMinAggregateOutputType = {
-    id: number | null
+    id: string | null
     nama: string | null
     email: string | null
     noHp: string | null
@@ -6043,15 +6041,15 @@ export namespace Prisma {
     tanggalLahir: Date | null
     alamat: string | null
     password: string | null
-    isVerified: boolean | null
+    verifiedAt: Date | null
     resetToken: string | null
-    roleId: number | null
+    roleId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
-    id: number | null
+    id: string | null
     nama: string | null
     email: string | null
     noHp: string | null
@@ -6060,9 +6058,9 @@ export namespace Prisma {
     tanggalLahir: Date | null
     alamat: string | null
     password: string | null
-    isVerified: boolean | null
+    verifiedAt: Date | null
     resetToken: string | null
-    roleId: number | null
+    roleId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6077,7 +6075,7 @@ export namespace Prisma {
     tanggalLahir: number
     alamat: number
     password: number
-    isVerified: number
+    verifiedAt: number
     resetToken: number
     roleId: number
     createdAt: number
@@ -6085,16 +6083,6 @@ export namespace Prisma {
     _all: number
   }
 
-
-  export type UserAvgAggregateInputType = {
-    id?: true
-    roleId?: true
-  }
-
-  export type UserSumAggregateInputType = {
-    id?: true
-    roleId?: true
-  }
 
   export type UserMinAggregateInputType = {
     id?: true
@@ -6106,7 +6094,7 @@ export namespace Prisma {
     tanggalLahir?: true
     alamat?: true
     password?: true
-    isVerified?: true
+    verifiedAt?: true
     resetToken?: true
     roleId?: true
     createdAt?: true
@@ -6123,7 +6111,7 @@ export namespace Prisma {
     tanggalLahir?: true
     alamat?: true
     password?: true
-    isVerified?: true
+    verifiedAt?: true
     resetToken?: true
     roleId?: true
     createdAt?: true
@@ -6140,7 +6128,7 @@ export namespace Prisma {
     tanggalLahir?: true
     alamat?: true
     password?: true
-    isVerified?: true
+    verifiedAt?: true
     resetToken?: true
     roleId?: true
     createdAt?: true
@@ -6186,18 +6174,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: UserAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: UserSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: UserMinAggregateInputType
@@ -6228,14 +6204,12 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: UserCountAggregateInputType | true
-    _avg?: UserAvgAggregateInputType
-    _sum?: UserSumAggregateInputType
     _min?: UserMinAggregateInputType
     _max?: UserMaxAggregateInputType
   }
 
   export type UserGroupByOutputType = {
-    id: number
+    id: string
     nama: string
     email: string
     noHp: string
@@ -6244,14 +6218,12 @@ export namespace Prisma {
     tanggalLahir: Date
     alamat: string
     password: string
-    isVerified: boolean
+    verifiedAt: Date | null
     resetToken: string | null
-    roleId: number
+    roleId: string
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
-    _avg: UserAvgAggregateOutputType | null
-    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
   }
@@ -6280,12 +6252,14 @@ export namespace Prisma {
     tanggalLahir?: boolean
     alamat?: boolean
     password?: boolean
-    isVerified?: boolean
+    verifiedAt?: boolean
     resetToken?: boolean
     roleId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     role?: boolean | RoleDefaultArgs<ExtArgs>
+    otp?: boolean | User$otpArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6298,7 +6272,7 @@ export namespace Prisma {
     tanggalLahir?: boolean
     alamat?: boolean
     password?: boolean
-    isVerified?: boolean
+    verifiedAt?: boolean
     resetToken?: boolean
     roleId?: boolean
     createdAt?: boolean
@@ -6316,7 +6290,7 @@ export namespace Prisma {
     tanggalLahir?: boolean
     alamat?: boolean
     password?: boolean
-    isVerified?: boolean
+    verifiedAt?: boolean
     resetToken?: boolean
     roleId?: boolean
     createdAt?: boolean
@@ -6334,16 +6308,18 @@ export namespace Prisma {
     tanggalLahir?: boolean
     alamat?: boolean
     password?: boolean
-    isVerified?: boolean
+    verifiedAt?: boolean
     resetToken?: boolean
     roleId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nama" | "email" | "noHp" | "noKK" | "nik" | "tanggalLahir" | "alamat" | "password" | "isVerified" | "resetToken" | "roleId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nama" | "email" | "noHp" | "noKK" | "nik" | "tanggalLahir" | "alamat" | "password" | "verifiedAt" | "resetToken" | "roleId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     role?: boolean | RoleDefaultArgs<ExtArgs>
+    otp?: boolean | User$otpArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     role?: boolean | RoleDefaultArgs<ExtArgs>
@@ -6356,9 +6332,10 @@ export namespace Prisma {
     name: "User"
     objects: {
       role: Prisma.$RolePayload<ExtArgs>
+      otp: Prisma.$OtpPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: number
+      id: string
       nama: string
       email: string
       noHp: string
@@ -6367,9 +6344,9 @@ export namespace Prisma {
       tanggalLahir: Date
       alamat: string
       password: string
-      isVerified: boolean
+      verifiedAt: Date | null
       resetToken: string | null
-      roleId: number
+      roleId: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -6767,6 +6744,7 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     role<T extends RoleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RoleDefaultArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    otp<T extends User$otpArgs<ExtArgs> = {}>(args?: Subset<T, User$otpArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OtpPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6796,7 +6774,7 @@ export namespace Prisma {
    * Fields of the User model
    */
   interface UserFieldRefs {
-    readonly id: FieldRef<"User", 'Int'>
+    readonly id: FieldRef<"User", 'String'>
     readonly nama: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
     readonly noHp: FieldRef<"User", 'String'>
@@ -6805,9 +6783,9 @@ export namespace Prisma {
     readonly tanggalLahir: FieldRef<"User", 'DateTime'>
     readonly alamat: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
-    readonly isVerified: FieldRef<"User", 'Boolean'>
+    readonly verifiedAt: FieldRef<"User", 'DateTime'>
     readonly resetToken: FieldRef<"User", 'String'>
-    readonly roleId: FieldRef<"User", 'Int'>
+    readonly roleId: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -7206,6 +7184,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.otp
+   */
+  export type User$otpArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Otp
+     */
+    select?: OtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Otp
+     */
+    omit?: OtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OtpInclude<ExtArgs> | null
+    where?: OtpWhereInput
+    orderBy?: OtpOrderByWithRelationInput | OtpOrderByWithRelationInput[]
+    cursor?: OtpWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OtpScalarFieldEnum | OtpScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7230,86 +7232,62 @@ export namespace Prisma {
 
   export type AggregateOtp = {
     _count: OtpCountAggregateOutputType | null
-    _avg: OtpAvgAggregateOutputType | null
-    _sum: OtpSumAggregateOutputType | null
     _min: OtpMinAggregateOutputType | null
     _max: OtpMaxAggregateOutputType | null
   }
 
-  export type OtpAvgAggregateOutputType = {
-    id: number | null
-  }
-
-  export type OtpSumAggregateOutputType = {
-    id: number | null
-  }
-
   export type OtpMinAggregateOutputType = {
-    id: number | null
-    email: string | null
+    id: string | null
     kode: string | null
-    expiredAt: Date | null
-    verified: boolean | null
+    expiry: Date | null
+    userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type OtpMaxAggregateOutputType = {
-    id: number | null
-    email: string | null
+    id: string | null
     kode: string | null
-    expiredAt: Date | null
-    verified: boolean | null
+    expiry: Date | null
+    userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type OtpCountAggregateOutputType = {
     id: number
-    email: number
     kode: number
-    expiredAt: number
-    verified: number
+    expiry: number
+    userId: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
 
-  export type OtpAvgAggregateInputType = {
-    id?: true
-  }
-
-  export type OtpSumAggregateInputType = {
-    id?: true
-  }
-
   export type OtpMinAggregateInputType = {
     id?: true
-    email?: true
     kode?: true
-    expiredAt?: true
-    verified?: true
+    expiry?: true
+    userId?: true
     createdAt?: true
     updatedAt?: true
   }
 
   export type OtpMaxAggregateInputType = {
     id?: true
-    email?: true
     kode?: true
-    expiredAt?: true
-    verified?: true
+    expiry?: true
+    userId?: true
     createdAt?: true
     updatedAt?: true
   }
 
   export type OtpCountAggregateInputType = {
     id?: true
-    email?: true
     kode?: true
-    expiredAt?: true
-    verified?: true
+    expiry?: true
+    userId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -7353,18 +7331,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: OtpAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: OtpSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: OtpMinAggregateInputType
@@ -7395,23 +7361,18 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: OtpCountAggregateInputType | true
-    _avg?: OtpAvgAggregateInputType
-    _sum?: OtpSumAggregateInputType
     _min?: OtpMinAggregateInputType
     _max?: OtpMaxAggregateInputType
   }
 
   export type OtpGroupByOutputType = {
-    id: number
-    email: string
+    id: string
     kode: string
-    expiredAt: Date
-    verified: boolean
+    expiry: Date
+    userId: string
     createdAt: Date
     updatedAt: Date
     _count: OtpCountAggregateOutputType | null
-    _avg: OtpAvgAggregateOutputType | null
-    _sum: OtpSumAggregateOutputType | null
     _min: OtpMinAggregateOutputType | null
     _max: OtpMaxAggregateOutputType | null
   }
@@ -7432,55 +7393,64 @@ export namespace Prisma {
 
   export type OtpSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    email?: boolean
     kode?: boolean
-    expiredAt?: boolean
-    verified?: boolean
+    expiry?: boolean
+    userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["otp"]>
 
   export type OtpSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    email?: boolean
     kode?: boolean
-    expiredAt?: boolean
-    verified?: boolean
+    expiry?: boolean
+    userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["otp"]>
 
   export type OtpSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    email?: boolean
     kode?: boolean
-    expiredAt?: boolean
-    verified?: boolean
+    expiry?: boolean
+    userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["otp"]>
 
   export type OtpSelectScalar = {
     id?: boolean
-    email?: boolean
     kode?: boolean
-    expiredAt?: boolean
-    verified?: boolean
+    expiry?: boolean
+    userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type OtpOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "kode" | "expiredAt" | "verified" | "createdAt" | "updatedAt", ExtArgs["result"]["otp"]>
+  export type OtpOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "kode" | "expiry" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["otp"]>
+  export type OtpInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type OtpIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type OtpIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $OtpPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Otp"
-    objects: {}
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
     scalars: $Extensions.GetPayloadResult<{
-      id: number
-      email: string
+      id: string
       kode: string
-      expiredAt: Date
-      verified: boolean
+      expiry: Date
+      userId: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["otp"]>
@@ -7877,6 +7847,7 @@ export namespace Prisma {
    */
   export interface Prisma__OtpClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7906,11 +7877,10 @@ export namespace Prisma {
    * Fields of the Otp model
    */
   interface OtpFieldRefs {
-    readonly id: FieldRef<"Otp", 'Int'>
-    readonly email: FieldRef<"Otp", 'String'>
+    readonly id: FieldRef<"Otp", 'String'>
     readonly kode: FieldRef<"Otp", 'String'>
-    readonly expiredAt: FieldRef<"Otp", 'DateTime'>
-    readonly verified: FieldRef<"Otp", 'Boolean'>
+    readonly expiry: FieldRef<"Otp", 'DateTime'>
+    readonly userId: FieldRef<"Otp", 'String'>
     readonly createdAt: FieldRef<"Otp", 'DateTime'>
     readonly updatedAt: FieldRef<"Otp", 'DateTime'>
   }
@@ -7930,6 +7900,10 @@ export namespace Prisma {
      */
     omit?: OtpOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OtpInclude<ExtArgs> | null
+    /**
      * Filter, which Otp to fetch.
      */
     where: OtpWhereUniqueInput
@@ -7948,6 +7922,10 @@ export namespace Prisma {
      */
     omit?: OtpOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OtpInclude<ExtArgs> | null
+    /**
      * Filter, which Otp to fetch.
      */
     where: OtpWhereUniqueInput
@@ -7965,6 +7943,10 @@ export namespace Prisma {
      * Omit specific fields from the Otp
      */
     omit?: OtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OtpInclude<ExtArgs> | null
     /**
      * Filter, which Otp to fetch.
      */
@@ -8014,6 +7996,10 @@ export namespace Prisma {
      */
     omit?: OtpOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OtpInclude<ExtArgs> | null
+    /**
      * Filter, which Otp to fetch.
      */
     where?: OtpWhereInput
@@ -8062,6 +8048,10 @@ export namespace Prisma {
      */
     omit?: OtpOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OtpInclude<ExtArgs> | null
+    /**
      * Filter, which Otps to fetch.
      */
     where?: OtpWhereInput
@@ -8105,6 +8095,10 @@ export namespace Prisma {
      */
     omit?: OtpOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OtpInclude<ExtArgs> | null
+    /**
      * The data needed to create a Otp.
      */
     data: XOR<OtpCreateInput, OtpUncheckedCreateInput>
@@ -8138,6 +8132,10 @@ export namespace Prisma {
      */
     data: OtpCreateManyInput | OtpCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OtpIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -8152,6 +8150,10 @@ export namespace Prisma {
      * Omit specific fields from the Otp
      */
     omit?: OtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OtpInclude<ExtArgs> | null
     /**
      * The data needed to update a Otp.
      */
@@ -8204,6 +8206,10 @@ export namespace Prisma {
      * Limit how many Otps to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OtpIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -8218,6 +8224,10 @@ export namespace Prisma {
      * Omit specific fields from the Otp
      */
     omit?: OtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OtpInclude<ExtArgs> | null
     /**
      * The filter to search for the Otp to update in case it exists.
      */
@@ -8244,6 +8254,10 @@ export namespace Prisma {
      * Omit specific fields from the Otp
      */
     omit?: OtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OtpInclude<ExtArgs> | null
     /**
      * Filter which Otp to delete.
      */
@@ -8276,6 +8290,10 @@ export namespace Prisma {
      * Omit specific fields from the Otp
      */
     omit?: OtpOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OtpInclude<ExtArgs> | null
   }
 
 
@@ -8356,7 +8374,7 @@ export namespace Prisma {
     tanggalLahir: 'tanggalLahir',
     alamat: 'alamat',
     password: 'password',
-    isVerified: 'isVerified',
+    verifiedAt: 'verifiedAt',
     resetToken: 'resetToken',
     roleId: 'roleId',
     createdAt: 'createdAt',
@@ -8368,10 +8386,9 @@ export namespace Prisma {
 
   export const OtpScalarFieldEnum: {
     id: 'id',
-    email: 'email',
     kode: 'kode',
-    expiredAt: 'expiredAt',
-    verified: 'verified',
+    expiry: 'expiry',
+    userId: 'userId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -8475,13 +8492,6 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
   /**
    * Deep Input Types
@@ -8711,7 +8721,7 @@ export namespace Prisma {
     AND?: RoleWhereInput | RoleWhereInput[]
     OR?: RoleWhereInput[]
     NOT?: RoleWhereInput | RoleWhereInput[]
-    id?: IntFilter<"Role"> | number
+    id?: StringFilter<"Role"> | string
     nama?: StringFilter<"Role"> | string
     slug?: StringFilter<"Role"> | string
     createdAt?: DateTimeFilter<"Role"> | Date | string
@@ -8729,7 +8739,7 @@ export namespace Prisma {
   }
 
   export type RoleWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
+    id?: string
     nama?: string
     slug?: string
     AND?: RoleWhereInput | RoleWhereInput[]
@@ -8747,17 +8757,15 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: RoleCountOrderByAggregateInput
-    _avg?: RoleAvgOrderByAggregateInput
     _max?: RoleMaxOrderByAggregateInput
     _min?: RoleMinOrderByAggregateInput
-    _sum?: RoleSumOrderByAggregateInput
   }
 
   export type RoleScalarWhereWithAggregatesInput = {
     AND?: RoleScalarWhereWithAggregatesInput | RoleScalarWhereWithAggregatesInput[]
     OR?: RoleScalarWhereWithAggregatesInput[]
     NOT?: RoleScalarWhereWithAggregatesInput | RoleScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Role"> | number
+    id?: StringWithAggregatesFilter<"Role"> | string
     nama?: StringWithAggregatesFilter<"Role"> | string
     slug?: StringWithAggregatesFilter<"Role"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Role"> | Date | string
@@ -8768,7 +8776,7 @@ export namespace Prisma {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    id?: IntFilter<"User"> | number
+    id?: StringFilter<"User"> | string
     nama?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     noHp?: StringFilter<"User"> | string
@@ -8777,12 +8785,13 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFilter<"User"> | Date | string
     alamat?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
-    isVerified?: BoolFilter<"User"> | boolean
+    verifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     resetToken?: StringNullableFilter<"User"> | string | null
-    roleId?: IntFilter<"User"> | number
+    roleId?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     role?: XOR<RoleScalarRelationFilter, RoleWhereInput>
+    otp?: OtpListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -8795,16 +8804,17 @@ export namespace Prisma {
     tanggalLahir?: SortOrder
     alamat?: SortOrder
     password?: SortOrder
-    isVerified?: SortOrder
+    verifiedAt?: SortOrderInput | SortOrder
     resetToken?: SortOrderInput | SortOrder
     roleId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     role?: RoleOrderByWithRelationInput
+    otp?: OtpOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
+    id?: string
     email?: string
     nik?: string
     AND?: UserWhereInput | UserWhereInput[]
@@ -8816,12 +8826,13 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFilter<"User"> | Date | string
     alamat?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
-    isVerified?: BoolFilter<"User"> | boolean
+    verifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     resetToken?: StringNullableFilter<"User"> | string | null
-    roleId?: IntFilter<"User"> | number
+    roleId?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     role?: XOR<RoleScalarRelationFilter, RoleWhereInput>
+    otp?: OtpListRelationFilter
   }, "id" | "email" | "nik">
 
   export type UserOrderByWithAggregationInput = {
@@ -8834,23 +8845,21 @@ export namespace Prisma {
     tanggalLahir?: SortOrder
     alamat?: SortOrder
     password?: SortOrder
-    isVerified?: SortOrder
+    verifiedAt?: SortOrderInput | SortOrder
     resetToken?: SortOrderInput | SortOrder
     roleId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
-    _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
-    _sum?: UserSumOrderByAggregateInput
   }
 
   export type UserScalarWhereWithAggregatesInput = {
     AND?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     OR?: UserScalarWhereWithAggregatesInput[]
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"User"> | number
+    id?: StringWithAggregatesFilter<"User"> | string
     nama?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
     noHp?: StringWithAggregatesFilter<"User"> | string
@@ -8859,9 +8868,9 @@ export namespace Prisma {
     tanggalLahir?: DateTimeWithAggregatesFilter<"User"> | Date | string
     alamat?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
-    isVerified?: BoolWithAggregatesFilter<"User"> | boolean
+    verifiedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     resetToken?: StringNullableWithAggregatesFilter<"User"> | string | null
-    roleId?: IntWithAggregatesFilter<"User"> | number
+    roleId?: StringWithAggregatesFilter<"User"> | string
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -8870,62 +8879,58 @@ export namespace Prisma {
     AND?: OtpWhereInput | OtpWhereInput[]
     OR?: OtpWhereInput[]
     NOT?: OtpWhereInput | OtpWhereInput[]
-    id?: IntFilter<"Otp"> | number
-    email?: StringFilter<"Otp"> | string
+    id?: StringFilter<"Otp"> | string
     kode?: StringFilter<"Otp"> | string
-    expiredAt?: DateTimeFilter<"Otp"> | Date | string
-    verified?: BoolFilter<"Otp"> | boolean
+    expiry?: DateTimeFilter<"Otp"> | Date | string
+    userId?: StringFilter<"Otp"> | string
     createdAt?: DateTimeFilter<"Otp"> | Date | string
     updatedAt?: DateTimeFilter<"Otp"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type OtpOrderByWithRelationInput = {
     id?: SortOrder
-    email?: SortOrder
     kode?: SortOrder
-    expiredAt?: SortOrder
-    verified?: SortOrder
+    expiry?: SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
   }
 
   export type OtpWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
+    id?: string
     AND?: OtpWhereInput | OtpWhereInput[]
     OR?: OtpWhereInput[]
     NOT?: OtpWhereInput | OtpWhereInput[]
-    email?: StringFilter<"Otp"> | string
     kode?: StringFilter<"Otp"> | string
-    expiredAt?: DateTimeFilter<"Otp"> | Date | string
-    verified?: BoolFilter<"Otp"> | boolean
+    expiry?: DateTimeFilter<"Otp"> | Date | string
+    userId?: StringFilter<"Otp"> | string
     createdAt?: DateTimeFilter<"Otp"> | Date | string
     updatedAt?: DateTimeFilter<"Otp"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
 
   export type OtpOrderByWithAggregationInput = {
     id?: SortOrder
-    email?: SortOrder
     kode?: SortOrder
-    expiredAt?: SortOrder
-    verified?: SortOrder
+    expiry?: SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: OtpCountOrderByAggregateInput
-    _avg?: OtpAvgOrderByAggregateInput
     _max?: OtpMaxOrderByAggregateInput
     _min?: OtpMinOrderByAggregateInput
-    _sum?: OtpSumOrderByAggregateInput
   }
 
   export type OtpScalarWhereWithAggregatesInput = {
     AND?: OtpScalarWhereWithAggregatesInput | OtpScalarWhereWithAggregatesInput[]
     OR?: OtpScalarWhereWithAggregatesInput[]
     NOT?: OtpScalarWhereWithAggregatesInput | OtpScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Otp"> | number
-    email?: StringWithAggregatesFilter<"Otp"> | string
+    id?: StringWithAggregatesFilter<"Otp"> | string
     kode?: StringWithAggregatesFilter<"Otp"> | string
-    expiredAt?: DateTimeWithAggregatesFilter<"Otp"> | Date | string
-    verified?: BoolWithAggregatesFilter<"Otp"> | boolean
+    expiry?: DateTimeWithAggregatesFilter<"Otp"> | Date | string
+    userId?: StringWithAggregatesFilter<"Otp"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Otp"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Otp"> | Date | string
   }
@@ -9159,6 +9164,7 @@ export namespace Prisma {
   }
 
   export type RoleCreateInput = {
+    id?: string
     nama: string
     slug: string
     createdAt?: Date | string
@@ -9167,7 +9173,7 @@ export namespace Prisma {
   }
 
   export type RoleUncheckedCreateInput = {
-    id?: number
+    id?: string
     nama: string
     slug: string
     createdAt?: Date | string
@@ -9176,6 +9182,7 @@ export namespace Prisma {
   }
 
   export type RoleUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     nama?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9184,7 +9191,7 @@ export namespace Prisma {
   }
 
   export type RoleUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     nama?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9193,7 +9200,7 @@ export namespace Prisma {
   }
 
   export type RoleCreateManyInput = {
-    id?: number
+    id?: string
     nama: string
     slug: string
     createdAt?: Date | string
@@ -9201,6 +9208,7 @@ export namespace Prisma {
   }
 
   export type RoleUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
     nama?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9208,7 +9216,7 @@ export namespace Prisma {
   }
 
   export type RoleUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     nama?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9216,6 +9224,7 @@ export namespace Prisma {
   }
 
   export type UserCreateInput = {
+    id?: string
     nama: string
     email: string
     noHp: string
@@ -9224,15 +9233,16 @@ export namespace Prisma {
     tanggalLahir: Date | string
     alamat: string
     password: string
-    isVerified?: boolean
+    verifiedAt?: Date | string | null
     resetToken?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     role: RoleCreateNestedOneWithoutUsersInput
+    otp?: OtpCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
-    id?: number
+    id?: string
     nama: string
     email: string
     noHp: string
@@ -9241,14 +9251,16 @@ export namespace Prisma {
     tanggalLahir: Date | string
     alamat: string
     password: string
-    isVerified?: boolean
+    verifiedAt?: Date | string | null
     resetToken?: string | null
-    roleId: number
+    roleId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    otp?: OtpUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     nama?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     noHp?: StringFieldUpdateOperationsInput | string
@@ -9257,15 +9269,16 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFieldUpdateOperationsInput | Date | string
     alamat?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
+    otp?: OtpUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     nama?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     noHp?: StringFieldUpdateOperationsInput | string
@@ -9274,15 +9287,16 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFieldUpdateOperationsInput | Date | string
     alamat?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetToken?: NullableStringFieldUpdateOperationsInput | string | null
-    roleId?: IntFieldUpdateOperationsInput | number
+    roleId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    otp?: OtpUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
-    id?: number
+    id?: string
     nama: string
     email: string
     noHp: string
@@ -9291,14 +9305,15 @@ export namespace Prisma {
     tanggalLahir: Date | string
     alamat: string
     password: string
-    isVerified?: boolean
+    verifiedAt?: Date | string | null
     resetToken?: string | null
-    roleId: number
+    roleId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type UserUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
     nama?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     noHp?: StringFieldUpdateOperationsInput | string
@@ -9307,14 +9322,14 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFieldUpdateOperationsInput | Date | string
     alamat?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     nama?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     noHp?: StringFieldUpdateOperationsInput | string
@@ -9323,76 +9338,71 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFieldUpdateOperationsInput | Date | string
     alamat?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetToken?: NullableStringFieldUpdateOperationsInput | string | null
-    roleId?: IntFieldUpdateOperationsInput | number
+    roleId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OtpCreateInput = {
-    email: string
+    id?: string
     kode: string
-    expiredAt: Date | string
-    verified?: boolean
+    expiry: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutOtpInput
   }
 
   export type OtpUncheckedCreateInput = {
-    id?: number
-    email: string
+    id?: string
     kode: string
-    expiredAt: Date | string
-    verified?: boolean
+    expiry: Date | string
+    userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type OtpUpdateInput = {
-    email?: StringFieldUpdateOperationsInput | string
+    id?: StringFieldUpdateOperationsInput | string
     kode?: StringFieldUpdateOperationsInput | string
-    expiredAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    verified?: BoolFieldUpdateOperationsInput | boolean
+    expiry?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutOtpNestedInput
   }
 
   export type OtpUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    email?: StringFieldUpdateOperationsInput | string
+    id?: StringFieldUpdateOperationsInput | string
     kode?: StringFieldUpdateOperationsInput | string
-    expiredAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    verified?: BoolFieldUpdateOperationsInput | boolean
+    expiry?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OtpCreateManyInput = {
-    id?: number
-    email: string
+    id?: string
     kode: string
-    expiredAt: Date | string
-    verified?: boolean
+    expiry: Date | string
+    userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type OtpUpdateManyMutationInput = {
-    email?: StringFieldUpdateOperationsInput | string
+    id?: StringFieldUpdateOperationsInput | string
     kode?: StringFieldUpdateOperationsInput | string
-    expiredAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    verified?: BoolFieldUpdateOperationsInput | boolean
+    expiry?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OtpUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    email?: StringFieldUpdateOperationsInput | string
+    id?: StringFieldUpdateOperationsInput | string
     kode?: StringFieldUpdateOperationsInput | string
-    expiredAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    verified?: BoolFieldUpdateOperationsInput | boolean
+    expiry?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9737,10 +9747,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type RoleAvgOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
   export type RoleMaxOrderByAggregateInput = {
     id?: SortOrder
     nama?: SortOrder
@@ -9755,10 +9761,6 @@ export namespace Prisma {
     slug?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type RoleSumOrderByAggregateInput = {
-    id?: SortOrder
   }
 
   export type StringNullableFilter<$PrismaModel = never> = {
@@ -9776,14 +9778,30 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type RoleScalarRelationFilter = {
     is?: RoleWhereInput
     isNot?: RoleWhereInput
+  }
+
+  export type OtpListRelationFilter = {
+    every?: OtpWhereInput
+    some?: OtpWhereInput
+    none?: OtpWhereInput
+  }
+
+  export type OtpOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type UserCountOrderByAggregateInput = {
@@ -9796,16 +9814,11 @@ export namespace Prisma {
     tanggalLahir?: SortOrder
     alamat?: SortOrder
     password?: SortOrder
-    isVerified?: SortOrder
+    verifiedAt?: SortOrder
     resetToken?: SortOrder
     roleId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type UserAvgOrderByAggregateInput = {
-    id?: SortOrder
-    roleId?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -9818,7 +9831,7 @@ export namespace Prisma {
     tanggalLahir?: SortOrder
     alamat?: SortOrder
     password?: SortOrder
-    isVerified?: SortOrder
+    verifiedAt?: SortOrder
     resetToken?: SortOrder
     roleId?: SortOrder
     createdAt?: SortOrder
@@ -9835,16 +9848,11 @@ export namespace Prisma {
     tanggalLahir?: SortOrder
     alamat?: SortOrder
     password?: SortOrder
-    isVerified?: SortOrder
+    verifiedAt?: SortOrder
     resetToken?: SortOrder
     roleId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type UserSumOrderByAggregateInput = {
-    id?: SortOrder
-    roleId?: SortOrder
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -9865,50 +9873,50 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
   }
 
   export type OtpCountOrderByAggregateInput = {
     id?: SortOrder
-    email?: SortOrder
     kode?: SortOrder
-    expiredAt?: SortOrder
-    verified?: SortOrder
+    expiry?: SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type OtpAvgOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
   export type OtpMaxOrderByAggregateInput = {
     id?: SortOrder
-    email?: SortOrder
     kode?: SortOrder
-    expiredAt?: SortOrder
-    verified?: SortOrder
+    expiry?: SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type OtpMinOrderByAggregateInput = {
     id?: SortOrder
-    email?: SortOrder
     kode?: SortOrder
-    expiredAt?: SortOrder
-    verified?: SortOrder
+    expiry?: SortOrder
+    userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type OtpSumOrderByAggregateInput = {
-    id?: SortOrder
   }
 
   export type PosyanduCreateNestedManyWithoutKelurahanInput = {
@@ -10109,12 +10117,26 @@ export namespace Prisma {
     connect?: RoleWhereUniqueInput
   }
 
+  export type OtpCreateNestedManyWithoutUserInput = {
+    create?: XOR<OtpCreateWithoutUserInput, OtpUncheckedCreateWithoutUserInput> | OtpCreateWithoutUserInput[] | OtpUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: OtpCreateOrConnectWithoutUserInput | OtpCreateOrConnectWithoutUserInput[]
+    createMany?: OtpCreateManyUserInputEnvelope
+    connect?: OtpWhereUniqueInput | OtpWhereUniqueInput[]
+  }
+
+  export type OtpUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<OtpCreateWithoutUserInput, OtpUncheckedCreateWithoutUserInput> | OtpCreateWithoutUserInput[] | OtpUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: OtpCreateOrConnectWithoutUserInput | OtpCreateOrConnectWithoutUserInput[]
+    createMany?: OtpCreateManyUserInputEnvelope
+    connect?: OtpWhereUniqueInput | OtpWhereUniqueInput[]
+  }
+
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type RoleUpdateOneRequiredWithoutUsersNestedInput = {
@@ -10123,6 +10145,48 @@ export namespace Prisma {
     upsert?: RoleUpsertWithoutUsersInput
     connect?: RoleWhereUniqueInput
     update?: XOR<XOR<RoleUpdateToOneWithWhereWithoutUsersInput, RoleUpdateWithoutUsersInput>, RoleUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type OtpUpdateManyWithoutUserNestedInput = {
+    create?: XOR<OtpCreateWithoutUserInput, OtpUncheckedCreateWithoutUserInput> | OtpCreateWithoutUserInput[] | OtpUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: OtpCreateOrConnectWithoutUserInput | OtpCreateOrConnectWithoutUserInput[]
+    upsert?: OtpUpsertWithWhereUniqueWithoutUserInput | OtpUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: OtpCreateManyUserInputEnvelope
+    set?: OtpWhereUniqueInput | OtpWhereUniqueInput[]
+    disconnect?: OtpWhereUniqueInput | OtpWhereUniqueInput[]
+    delete?: OtpWhereUniqueInput | OtpWhereUniqueInput[]
+    connect?: OtpWhereUniqueInput | OtpWhereUniqueInput[]
+    update?: OtpUpdateWithWhereUniqueWithoutUserInput | OtpUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: OtpUpdateManyWithWhereWithoutUserInput | OtpUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: OtpScalarWhereInput | OtpScalarWhereInput[]
+  }
+
+  export type OtpUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<OtpCreateWithoutUserInput, OtpUncheckedCreateWithoutUserInput> | OtpCreateWithoutUserInput[] | OtpUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: OtpCreateOrConnectWithoutUserInput | OtpCreateOrConnectWithoutUserInput[]
+    upsert?: OtpUpsertWithWhereUniqueWithoutUserInput | OtpUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: OtpCreateManyUserInputEnvelope
+    set?: OtpWhereUniqueInput | OtpWhereUniqueInput[]
+    disconnect?: OtpWhereUniqueInput | OtpWhereUniqueInput[]
+    delete?: OtpWhereUniqueInput | OtpWhereUniqueInput[]
+    connect?: OtpWhereUniqueInput | OtpWhereUniqueInput[]
+    update?: OtpUpdateWithWhereUniqueWithoutUserInput | OtpUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: OtpUpdateManyWithWhereWithoutUserInput | OtpUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: OtpScalarWhereInput | OtpScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutOtpInput = {
+    create?: XOR<UserCreateWithoutOtpInput, UserUncheckedCreateWithoutOtpInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOtpInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutOtpNestedInput = {
+    create?: XOR<UserCreateWithoutOtpInput, UserUncheckedCreateWithoutOtpInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOtpInput
+    upsert?: UserUpsertWithoutOtpInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOtpInput, UserUpdateWithoutOtpInput>, UserUncheckedUpdateWithoutOtpInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -10304,9 +10368,15 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -10326,12 +10396,18 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type PosyanduCreateWithoutKelurahanInput = {
@@ -10583,6 +10659,7 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutRoleInput = {
+    id?: string
     nama: string
     email: string
     noHp: string
@@ -10591,14 +10668,15 @@ export namespace Prisma {
     tanggalLahir: Date | string
     alamat: string
     password: string
-    isVerified?: boolean
+    verifiedAt?: Date | string | null
     resetToken?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    otp?: OtpCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRoleInput = {
-    id?: number
+    id?: string
     nama: string
     email: string
     noHp: string
@@ -10607,10 +10685,11 @@ export namespace Prisma {
     tanggalLahir: Date | string
     alamat: string
     password: string
-    isVerified?: boolean
+    verifiedAt?: Date | string | null
     resetToken?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    otp?: OtpUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRoleInput = {
@@ -10643,7 +10722,7 @@ export namespace Prisma {
     AND?: UserScalarWhereInput | UserScalarWhereInput[]
     OR?: UserScalarWhereInput[]
     NOT?: UserScalarWhereInput | UserScalarWhereInput[]
-    id?: IntFilter<"User"> | number
+    id?: StringFilter<"User"> | string
     nama?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     noHp?: StringFilter<"User"> | string
@@ -10652,14 +10731,15 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFilter<"User"> | Date | string
     alamat?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
-    isVerified?: BoolFilter<"User"> | boolean
+    verifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     resetToken?: StringNullableFilter<"User"> | string | null
-    roleId?: IntFilter<"User"> | number
+    roleId?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
   }
 
   export type RoleCreateWithoutUsersInput = {
+    id?: string
     nama: string
     slug: string
     createdAt?: Date | string
@@ -10667,7 +10747,7 @@ export namespace Prisma {
   }
 
   export type RoleUncheckedCreateWithoutUsersInput = {
-    id?: number
+    id?: string
     nama: string
     slug: string
     createdAt?: Date | string
@@ -10677,6 +10757,32 @@ export namespace Prisma {
   export type RoleCreateOrConnectWithoutUsersInput = {
     where: RoleWhereUniqueInput
     create: XOR<RoleCreateWithoutUsersInput, RoleUncheckedCreateWithoutUsersInput>
+  }
+
+  export type OtpCreateWithoutUserInput = {
+    id?: string
+    kode: string
+    expiry: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OtpUncheckedCreateWithoutUserInput = {
+    id?: string
+    kode: string
+    expiry: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OtpCreateOrConnectWithoutUserInput = {
+    where: OtpWhereUniqueInput
+    create: XOR<OtpCreateWithoutUserInput, OtpUncheckedCreateWithoutUserInput>
+  }
+
+  export type OtpCreateManyUserInputEnvelope = {
+    data: OtpCreateManyUserInput | OtpCreateManyUserInput[]
+    skipDuplicates?: boolean
   }
 
   export type RoleUpsertWithoutUsersInput = {
@@ -10691,6 +10797,7 @@ export namespace Prisma {
   }
 
   export type RoleUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
     nama?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10698,9 +10805,121 @@ export namespace Prisma {
   }
 
   export type RoleUncheckedUpdateWithoutUsersInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     nama?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OtpUpsertWithWhereUniqueWithoutUserInput = {
+    where: OtpWhereUniqueInput
+    update: XOR<OtpUpdateWithoutUserInput, OtpUncheckedUpdateWithoutUserInput>
+    create: XOR<OtpCreateWithoutUserInput, OtpUncheckedCreateWithoutUserInput>
+  }
+
+  export type OtpUpdateWithWhereUniqueWithoutUserInput = {
+    where: OtpWhereUniqueInput
+    data: XOR<OtpUpdateWithoutUserInput, OtpUncheckedUpdateWithoutUserInput>
+  }
+
+  export type OtpUpdateManyWithWhereWithoutUserInput = {
+    where: OtpScalarWhereInput
+    data: XOR<OtpUpdateManyMutationInput, OtpUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type OtpScalarWhereInput = {
+    AND?: OtpScalarWhereInput | OtpScalarWhereInput[]
+    OR?: OtpScalarWhereInput[]
+    NOT?: OtpScalarWhereInput | OtpScalarWhereInput[]
+    id?: StringFilter<"Otp"> | string
+    kode?: StringFilter<"Otp"> | string
+    expiry?: DateTimeFilter<"Otp"> | Date | string
+    userId?: StringFilter<"Otp"> | string
+    createdAt?: DateTimeFilter<"Otp"> | Date | string
+    updatedAt?: DateTimeFilter<"Otp"> | Date | string
+  }
+
+  export type UserCreateWithoutOtpInput = {
+    id?: string
+    nama: string
+    email: string
+    noHp: string
+    noKK?: string | null
+    nik: string
+    tanggalLahir: Date | string
+    alamat: string
+    password: string
+    verifiedAt?: Date | string | null
+    resetToken?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    role: RoleCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutOtpInput = {
+    id?: string
+    nama: string
+    email: string
+    noHp: string
+    noKK?: string | null
+    nik: string
+    tanggalLahir: Date | string
+    alamat: string
+    password: string
+    verifiedAt?: Date | string | null
+    resetToken?: string | null
+    roleId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserCreateOrConnectWithoutOtpInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutOtpInput, UserUncheckedCreateWithoutOtpInput>
+  }
+
+  export type UserUpsertWithoutOtpInput = {
+    update: XOR<UserUpdateWithoutOtpInput, UserUncheckedUpdateWithoutOtpInput>
+    create: XOR<UserCreateWithoutOtpInput, UserUncheckedCreateWithoutOtpInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutOtpInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutOtpInput, UserUncheckedUpdateWithoutOtpInput>
+  }
+
+  export type UserUpdateWithoutOtpInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nama?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    noKK?: NullableStringFieldUpdateOperationsInput | string | null
+    nik?: StringFieldUpdateOperationsInput | string
+    tanggalLahir?: DateTimeFieldUpdateOperationsInput | Date | string
+    alamat?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    role?: RoleUpdateOneRequiredWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutOtpInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nama?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    noKK?: NullableStringFieldUpdateOperationsInput | string | null
+    nik?: StringFieldUpdateOperationsInput | string
+    tanggalLahir?: DateTimeFieldUpdateOperationsInput | Date | string
+    alamat?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    roleId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10802,7 +11021,7 @@ export namespace Prisma {
   }
 
   export type UserCreateManyRoleInput = {
-    id?: number
+    id?: string
     nama: string
     email: string
     noHp: string
@@ -10811,13 +11030,14 @@ export namespace Prisma {
     tanggalLahir: Date | string
     alamat: string
     password: string
-    isVerified?: boolean
+    verifiedAt?: Date | string | null
     resetToken?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type UserUpdateWithoutRoleInput = {
+    id?: StringFieldUpdateOperationsInput | string
     nama?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     noHp?: StringFieldUpdateOperationsInput | string
@@ -10826,14 +11046,15 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFieldUpdateOperationsInput | Date | string
     alamat?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    otp?: OtpUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRoleInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     nama?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     noHp?: StringFieldUpdateOperationsInput | string
@@ -10842,24 +11063,57 @@ export namespace Prisma {
     tanggalLahir?: DateTimeFieldUpdateOperationsInput | Date | string
     alamat?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    otp?: OtpUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutRoleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nama?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    noKK?: NullableStringFieldUpdateOperationsInput | string | null
+    nik?: StringFieldUpdateOperationsInput | string
+    tanggalLahir?: DateTimeFieldUpdateOperationsInput | Date | string
+    alamat?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetToken?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type UserUncheckedUpdateManyWithoutRoleInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    nama?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    noHp?: StringFieldUpdateOperationsInput | string
-    noKK?: NullableStringFieldUpdateOperationsInput | string | null
-    nik?: StringFieldUpdateOperationsInput | string
-    tanggalLahir?: DateTimeFieldUpdateOperationsInput | Date | string
-    alamat?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
-    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+  export type OtpCreateManyUserInput = {
+    id?: string
+    kode: string
+    expiry: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OtpUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kode?: StringFieldUpdateOperationsInput | string
+    expiry?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OtpUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kode?: StringFieldUpdateOperationsInput | string
+    expiry?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OtpUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kode?: StringFieldUpdateOperationsInput | string
+    expiry?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

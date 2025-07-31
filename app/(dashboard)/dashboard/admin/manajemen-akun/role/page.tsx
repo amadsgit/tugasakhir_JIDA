@@ -13,9 +13,9 @@ export default function Page() {
   const [roles, setRoles] = useState<Role[]>([]);
   const [loadingFetch, setLoadingFetch] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [selectedDeleteId, setSelectedDeleteId] = useState<number | null>(null);
+  const [selectedDeleteId, setSelectedDeleteId] = useState<string | null>(null);
 
   const isEdit = selectedId !== null;
 
@@ -76,7 +76,7 @@ export default function Page() {
 
   
   // delete data
-  const openDeleteModal = (id: number) => {
+  const openDeleteModal = (id: string) => {
     setSelectedDeleteId(id);
     setShowModal(true);
   };

@@ -1,46 +1,65 @@
-import { prisma } from '@/lib/prisma';
-import { sendOtpEmail } from '@/lib/mailer';
-import { NextResponse } from 'next/server';
+import { PrismaClient } from "@/generated/prisma";
+import nodemailer from "nodemailer";
+import { NextResponse } from "next/server";
+
+const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
   try {
     const { email } = await req.json();
 
     if (!email) {
-      return NextResponse.json({ message: 'Email wajib diisi' }, { status: 400 });
+      return NextResponse.json({ message: "Email wajib diisi." }, { status: 400 });
     }
 
-    // memebuat OTP baru
-    const kode = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digit
-    const expiredAt = new Date(Date.now() + 10 * 60 * 1000);
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      return NextResponse.json({ message: "User tidak ditemukan." }, { status: 404 });
+    }
 
-    // menandai semua otp sebelumnya sebagai tidak berlaku
+    // Nonaktifkan OTP lama yang belum kadaluarsa
     await prisma.otp.updateMany({
       where: {
-        email,
-        verified: false,
-        expiredAt: { gt: new Date() }
+        userId: user.id,
+        expiry: { gt: new Date() },
       },
       data: {
-        expiredAt: new Date(), // expired langsung
+        expiry: new Date(), // langsung kadaluarsa
       },
     });
 
-    // Simpan OTP baru
+    // Generate OTP baru
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiry = new Date(Date.now() + 10 * 60 * 1000); // 10 menit
+
     await prisma.otp.create({
       data: {
-        email,
-        kode,
-        expiredAt,
+        kode: otp,
+        expiry,
+        userId: user.id,
       },
     });
 
-    // Kirim email
-    await sendOtpEmail(email, kode);
+    // Kirim ulang OTP via email
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
-    return NextResponse.json({ message: 'OTP baru telah dikirim ke email Anda.' });
+    await transporter.sendMail({
+      from: `"e-Posyandu" <${process.env.EMAIL_FROM}>`,
+      to: email,
+      subject: "Kode OTP Baru",
+      text: `Halo ${user.nama},\n\nKode OTP baru Anda adalah: ${otp}\nKode ini berlaku selama 10 menit.\n\nJangan berikan kode ini kepada siapa pun.`,
+    });
+
+    return NextResponse.json({ message: "Kode OTP baru berhasil dikirim ke email." });
+
   } catch (error) {
-    console.error('Gagal mengirim ulang OTP:', error);
-    return NextResponse.json({ message: 'Terjadi kesalahan saat mengirim OTP.' }, { status: 500 });
+    console.error("Gagal mengirim ulang OTP:", error);
+    return NextResponse.json({ message: "Terjadi kesalahan saat mengirim ulang OTP." }, { status: 500 });
   }
 }

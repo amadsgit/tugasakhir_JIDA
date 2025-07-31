@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { UserIcon, MailIcon, PhoneIcon, CalendarIcon, HomeIcon, FingerprintIcon, CardSimIcon, LockIcon } from 'lucide-react';
+import { UserIcon, MailIcon, PhoneIcon, CalendarIcon, HomeIcon, FingerprintIcon, CardSimIcon, LockIcon, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
@@ -24,19 +24,22 @@ export default function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const [errors, setErrors] = useState({ password: '' });
+  const [errornik, setErrorNik] = useState({ nik: '' });
+  const [errornoKK, setErrornoKK] = useState({ noKK: '' });
 
   // get data role
-  const [roleOptions, setRoleOptions] = useState<{ id: number; nama: string; slug: string }[]>([]);
+  const [roleOptions, setRoleOptions] = useState<{ id: string; nama: string; slug: string }[]>([]);
   useEffect(() => {
     const fetchRoles = async () => {
       try {
         const res = await fetch('/api/role');
         const data = await res.json();
-        const filtered = data.filter(
-          (role: { slug: string }) =>
-            role.slug === 'ibu_hamil' || role.slug === 'orang_tua_balita'
-        );
-        setRoleOptions(filtered);
+        // const filtered = data.filter(
+        //   (role: { slug: string }) =>
+        //     role.slug === 'ibu_hamil' || role.slug === 'orang_tua_balita'
+        // );
+        // setRoleOptions(filtered);
+        setRoleOptions(data);
       } catch (error) {
         console.error('Gagal memuat role:', error);
       }
@@ -51,19 +54,40 @@ export default function RegisterPage() {
     const updatedForm = { ...form, [name]: value };
     setForm(updatedForm);
 
-    // Validasi langsung password
-      if (name === 'password') {
-        if (value.length < 6) {
-          setErrors(prev => ({ ...prev, password: 'Minimal 6 karakter' }));
-        } else {
-          setErrors(prev => ({ ...prev, password: '' }));
-        }
+    // Validasi langsung nik
+    if (name === 'nik') {
+      if (value.length < 16) {
+        setErrorNik(prev => ({ ...prev, nik: 'Nomor NIK harus 16 digit' }));
+      } else {
+        setErrorNik(prev => ({ ...prev, nik: '' }));
       }
+    }
+
+    // Validasi langsung noKK
+    if (name === 'noKK') {
+      if (value.length < 16) {
+        setErrornoKK(prev => ({ ...prev, noKK: 'Nomor KK harus 16 digit' }));
+      } else {
+        setErrornoKK(prev => ({ ...prev, noKK: '' }));
+      }
+    }
+
+    // Validasi langsung password
+    if (name === 'password') {
+      if (value.length < 6) {
+        setErrors(prev => ({ ...prev, password: 'Password minimal 6 karakter' }));
+      } else {
+        setErrors(prev => ({ ...prev, password: '' }));
+      }
+    }
+
+
     // validasi langsung saat input
     if (name === 'password' || name === 'confirmPassword') {
       setIsPasswordMatch(updatedForm.password === updatedForm.confirmPassword);
     }
   };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,7 +108,7 @@ export default function RegisterPage() {
       alamat: form.alamat,
       tanggalLahir: form.tanggalLahir,
       password: form.password,
-      roleId: Number(form.role),
+      roleId: form.role,
     };
 
     try {
@@ -109,7 +133,7 @@ export default function RegisterPage() {
       setTimeout(() => {
         router.push(`/auth/verify-otp?email=${encodeURIComponent(cleanedForm.email)}`);
       }, 1500);
-
+ 
     } catch (error) {
       console.error('Error saat submit:', error);
       toast.error('Terjadi kesalahan saat pendaftaran!');
@@ -183,10 +207,15 @@ export default function RegisterPage() {
               }}
               placeholder="Nomor Kartu Keluarga"
               required
-              className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              className={`w-full px-4 py-2 pl-10 border rounded-md focus:ring-2 focus:outline-none ${
+                errornoKK.noKK ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-teal-500'
+              }`}
             />
             <CardSimIcon className="w-5 h-5 absolute top-2.5 left-3 text-gray-400" />
           </div>
+          {errornoKK.noKK && (
+            <p className="text-sm text-red-600 mt-1">{errornoKK.noKK}</p>
+          )}
 
           <div className="relative">
             <input
@@ -200,10 +229,15 @@ export default function RegisterPage() {
               }}
               placeholder="NIK"
               required
-              className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              className={`w-full px-4 py-2 pl-10 border rounded-md focus:ring-2 focus:outline-none ${
+                errornik.nik ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-teal-500'
+              }`}
             />
             <FingerprintIcon className="w-5 h-5 absolute top-2.5 left-3 text-gray-400" />
           </div>
+          {errornik.nik && (
+            <p className="text-sm text-red-600 mt-1">{errornik.nik}</p>
+          )}
 
           <div className="relative">
             <input
@@ -294,10 +328,17 @@ export default function RegisterPage() {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded disabled:opacity-50"
+            className="flex items-center justify-center gap-2 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded disabled:opacity-50"
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Mendaftar...' : 'Daftar'}
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>Mendaftar...</span>
+              </>
+            ) : (
+              'Daftar'
+            )}
           </button>
 
           <div className="text-center text-sm text-gray-500">

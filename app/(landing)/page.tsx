@@ -3,13 +3,9 @@ import FooterLanding from '@/app/ui/landing/footer-landing';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import Image from 'next/image';
-import { redirect } from 'next/navigation';
 
 
 export default function Page() {
-
-  // route sementara ke halaman login 
-  redirect('/auth/login');
 
   return (
     <main className="flex min-h-screen flex-col bg-gradient-to-b from-white via-emerald-50 to-white text-gray-800">
@@ -85,20 +81,18 @@ export default function Page() {
         {/* Hero Image */}
         <div className="flex items-center justify-center md:w-3/5">
           <Image
-            src="/hero-desktop.png"
+            src="/desktop.png"
             alt="Hero Ilustrasi"
             width={800}
             height={700}
             className="hidden md:block rounded-xl shadow-lg"
-            priority
           />
           <Image
-            src="/hero-mobile.png"
+            src="/mobile.png"
             alt="Hero Ilustrasi Mobile"
             width={400}
             height={300}
             className="block md:hidden rounded-lg shadow"
-            priority
           />
         </div>
       </section>

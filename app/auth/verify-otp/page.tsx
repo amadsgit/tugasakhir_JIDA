@@ -4,10 +4,11 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import OtpInput from '@/components/otp-input';
+import { Loader2 } from "lucide-react";
 
 export default function VerifyOtpPage() {
   const [email, setEmail] = useState('');
-  const [kode, setKode] = useState('');
+  const [otp, setOtp] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -37,7 +38,7 @@ export default function VerifyOtpPage() {
 
 
   const handleVerify = async () => {
-    if (kode.length !== 6) {
+    if (otp.length !== 6) {
       toast.error('Kode OTP harus terdiri dari 6 digit!');
       return;
     }
@@ -48,7 +49,7 @@ export default function VerifyOtpPage() {
       const res = await fetch('/api/auth/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, kode }),
+        body: JSON.stringify({ email, otp }),
       });
 
       const data = await res.json();
@@ -85,7 +86,7 @@ export default function VerifyOtpPage() {
       } else {
         toast.success('OTP baru telah dikirim ke email!');
         setCountdown(600);
-        setKode('');
+        setOtp('');
       }
     } catch (err) {
       toast.error('Terjadi kesalahan, coba lagi.');
@@ -104,15 +105,22 @@ export default function VerifyOtpPage() {
         Berlaku selama: <span className="text-red-500 font-semibold">{formatTime(countdown)} </span>
       </div>
       
-      <OtpInput onChangeOtp={(val) => setKode(val)} />
-
+      <OtpInput onChangeOtp={(val) => setOtp(val)} />
+        
       {countdown > 0 ? (
         <button
           onClick={handleVerify}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full"
+          className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full disabled:opacity-50"
           disabled={loading}
         >
-          {loading ? 'Memverifikasi...' : 'Verifikasi'}
+          {loading ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              <span>Memverifikasi...</span>
+            </>
+          ) : (
+            'Verifikasi'
+          )}
         </button>
       ) : (
         <button

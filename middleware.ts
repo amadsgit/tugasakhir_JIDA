@@ -1,75 +1,79 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { verifyJwtToken } from '@/lib/jwt';
+// middleware.ts
+import { getToken } from "next-auth/jwt";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-const publicRoutes = ['/', '/auth/login', '/auth/register'];
-const logoutRoutes = ['/api/auth/logout'];
+const PUBLIC_ROUTES = [
+  "/",
+  "/tentang",
+  "/kontak",
+  "/auth/login",
+  "/auth/register",
+  "/auth/verify-otp",
+];
 
 export async function middleware(req: NextRequest) {
-  const path = req.nextUrl.pathname;
-  
-  // Lewati verifikasi JWT untuk endpoint logout untuk meningkatkan kinerja
-  if (logoutRoutes.some(route => path.startsWith(route))) {
+  const { pathname } = req.nextUrl;
+
+  // 1. Lewati middleware untuk route API dan NextAuth
+  if (
+    pathname.startsWith("/api") || // ← penting agar next-auth tidak error
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/favicon.ico")
+  ) {
     return NextResponse.next();
   }
-  
-  const token = req.cookies.get('token')?.value;
-  let user = null;
-  
-  if (token) {
-    try {
-      user = await verifyJwtToken<{ role: string; id: string; email?: string }>(token);
-      if (process.env.NODE_ENV === 'production') {
-        console.log('Middleware: Token verified for user ID:', user?.id || 'unknown');
-      }
-    } catch (error) {
-      if (process.env.NODE_ENV === 'production') {
-        console.log('Middleware: Token verification failed:', error);
-      }
-      user = null;
-    }
-  } else {
-    if (process.env.NODE_ENV === 'production' && path.startsWith('/dashboard')) {
-      console.log('Middleware: No token found for dashboard access');
-    }
+
+  // 2. Ambil token dari cookie
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+  const isAuth = !!token;
+  const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
+
+  // 3. Jika user sudah login tapi akses halaman public → arahkan ke dashboard
+  if (isPublicRoute && isAuth) {
+    const role = token?.role;
+
+    let redirectPath = "/dashboard"; // fallback jika role tidak dikenali
+    if (role === "admin") redirectPath = "/dashboard/admin";
+    else if (role === "kader") redirectPath = "/dashboard/kader";
+    else if (role === "ibu_hamil") redirectPath = "/dashboard/ibu-hamil";
+    else if (role === "orang_tua_balita") redirectPath = "/dashboard/orang-tua-balita";
+
+    return NextResponse.redirect(new URL(redirectPath, req.url));
   }
 
-  if (!user && path.startsWith('/dashboard')) {
-    if (process.env.NODE_ENV === 'production') {
-      console.log('Middleware: Redirecting to login from:', path);
-    }
-    const response = NextResponse.redirect(new URL('/auth/login', req.url));
-    // Tambahkan header untuk mencegah caching halaman dashboard
-    response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate, private');
-    response.headers.set('Pragma', 'no-cache');
-    response.headers.set('Expires', '0');
-    return response;
+  // 4. Jika user belum login tapi akses halaman private → arahkan ke login
+  if (!isPublicRoute && !isAuth) {
+    return NextResponse.redirect(new URL("/auth/login", req.url));
   }
 
-  if (user && publicRoutes.includes(path)) {
-    const roleRoutes: Record<string, string> = {
-      administrator: '/dashboard/admin',
-      kader: '/dashboard/kader',
-      ibu_hamil: '/dashboard/ibu-hamil',
-      orang_tua_balita: '/dashboard/orang-tua-balita',
+  // 5. Jika user mencoba akses halaman role lain → blokir
+  if (isAuth) {
+    const role = token?.role;
+
+    // Daftar prefix yang diizinkan per role
+    const roleAccessMap: Record<string, string> = {
+      admin: "/dashboard/admin",
+      kader: "/dashboard/kader",
+      ibu_hamil: "/dashboard/ibu-hamil",
+      orang_tua_balita: "/dashboard/orang-tua-balita",
     };
 
-    return NextResponse.redirect(new URL(roleRoutes[user.role], req.url));
-    // return NextResponse.redirect(new URL(roleRoutes[user.role] || '/dashboard', req.url));
-  }
+    const allowedPrefix = roleAccessMap[role || ""];
 
-  // Tambahkan header no-cache untuk semua halaman dashboard yang dilindungi
-  if (path.startsWith('/dashboard')) {
-    const response = NextResponse.next();
-    response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate, private');
-    response.headers.set('Pragma', 'no-cache');
-    response.headers.set('Expires', '0');
-    return response;
+    // Cek apakah user mencoba akses halaman yang tidak sesuai rolenya
+    if (allowedPrefix && !pathname.startsWith(allowedPrefix)) {
+      return NextResponse.redirect(new URL(allowedPrefix, req.url));
+    }
   }
 
   return NextResponse.next();
 }
 
+// 6. Match semua route, kecuali static dan API
 export const config = {
-  matcher: ['/dashboard/:path*', '/', '/auth/login', '/auth/register'],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|desktop.png|mobile.png|logo.png|logo3.png).*)",
+  ],
 };

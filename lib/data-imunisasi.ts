@@ -1,7 +1,7 @@
 import { type DataImunisasi } from '@/app/ui/dashboard/cakupan-imunisasi-chart';
 
 export async function getDataImunisasi(): Promise<DataImunisasi[]> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL!;
+  const baseUrl = process.env.BASE_URL!;
   console.log("BASE URL:", baseUrl);
   const res = await fetch(`${baseUrl}/api/data-imunisasi`, {
     cache: 'no-store',
