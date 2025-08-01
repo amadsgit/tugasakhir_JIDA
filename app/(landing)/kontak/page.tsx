@@ -1,3 +1,8 @@
+export const metadata = {
+  title: 'Kontak | E‑Posyandu Care',
+  description: 'Digitalisasi layanan posyandu untuk masyarakat sehat dan terdata',
+};
+
 import NavbarLanding from '@/app/ui/landing/navbar-landing';
 import FooterLanding from '@/app/ui/landing/footer-landing';
 import { EnvelopeIcon, MapPinIcon, PhoneIcon } from '@heroicons/react/24/outline';

@@ -1,9 +1,13 @@
+export const metadata = {
+  title: 'Beranda | E‑Posyandu Care',
+  description: 'Digitalisasi layanan posyandu untuk masyarakat sehat dan terdata',
+};
+
 import NavbarLanding from '@/app/ui/landing/navbar-landing';
 import FooterLanding from '@/app/ui/landing/footer-landing';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import Image from 'next/image';
-
 
 export default function Page() {
 
