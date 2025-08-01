@@ -119,9 +119,9 @@ export default function TopNavbar() {
                   🔔 fitur notifikasi masih belum dibuat
                 </li>
               </ul>
-              <div className="text-right px-4 py-2 text-xs text-blue-500 hover:underline cursor-pointer">
+              {/* <div className="text-right px-4 py-2 text-xs text-blue-500 hover:underline cursor-pointer">
                 Lihat semua notifikasi
-              </div>
+              </div> */}
             </div>
           )}
         </div>

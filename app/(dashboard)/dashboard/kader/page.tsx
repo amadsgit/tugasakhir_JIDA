@@ -26,37 +26,37 @@ export default async function Page() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         <SummaryCard
           title="Jumlah Balita Terdata"
-          count="null"
+          count="masih pengembangan"
           icon={<BabyIcon className="w-7 h-7 text-emerald-600" />}
         />
         <SummaryCard
           title="Jumlah Imunisasi"
-          count="null"
+          count="masih pengembangan"
           icon={<SyringeIcon className="w-7 h-7 text-emerald-600" />}
         />
         <SummaryCard
           title="Jumlah Pemeriksaan"
-          count="null"
+          count="masih pengembangan"
           icon={<ScaleIcon className="w-7 h-7 text-emerald-600" />}
         />
         <SummaryCard
           title="Jumlah Kader Aktif"
-          count="null"
+          count="masih pengembangan"
           icon={<ClipboardListIcon className="w-7 h-7 text-emerald-600" />}
         />
         <SummaryCard
           title="Jumlah Posyandu"
-          count="null"
+          count="masih pengembangan"
           icon={<UsersIcon className="w-7 h-7 text-emerald-600" />}
         />
         <SummaryCard
           title="Jadwal Posyandu"
-          count="null"
+          count="masih pengembangan"
           icon={<CalendarDaysIcon className="w-7 h-7 text-emerald-600" />}
         />
         <SummaryCard
           title="Laporan Bulanan"
-          count="null"
+          count="masih pengembangan"
           icon={<DockIcon className="w-7 h-7 text-emerald-600" />}
         />
       </div>
