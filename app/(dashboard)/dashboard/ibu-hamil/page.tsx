@@ -55,7 +55,7 @@ export default async function Page() {
         />
         <SummaryCard
           title="Berat Badan Ibu"
-          count="Naik 6 kg"
+          count="null"
           icon={<ArrowTrendingUpIcon className="w-7 h-7 text-emerald-600" />}
         />
       </div>
