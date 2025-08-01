@@ -11,11 +11,11 @@ import SummaryCard from '@/app/ui/dashboard/summary-card';
 
 export default async function Page() {
   // Dummy values sementara
-  const jumlahPemeriksaan = 'masih pengembangan';
-  const usiaKehamilan = 'masih pengembangan';
-  const statusRisiko = 'masih pengembangan';
-  const jadwalPemeriksaan = 'masih pengembangan';
-  const jumlahTT = 'masih pengembangan';
+  const jumlahPemeriksaan = '0';
+  const usiaKehamilan = '0';
+  const statusRisiko = '0';
+  const jadwalPemeriksaan = '0';
+  const jumlahTT = '0';
 
   return (
     <div className="p-6 text-gray-800">
@@ -55,7 +55,7 @@ export default async function Page() {
         />
         <SummaryCard
           title="Berat Badan Ibu"
-          count="masih pengembangan"
+          count="0"
           icon={<ArrowTrendingUpIcon className="w-7 h-7 text-emerald-600" />}
         />
       </div>

@@ -20,22 +20,22 @@ export default async function Page() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <SummaryCard
           title="Jumlah Balita Terdaftar"
-          count="masih pengembangan"
+          count="0"
           icon={<BabyIcon className="w-7 h-7 text-emerald-600" />}
         />
         <SummaryCard
           title="Imunisasi Terpenuhi"
-          count="masih pengembangan"
+          count="0"
           icon={<HeartPulseIcon className="w-7 h-7 text-emerald-600" />}
         />
         <SummaryCard
           title="Tinggi Badan Terkini"
-          count="masih pengembangan"
+          count="0"
           icon={<RulerIcon className="w-7 h-7 text-emerald-600" />}
         />
         <SummaryCard
           title="Berat Badan Terkini"
-          count="masih pengembangan"
+          count="0"
           icon={<ThermometerIcon className="w-7 h-7 text-emerald-600" />}
         />
       </div>
