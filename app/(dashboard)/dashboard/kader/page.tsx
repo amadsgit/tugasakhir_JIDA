@@ -51,7 +51,7 @@ export default async function Page() {
         />
         <SummaryCard
           title="Jadwal Posyandu"
-          count="5" // nanti ambil dari jadwal real
+          count="null"
           icon={<CalendarDaysIcon className="w-7 h-7 text-emerald-600" />}
         />
         <SummaryCard
@@ -60,9 +60,6 @@ export default async function Page() {
           icon={<DockIcon className="w-7 h-7 text-emerald-600" />}
         />
       </div>
-
-      {/* Grafik Imunisasi */}
-      {/*  */}
     </div>
   );
 }

@@ -11,11 +11,11 @@ import SummaryCard from '@/app/ui/dashboard/summary-card';
 
 export default async function Page() {
   // Dummy values sementara
-  const jumlahPemeriksaan = 5;
-  const usiaKehamilan = '28 Minggu';
-  const statusRisiko = 'Rendah';
-  const jadwalPemeriksaan = '30 Juli 2025';
-  const jumlahTT = 2;
+  const jumlahPemeriksaan = 'null';
+  const usiaKehamilan = 'null';
+  const statusRisiko = 'null';
+  const jadwalPemeriksaan = 'null';
+  const jumlahTT = 'null';
 
   return (
     <div className="p-6 text-gray-800">
