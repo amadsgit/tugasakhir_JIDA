@@ -28,6 +28,17 @@ export default function FloatingReadmeBadge() {
             <div className="prose max-w-none text-sm overflow-y-auto">
               <p><strong>e-Posyandu Care</strong> adalah aplikasi digital untuk mendukung kegiatan Posyandu berbasis Next.js dan PostgreSQL.</p>
 
+              <p className="mt-2">Login untuk Admin & Kader yg sudah terdaftar:</p>
+              <span className="font-bold">Admin: <br />
+              email : mdahmadline@gmail.com <br />
+              pass  : password123
+              </span> <br />
+              <span className="font-bold">Kader: <br />
+              email : ahmadpramesta@gmail.com <br />
+              pass  : password123
+              </span>
+
+
               <p className="mt-2">Fitur yang sudah terbangun:</p>
               <ul className="list-disc ml-6">
                 <li>✔ CRUD Kelurahan</li>
@@ -49,7 +60,7 @@ export default function FloatingReadmeBadge() {
 
               <p className="mt-2">Dibuat oleh: Mamad Ahmad</p>
 
-              <p className="mt-4">🔗 <a href="https://tugasakhir-jida-git-main-mamad-ahmads-projects.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">Lihat aplikasi di Vercel</a></p>
+              <p className="mt-4">🔗 <a href="https://tugasakhir-jida.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">Lihat aplikasi di Vercel</a></p>
             </div>
           </div>
         </div>

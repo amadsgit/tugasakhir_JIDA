@@ -66,27 +66,25 @@ export default function Page() {
         method: 'DELETE',
       });
 
+      const result = await res.json();
+
       if (!res.ok) {
-        const errorData = await res.json();
-
-        if (res.status === 409 && errorData?.error) {
-          toast.error(errorData.error);
-        } else {
-          toast.error('Gagal menghapus data user!');
-        }
-
+        toast.error(result?.error || 'Gagal menghapus user!');
         return;
       }
 
+      // hapus user dari list state
       setUserList((prev) => prev.filter((item) => item.id !== selectedId));
-      toast.success('Data User berhasil dihapus!');
-    } catch (err) {
-      console.error(err);
-      toast.error('Terjadi kesalahan saat menghapus data!');
+      toast.success(result?.message || 'User berhasil dihapus!');
+    } catch (error) {
+      console.error('Gagal saat request hapus:', error);
+      toast.error('Terjadi kesalahan saat menghapus user!');
     } finally {
       setShowModal(false);
+      setSelectedId(null);
     }
   };
+
 
   const filteredList = useMemo(() => {
     const q = searchQuery.toLowerCase();
