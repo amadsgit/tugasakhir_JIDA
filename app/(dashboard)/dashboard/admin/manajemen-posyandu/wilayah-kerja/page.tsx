@@ -119,20 +119,20 @@ export default function Page() {
       <TabsPane />
 
       {/* Form & List */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mt-6">
-        <h2 className="text-xl font-semibold flex items-center gap-2 mb-4">
+      <div className="bg-white dark:bg-white rounded-xl shadow-md p-6 mt-6">
+        <h2 className="text-xl font-semibold flex items-center gap-2 mb-4 text-gray-700">
           <MapIcon className="w-5 h-5" /> Wilayah Kerja Puskesmas
         </h2>
 
         {/* Form */}
-        <p className="text-md font-semibold text-gray-600 mb-2">
+        <p className="text-md font-semibold text-gray-700 mb-2">
           {isEdit ? 'Edit Kelurahan / Desa' : 'Tambah Kelurahan / Desa'}
         </p>
         <form onSubmit={handleSubmit} className="mb-6">
           <div className="flex gap-2">
             <input
               type="text"
-              className="border border-gray-300 dark:border-gray-700 rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="Contoh : Pasirkareumbi"
               value={nama}
               onChange={(e) => setNama(e.target.value)}
@@ -188,21 +188,21 @@ export default function Page() {
               <span className="text-sm font-medium">Memuat data kelurahan/desa...</span>
             </div>
           ) : (
-            <table className="w-full table-auto border border-gray-200 dark:border-gray-700">
-              <thead className="bg-gray-100 dark:bg-gray-700 text-left">
+            <table className="w-full text-sm text-left border border-gray-200 rounded-lg overflow-hidden">
+              <thead className="bg-gray-100 text-gray-700">
                 <tr>
-                  <th className="p-3 border-b">#</th>
-                  <th className="p-3 border-b">Nama Kelurahan/Desa</th>
-                  <th className="p-3 border-b">Aksi</th>
+                  <th className="p-3 border-b border-gray-200">#</th>
+                  <th className="p-3 border-b border-gray-200">Nama Kelurahan/Desa</th>
+                  <th className="p-3 border-b border-gray-200">Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 {kelurahanList.length > 0 ? (
                   kelurahanList.map((item, index) => (
-                    <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                      <td className="p-3 border-b">{index + 1}</td>
-                      <td className="p-3 border-b">{item.nama}</td>
-                      <td className="p-3 border-b">
+                    <tr key={item.id} className="hover:bg-gray-50 transition">
+                      <td className="p-3 border-b border-gray-100">{index + 1}</td>
+                      <td className="p-3 border-b border-gray-100">{item.nama}</td>
+                      <td className="p-3 border-b border-gray-100">
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleEdit(item)}

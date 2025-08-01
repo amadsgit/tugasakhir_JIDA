@@ -99,12 +99,12 @@ export default function Page() {
             <h1 className="text-2xl font-bold">Manajemen Data <span>Role & Akun User</span></h1>
             <p className="text-gray-500 dark:text-gray-400">Informasi data role & akun user</p>
           </div>
-          <Link href="#">
+          {/* <Link href="#">
             <button className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm px-4 py-2 rounded-md shadow-sm transition">
               <PlusCircle className="w-4 h-4 text-white text-bold" />
               User
             </button>
-          </Link>
+          </Link> */}
         </div>
 
         <div className="flex justify-between items-center">
@@ -156,13 +156,13 @@ export default function Page() {
                         <td className="px-6 py-4">{item.role?.nama ?? '-'}</td>
                         <td className="px-6 py-4 text-center">
                           <div className="flex justify-center items-center gap-2">
-                            <Link
+                            {/* <Link
                               href={`#`}
                               className="p-2 rounded-md bg-white border border-gray-300 hover:border-teal-500 hover:text-teal-600 transition"
                               title="Edit"
                             >
                               <PencilSquareIcon className="h-4 w-4" />
-                            </Link>
+                            </Link> */}
 
                             <button
                               onClick={() => openDeleteModal(item.id)}
@@ -172,13 +172,13 @@ export default function Page() {
                               <TrashIcon className="h-4 w-4" />
                             </button>
 
-                            <Link
+                            {/* <Link
                               href={`#`}
                               className="p-2 rounded-md bg-white border border-gray-300 hover:border-blue-500 hover:text-blue-600 transition"
                               title="Detail Posyandu"
                             >
                               <EyeIcon className="h-4 w-4" />
-                            </Link>
+                            </Link> */}
                           </div>
                         </td>
                       </tr>

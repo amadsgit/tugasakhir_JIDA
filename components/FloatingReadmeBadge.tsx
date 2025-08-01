@@ -44,7 +44,7 @@ export default function FloatingReadmeBadge() {
                 <li>✔ CRUD Kelurahan</li>
                 <li>✔ CRUD Posyandu + Chart & GIS Posyandu</li>
                 <li>✔ CRUD Kader (dengan Redux)</li>
-                <li>✔ CRUD User dan Role</li>
+                <li>✔ CRUD Role</li>
                 <li>✔ Login dan Register dengan OTP</li>
                 <li>✔ Middleware route & role-based access</li>
               </ul>

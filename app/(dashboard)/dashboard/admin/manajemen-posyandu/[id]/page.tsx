@@ -33,11 +33,11 @@ export default async function PosyanduDetailPage({ params }: { params: Promise<{
       {/* Konten */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Informasi Umum */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 hover:shadow-lg transition-all duration-200">
+        <div className="bg-white dark:bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-all duration-200">
           <h2 className="text-lg font-semibold text-emerald-600 flex items-center gap-2 mb-4">
             <Info className="w-5 h-5" /> Informasi Umum
           </h2>
-          <ul className="space-y-3 text-gray-700 dark:text-gray-200">
+          <ul className="space-y-3 text-gray-600">
             <li><strong>Nama:</strong> {posyandu.nama}</li>
             <li><strong>Alamat:</strong> {posyandu.alamat}</li>
             <li><strong>Wilayah:</strong> {posyandu.wilayah}</li>
@@ -47,11 +47,11 @@ export default async function PosyanduDetailPage({ params }: { params: Promise<{
         </div>
 
         {/* Kontak & Koordinat */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 hover:shadow-lg transition-all duration-200">
+        <div className="bg-white dark:white rounded-2xl shadow-md p-6 hover:shadow-lg transition-all duration-200">
           <h2 className="text-lg font-semibold text-emerald-600 flex items-center gap-2 mb-4">
             <Phone className="w-5 h-5" /> Kontak & Koordinat
           </h2>
-          <ul className="space-y-3 text-gray-700 dark:text-gray-200">
+          <ul className="space-y-3 text-gray-600 ">
             <li><strong>Penanggung Jawab:</strong> {posyandu.penanggungJawab}</li>
             <li><strong>No HP:</strong> {posyandu.noHp}</li>
             <li><strong>Latitude:</strong> {posyandu.latitude}</li>
@@ -60,11 +60,11 @@ export default async function PosyanduDetailPage({ params }: { params: Promise<{
         </div>
 
         {/* Riwayat */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 col-span-1 md:col-span-2 hover:shadow-lg transition-all duration-200">
+        <div className="bg-white dark:white rounded-2xl shadow-md p-6 col-span-1 md:col-span-2 hover:shadow-lg transition-all duration-200">
           <h2 className="text-lg font-semibold text-emerald-600 flex items-center gap-2 mb-4">
             <History className="w-5 h-5" /> Riwayat Pencatatan
           </h2>
-          <ul className="space-y-3 text-gray-700 dark:text-gray-200">
+          <ul className="space-y-3 text-gray-600 ">
             <li>
               <strong>Dibuat:</strong>{' '}
               {new Date(posyandu.createdAt).toLocaleDateString('id-ID', {

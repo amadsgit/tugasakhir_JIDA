@@ -60,26 +60,6 @@ export default function Page() {
             <li>📥 Menghasilkan laporan otomatis untuk Dinas Kesehatan</li>
             <li>💬 Menyampaikan informasi dan pengingat ke orang tua melalui sistem terintegrasi</li>
           </ul>
-          <div className="flex gap-3 mt-4">
-            <Link
-              href="/auth/login"
-              className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 text-white px-5 py-2.5 text-sm md:text-base font-medium shadow hover:bg-emerald-500 transition"
-            >
-              <span>Login</span> <ArrowRightIcon className="w-5 md:w-6" />
-            </Link>
-            <Link
-              href="/tentang"
-              className="text-emerald-700 text-sm md:text-base hover:underline"
-            >
-              Tentang Kami
-            </Link>
-            <Link
-              href="/kontak"
-              className="text-emerald-700 text-sm md:text-base hover:underline"
-            >
-              Kontak
-            </Link>
-          </div>
         </div>
 
         {/* Hero Image */}
@@ -92,7 +72,7 @@ export default function Page() {
             className="hidden md:block rounded-xl shadow-lg"
           />
           <Image
-            src="/mobile.png"
+            src="/desktop.png"
             alt="Hero Ilustrasi Mobile"
             width={400}
             height={300}
