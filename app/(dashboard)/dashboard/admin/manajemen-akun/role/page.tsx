@@ -198,7 +198,29 @@ export default function Page() {
                   roles.map((item, index) => (
                     <tr key={item.id} className="hover:bg-gray-50 transition">
                       <td className="p-3 border-b border-gray-100">{index + 1}</td>
-                      <td className="p-3 border-b border-gray-100">{item.nama}</td>
+                      {/* <td className="p-3 border-b border-gray-100">{item.nama}</td> */}
+                      <td className="px-6 py-4 inline-block w-[170px]">
+                          {item.nama ? (
+                            <span
+                              className={`px-2 py-1 rounded-full text-xs font-semibold capitalize
+                                ${
+                                  item.nama.toLowerCase() === 'admin'
+                                    ? 'bg-red-100 text-red-700'
+                                    : item.nama.toLowerCase() === 'kader'
+                                    ? 'bg-purple-100 text-blue-700'
+                                    : item.nama.toLowerCase() === 'ibu hamil'
+                                    ? 'bg-pink-100 text-purple-700'
+                                    : item.nama.toLowerCase() === 'orang tua balita'
+                                    ? 'bg-orange-100 text-orange-700'
+                                    : 'bg-gray-100 text-gray-700'
+                                }`}
+                            >
+                              {item.nama}
+                            </span>
+                          ) : (
+                            '-'
+                          )}
+                        </td>
                       <td className="p-3 border-b border-gray-100">
                         {new Date(item.createdAt).toLocaleDateString('id-ID', {
                           day: 'numeric',

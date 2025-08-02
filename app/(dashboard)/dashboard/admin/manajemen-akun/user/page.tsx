@@ -21,6 +21,7 @@ type User = {
   noHp: string;
   noKK: string | null;
   nik: string;
+  verifiedAt: string;
   tanggalLahir: string;
   alamat: string;
   password: string;
@@ -142,6 +143,7 @@ export default function Page() {
                     <th className="px-6 py-4 text-left">Email</th>
                     <th className="px-6 py-4 text-left">No.HP</th>
                     <th className="px-6 py-4 text-center">Role</th>
+                    <th className="px-6 py-4 text-center">Status</th>
                     <th className="px-6 py-4 text-center">Action</th>
                   </tr>
                 </thead>
@@ -153,7 +155,40 @@ export default function Page() {
                         <td className="px-6 py-4">{item.nama}</td>
                         <td className="px-6 py-4">{item.email}</td>
                         <td className="px-6 py-4">{item.noHp}</td>
-                        <td className="px-6 py-4">{item.role?.nama ?? '-'}</td>
+                        <td className="px-6 py-4">
+                          {item.role?.nama ? (
+                            <span
+                              className={`px-2 py-1 rounded-full text-xs font-semibold capitalize
+                                ${
+                                  item.role.nama.toLowerCase() === 'admin'
+                                    ? 'bg-red-100 text-red-700'
+                                    : item.role.nama.toLowerCase() === 'kader'
+                                    ? 'bg-purple-100 text-blue-700'
+                                    : item.role.nama.toLowerCase() === 'ibu hamil'
+                                    ? 'bg-pink-100 text-purple-700'
+                                    : item.role.nama.toLowerCase() === 'orang tua balita'
+                                    ? 'bg-orange-100 text-orange-700'
+                                    : 'bg-gray-100 text-gray-700'
+                                }`}
+                            >
+                              {item.role.nama}
+                            </span>
+                          ) : (
+                            '-'
+                          )}
+                        </td>
+
+                        <td className="px-6 py-4 text-center">
+                          {item.verifiedAt ? (
+                            <span className="inline-block px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">
+                              Aktif
+                            </span>
+                          ) : (
+                            <span className="inline-block px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">
+                              Tidak Aktif
+                            </span>
+                          )}
+                        </td>
                         <td className="px-6 py-4 text-center">
                           <div className="flex justify-center items-center gap-2">
                             {/* <Link
@@ -166,8 +201,13 @@ export default function Page() {
 
                             <button
                               onClick={() => openDeleteModal(item.id)}
-                              className="p-2 rounded-md bg-white border border-gray-300 hover:border-rose-500 hover:text-rose-600 transition"
-                              title="Hapus"
+                              disabled={item.role?.nama?.toLowerCase() === 'admin'}
+                              className={`p-2 rounded-md border transition 
+                                ${item.role?.nama?.toLowerCase() === 'admin'
+                                  ? 'bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed'
+                                  : 'bg-white border-gray-300 hover:border-rose-500 hover:text-rose-600'
+                                }`}
+                              title={item.role?.nama?.toLowerCase() === 'admin' ? 'Admin tidak dapat dihapus' : 'Hapus'}
                             >
                               <TrashIcon className="h-4 w-4" />
                             </button>

@@ -6,6 +6,7 @@ export const metadata = {
 import NavbarLanding from '@/app/ui/landing/navbar-landing';
 import FooterLanding from '@/app/ui/landing/footer-landing';
 import { EnvelopeIcon, MapPinIcon, PhoneIcon } from '@heroicons/react/24/outline';
+import toast from 'react-hot-toast';
 
 export default function KontakPage() {
   return (
